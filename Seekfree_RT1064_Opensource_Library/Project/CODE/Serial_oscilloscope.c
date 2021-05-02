@@ -39,7 +39,7 @@ void Data_Send(UARTN_enum uratn,unsigned short int *pst)
 	data_to_send[_cnt++]=(unsigned char)pst[6];
 	data_to_send[_cnt++]=(unsigned char)(pst[7]>>8);
 	data_to_send[_cnt++]=(unsigned char)pst[7];
-    data_to_send[_cnt++]=(unsigned char)(pst[8]>>8);
+        data_to_send[_cnt++]=(unsigned char)(pst[8]>>8);
 	data_to_send[_cnt++]=(unsigned char)pst[8];
 
 	

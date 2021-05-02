@@ -19,6 +19,7 @@
 
 #include "headfile.h"
 #include "isr.h"
+#include "aicar_init.h"
 
 
 void CSI_IRQHandler(void)
@@ -33,6 +34,26 @@ void PIT_IRQHandler(void)
     {
         PIT_FLAG_CLEAR(PIT_CH0);
         
+        encoder2 = qtimer_quad_get(QTIMER_1,QTIMER1_TIMER0_C0 );
+        encoder1 = -qtimer_quad_get(QTIMER_1,QTIMER1_TIMER2_C2 );
+        qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER0_C0 );
+        qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER2_C2 );
+        
+        //aicar_motor_control(left_motor, right_motor);
+        aicar_motor_pid(aim_speed,aim_speed);
+        aicar_servo_control(servo_duty);
+        
+        aicar_pid_wireless();
+        if(bb_time)
+        {
+            gpio_set(BEEP_PIN,1);//打开蜂鸣器
+            bb_time--;
+        }
+        else if(bb_time==0)
+        {
+            gpio_set(BEEP_PIN,0);//关闭蜂鸣器
+        }
+
     }
     
     if(PIT_FLAG_GET(PIT_CH1))
@@ -68,16 +89,12 @@ void GPIO2_Combined_16_31_IRQHandler(void)
 
 void GPIO2_Combined_0_15_IRQHandler(void)
 {
-    if(GET_GPIO_FLAG(MT9V03X_VSYNC_PIN))
-    {
-        //不用清除标志位，标志位在mt9v03x_vsync函数内部会清除
-        if(CAMERA_GRAYSCALE == flexio_camera_type)mt9v03x_vsync();
-    }
-    if(GET_GPIO_FLAG(SCC8660_VSYNC_PIN))
-    {
-        //不用清除标志位，标志位在scc8660_vsync函数内部会清除
-        if(CAMERA_COLOR == flexio_camera_type)scc8660_vsync();
-    }
+    mt9v03x_vsync();
+//    if(GET_GPIO_FLAG(SCC8660_VSYNC_PIN))
+//    {
+//        //不用清除标志位，标志位在scc8660_vsync函数内部会清除
+//        if(CAMERA_COLOR == flexio_camera_type)scc8660_vsync();
+//    }
 }
 
 

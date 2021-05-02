@@ -17,9 +17,12 @@
 #include "SEEKFREE_18TFT.h"
 #include "zf_qtimer.h"
 #include "SEEKFREE_WIRELESS.h"
+#include "aicar_key.h"
+#include "aicar_adc.h"
 
 int32 left_motor=0,right_motor=0;
-int16 aim_speed=0;
+uint32 servo_duty=0;
+int16 aim_speed=0;//pid”√
 uint16 bb_time=0;
 int16 encoder1=0,encoder2=0;
 uint16 encoder_str[20]={0};
@@ -27,9 +30,11 @@ uint16 encoder_str[20]={0};
 void aicar_init()
 {
     mt9v03x_csi_init();//…„œÒÕ∑
-    //adc
+    //aicar_adc_init();//adc
     qtimer_quad_init(QTIMER_1,QTIMER1_TIMER0_C0,QTIMER1_TIMER1_C1);
     qtimer_quad_init(QTIMER_1,QTIMER1_TIMER2_C2,QTIMER1_TIMER3_C24);//encoder
+    aicar_key_init();//key
+    aicar_switch_init();//switch
     lcd_init();//lcd
     seekfree_wireless_init();//wireless
     gpio_init(BEEP_PIN,GPO,0,GPIO_PIN_CONFIG);//bb

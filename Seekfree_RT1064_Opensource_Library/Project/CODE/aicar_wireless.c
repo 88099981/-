@@ -13,17 +13,18 @@
 #include "Serial_oscilloscope.h"
 #include "SEEKFREE_MT9V03X.h"
 #include "aicar_init.h"
+#include "aicar_motor.h"
 
 
 void aicar_pid_wireless(void)
 {
     encoder_str[0]=encoder1;
     encoder_str[1]=encoder2;
-    encoder_str[2]=left_motor;
-    encoder_str[3]=right_motor;
-    encoder_str[4]=aim_speed;
-    encoder_str[5]=0;
-    encoder_str[6]=0;
+    encoder_str[2]=(uint16)speed_out1/10;
+    encoder_str[3]=(uint16)speed_out2/10;
+    encoder_str[4]=(uint16)aim_speed/10;
+    encoder_str[5]=(uint16)kp_l*100;
+    encoder_str[6]=(uint16)ki_l*100;
     encoder_str[7]=0;
     Data_Send(WIRELESS_UART, encoder_str);
 }
