@@ -10,6 +10,8 @@ extern int16 encoder1,encoder2;
 extern uint16 encoder_str[];
 extern int16 aim_speed;
 extern uint32 servo_duty;
+extern vuint8 break_flag;
+extern uint16 stop_cnt;
 
 void aicar_init();
 

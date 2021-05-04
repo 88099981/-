@@ -53,9 +53,6 @@ void aicar_switch_init()
 
 void aicar_key_get()
 {
-
-    aicar_switch_get();
-
     key1_last_status = key1_status;
     key2_last_status = key2_status;
     key3_last_status = key3_status;
@@ -72,65 +69,7 @@ void aicar_key_get()
     if(key3_status && !key3_last_status)    key3_flag = 1;
     if(key4_status && !key4_last_status)    key4_flag = 1;
         
-    //标志位置位之后，可以使用标志位执行自己想要做的事件
-    if(key1_flag)   
-    {
-        if(sw1_status)
-        {
-            key1_flag = 0;//使用按键之后，应该清除标志位
-            aim_speed+=30;
-        }
-        else if(sw2_status)
-        {
-            key1_flag = 0;//使用按键之后，应该清除标志位
-            kp_l+=1.0;
-        }
-    }
-                
-    if(key2_flag)       
-    {           
-        if(sw1_status)
-        {
-            key2_flag = 0;//使用按键之后，应该清除标志位
-            aim_speed=0;
-        }
-        else if(sw2_status)
-        {
-            key2_flag = 0;//使用按键之后，应该清除标志位
-            kp_l-=1.0;
-        }
-             
-    }
-        
-    if(key3_flag)           
-    {
-        if(sw1_status)
-        {
-            key3_flag = 0;//使用按键之后，应该清除标志位
-            aim_speed-=30;
-        }
-        else if(sw2_status)
-        {
-            key3_flag = 0;//使用按键之后，应该清除标志位
-            ki_l+=1.0;
-        }
-    }
-        
-    if(key4_flag)   
-    {
-        if(sw1_status)
-        {
-            key4_flag = 0;//使用按键之后，应该清除标志位
-            bb_time=10;
-        }
-        else if(sw2_status)
-        {
-            key4_flag = 0;//使用按键之后，应该清除标志位
-            ki_l-=1.0;
-        }
-    }
-             
-
+    //标志位置位之后，可以使用标志位执行自己想要做的事件 
 }
     
 void aicar_switch_get()

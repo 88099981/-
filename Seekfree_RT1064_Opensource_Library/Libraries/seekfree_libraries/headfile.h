@@ -91,6 +91,8 @@
 #include "aicar_motor.h"
 #include "aicar_wireless.h"
 #include "aicar_adc.h"
+#include "aicar_meau.h"
+#include "aicar_printf.h"
 #include "Serial_oscilloscope.h"
 #endif
 

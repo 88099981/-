@@ -20,6 +20,9 @@
 #include "aicar_key.h"
 #include "aicar_adc.h"
 
+vuint8 break_flag=0;
+
+uint16 stop_cnt=0;
 int32 left_motor=0,right_motor=0;
 uint32 servo_duty=0;
 int16 aim_speed=0;//pid”√
@@ -30,7 +33,7 @@ uint16 encoder_str[20]={0};
 void aicar_init()
 {
     mt9v03x_csi_init();//…„œÒÕ∑
-    //aicar_adc_init();//adc
+    aicar_adc_init();//adc
     qtimer_quad_init(QTIMER_1,QTIMER1_TIMER0_C0,QTIMER1_TIMER1_C1);
     qtimer_quad_init(QTIMER_1,QTIMER1_TIMER2_C2,QTIMER1_TIMER3_C24);//encoder
     aicar_key_init();//key

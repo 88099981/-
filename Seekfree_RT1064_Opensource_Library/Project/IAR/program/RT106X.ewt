@@ -1227,10 +1227,22 @@
             <name>$PROJ_DIR$\..\..\CODE\aicar_key.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_meau.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_meau.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_motor.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_motor.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_printf.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_printf.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_servo.c</name>

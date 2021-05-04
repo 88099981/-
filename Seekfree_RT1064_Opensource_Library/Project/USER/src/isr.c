@@ -40,6 +40,10 @@ void PIT_IRQHandler(void)
         qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER2_C2 );
         
         //aicar_motor_control(left_motor, right_motor);
+        if(break_flag==1)
+        {
+            aim_speed=0;
+        }
         aicar_motor_pid(aim_speed,aim_speed);
         aicar_servo_control(servo_duty);
         

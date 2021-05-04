@@ -18,13 +18,13 @@ void aicar_servo_init(void)
 }
 void aicar_servo_control(uint32 duty)//前轮舵机，3450-4250，中值3850
 {
-    if(duty<=0)
+    if(duty<=3450)
     {
-        duty=0;
+        duty=3450;
     }
-    else if(duty>PWM_DUTY_MAX)
+    else if(duty>=4250)
     {
-        duty=PWM_DUTY_MAX;
+        duty=4250;
     }
     pwm_duty(S_MOTOR1_PIN,duty);
 }

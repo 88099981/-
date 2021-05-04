@@ -5,6 +5,6 @@
 
 //º¯Êý
 void aicar_servo_init(void);
-void aicar_servo_control(uint32 servo_duty);
+void aicar_servo_control(uint32 duty);
 void aicar_servo_holder(void);
 #endif
