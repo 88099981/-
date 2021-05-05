@@ -1257,6 +1257,30 @@
             <name>$PROJ_DIR$\..\..\CODE\aicar_wireless.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\camera.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\cut.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\cut.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\get_mid.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\get_mid.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\include.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\ostu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\ostu.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\Serial_oscilloscope.c</name>
         </file>
         <file>

@@ -23,14 +23,12 @@
 vuint8 break_flag=0;
 
 uint16 stop_cnt=0;
-int16 left_motor=0,right_motor=0;
+int32 left_motor=0,right_motor=0;
 uint32 servo_duty=0;
-int16 aim_speed=0;//pid用,最大值不是50000，别胡改
+int16 aim_speed=0;//pid用
 uint16 bb_time=0;
 int16 encoder1=0,encoder2=0;
 uint16 encoder_str[20]={0};
-
-double chasu_k=0.0,chasu_b=0.0;
 
 void aicar_init()
 {

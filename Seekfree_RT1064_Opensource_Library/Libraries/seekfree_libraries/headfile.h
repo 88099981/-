@@ -94,5 +94,6 @@
 #include "aicar_meau.h"
 #include "aicar_printf.h"
 #include "Serial_oscilloscope.h"
+#include "include.h"
 #endif
 
