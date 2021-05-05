@@ -33,7 +33,6 @@ void PIT_IRQHandler(void)
     if(PIT_FLAG_GET(PIT_CH0))
     {
         PIT_FLAG_CLEAR(PIT_CH0);
-        
         encoder2 = qtimer_quad_get(QTIMER_1,QTIMER1_TIMER0_C0 );
         encoder1 = -qtimer_quad_get(QTIMER_1,QTIMER1_TIMER2_C2 );
         qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER0_C0 );
@@ -42,10 +41,11 @@ void PIT_IRQHandler(void)
         //aicar_motor_control(left_motor, right_motor);
         if(break_flag==1)
         {
-            aim_speed=0;
+            left_motor=0;
+            right_motor=0;
         }
-        aicar_motor_pid(aim_speed,aim_speed);
         aicar_servo_control(servo_duty);
+        aicar_motor_pid(left_motor,right_motor);
         
         aicar_pid_wireless();
         if(bb_time)
