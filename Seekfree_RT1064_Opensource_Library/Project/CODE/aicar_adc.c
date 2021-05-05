@@ -56,6 +56,37 @@ void aicar_adc_get()
     lasttime_ad=ad_error;
     
     servo_duty=3850+servo_angle;
+    
+    if(servo_duty<=3450)
+    {
+        servo_duty=3450;
+    }
+    else if(servo_duty>=4250)
+    {
+        servo_duty=4250;
+    }
+    chasu_b=servo_duty*0.1175-452.375;
+    chasu_b=chasu_b*0.01745329;
+    chasu_b=sin(chasu_b);
+    if(chasu_b<EPSOLON&&chasu_b>-EPSOLON)
+    {
+        chasu_k=1;
+        left_motor=aim_speed;
+        right_motor=aim_speed;
+    }
+    else if(chasu_b>=EPSOLON)
+    {
+        chasu_k=1+(18.5/(20.0/chasu_b-9.25));
+        left_motor=aim_speed;
+        right_motor=(int16)(aim_speed*chasu_k);
+    }
+    else if(chasu_b<=-EPSOLON)
+    {
+        chasu_b=-chasu_b;
+        chasu_k=1+(18.5/(20.0/chasu_b-9.25));
+        left_motor=(int16)(aim_speed*chasu_k);
+        right_motor=aim_speed;           
+    }
 }
 
 void aicar_stop(void)

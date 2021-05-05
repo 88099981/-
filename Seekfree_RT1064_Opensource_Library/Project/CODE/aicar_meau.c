@@ -32,7 +32,7 @@ void aicar_meau()
             lcd_clear(WHITE);  
             
         }
-        aim_speed=0;
+        break_flag=1;
         aicar_servopid_printf();
         if(key1_flag)
         {
@@ -83,15 +83,42 @@ void aicar_meau()
             lcd_clear(WHITE); 
             stop_cnt=0;
             break_flag=0;
+            aim_speed=SPEED_SET;
         }
-        aim_speed=60;
+        if(key1_flag)
+        {
+            key1_flag=0;
+            aim_speed+=10;
+        }
+        else if(key2_flag)
+        {
+            key2_flag=0;
+            aim_speed-=10;
+        }
+        else if(key3_flag)
+        {
+            key3_flag=0;
+            aim_speed+=5;
+        }
+        else if(key4_flag)
+        {
+            key4_flag=0;
+            aim_speed-=5;
+        }        
         aicar_adc_get();
-        lcd_showstr(0,2,"bk_flag:");
-        lcd_showuint8(12*8,2,break_flag);
-        lcd_showstr(0,4,"kp_ad:");
-        lcd_showfloat(12*8,4,kp_ad,3,2);
-        lcd_showstr(0,5,"kd_ad:");
-        lcd_showfloat(12*8,5,kd_ad,3,2);
+        lcd_showstr(0,2,"aim_speed:");
+        lcd_showint16(12*8,2,aim_speed);
+//        lcd_showstr(0,2,"bk_flag:");
+//        lcd_showuint8(12*8,2,break_flag);
+//        lcd_showstr(0,4,"kp_ad:");
+//        lcd_showfloat(12*8,4,kp_ad,3,2);
+//        lcd_showstr(0,5,"kd_ad:");
+//        lcd_showfloat(12*8,5,kd_ad,3,2);
+        lcd_showstr(0,6,"left:");
+        lcd_showint16(12*8,6,left_motor);
+        lcd_showstr(0,7,"right:");
+        lcd_showint16(12*8,7,right_motor);
+        //aicar_chasu_printf();
     }
     else if(sw1_status==1&&sw2_status==1)          
     {

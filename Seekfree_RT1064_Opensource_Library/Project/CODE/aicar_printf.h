@@ -5,6 +5,7 @@
 void aicar_adc_printf();
 void aicar_servopid_printf();
 void aicar_motorpid_printf();
+void aicar_chasu_printf();
 
 
 #endif
