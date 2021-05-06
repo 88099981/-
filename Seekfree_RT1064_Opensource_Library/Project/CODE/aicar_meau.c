@@ -17,6 +17,8 @@
 #include "SEEKFREE_18TFT.h"
 #include "include.h"
 #include "camera.h"
+#include "aicar_error.h"
+#include "aicar_chasu.h"
 
 uint8 img[IMG_H][IMG_W];		//ÊÕµ½µÄÍ¼Ïñ
 uint8 meau_page=0;
@@ -36,26 +38,34 @@ void aicar_meau()
             
         }
         break_flag=1;
-        aicar_servopid_printf();
+        if(mt9v03x_csi_finish_flag)
+        {      
+            mt9v03x_csi_finish_flag = 0;
+	    cut_image_to_img2();//copy
+	    binary_img();
+	    Search_main();    
+        }      
+        aicar_camera_error();
+        aicar_camerapid_printf();
         if(key1_flag)
         {
             key1_flag=0;
-            kp_ad+=0.3;
+            a_cam+=0.0003;
         }
         else if(key2_flag)
         {
             key2_flag=0;
-            kp_ad-=0.3;
+            a_cam-=0.0003;
         }
         else if(key3_flag)
         {
             key3_flag=0;
-            kd_ad+=0.3;
+            kd_cam+=0.3;
         }
         else if(key4_flag)
         {
             key4_flag=0;
-            kd_ad-=0.3;
+            kd_cam-=0.3;
         }        
     }
                 
@@ -112,7 +122,15 @@ void aicar_meau()
             key4_flag=0;
             aim_speed-=5;
         }        
-        aicar_adc_get();
+        if(mt9v03x_csi_finish_flag)
+        {      
+            mt9v03x_csi_finish_flag = 0;
+	    cut_image_to_img2();//copy
+	    binary_img();
+	    Search_main();    
+        }        
+        aicar_camera_error();
+        aicar_n_chasu();
         lcd_showstr(0,2,"aim_speed:");
         lcd_showint16(12*8,2,aim_speed);
 //        lcd_showstr(0,2,"bk_flag:");
@@ -137,6 +155,7 @@ void aicar_meau()
         }
         aim_speed=0;
         aicar_adc_get();
+        aicar_adc_error();
         aicar_adc_printf();
     }
              

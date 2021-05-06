@@ -29,6 +29,8 @@ void aicar_gogogo()
     ki_r=KI_motor_right;
     kp_ad=KP_ad_str;
     kd_ad=KD_ad_str;
+    a_cam=A_cam;
+    kd_cam=KD_cam;
 
     EnableGlobalIRQ(0); //总中断最后开启
     while(1)

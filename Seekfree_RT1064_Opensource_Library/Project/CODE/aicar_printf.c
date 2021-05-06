@@ -15,6 +15,7 @@
 #include "SEEKFREE_18TFT.h"
 #include "aicar_key.h"
 #include "aicar_motor.h"
+#include "aicar_error.h"
 void aicar_adc_printf()
 {
     lcd_showstr(0,1,"ad_value1:");    
@@ -90,4 +91,16 @@ void aicar_chasu_printf()
     lcd_showstr(0,7,"right:");
     lcd_showint16(12*8,7,right_motor);
     
+}
+
+void aicar_camerapid_printf()
+{
+    lcd_showstr(0,2,"cam_err:");
+    lcd_showint8(12*8,2,camera_error);
+    lcd_showstr(0,5,"a_cam:");
+    lcd_showfloat(12*8,5,a_cam,1,4);
+    lcd_showstr(0,6,"kp_cam:");
+    lcd_showfloat(12*8,6,kp_cam,3,2);
+    lcd_showstr(0,7,"kd_cam:");
+    lcd_showfloat(12*8,7,kd_cam,3,2);
 }
