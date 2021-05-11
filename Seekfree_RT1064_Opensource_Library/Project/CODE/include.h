@@ -8,5 +8,6 @@
 #include "get_mid.h"
 #include "camera.h"
 #include "common.h"
+#include "fd_binarization.h"
 
 #endif

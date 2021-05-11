@@ -4,6 +4,8 @@
 #define Step_yu    252				//4步   等差  灰度级
 #define Step   4
 
+uint8 ostu_thres=0;
+
 uint8 get_ostu_thres()
 {
 	uint8 gray_start=0;			//图像的起始灰度 
@@ -194,10 +196,10 @@ uint8 get_ostu_thres()
 	return i;
 }
 
-uint8 binary_img()
+void binary_img()
 {
 	//uint8 ostu_thres=get_ostu_thres();
-	uint8 ostu_thres=160;
+	ostu_thres=160;
 	uint8 i,j;
 	for(i=0;i<IMG_H;i++)
 	{

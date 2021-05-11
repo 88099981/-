@@ -6,6 +6,8 @@
 //#define White 255
 //#define Black 0
 
+extern uint8 ostu_thres;
+
 extern uint8 get_ostu_thres();
-extern uint8 binary_img();
+extern void binary_img();
 #endif
