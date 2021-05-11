@@ -3,6 +3,7 @@
 
 #include"common.h"
 #define ERROR_EDGE 15 
+#define KP_cam 8.0
 #define KD_cam 5.0
 #define A_cam 0.005
 

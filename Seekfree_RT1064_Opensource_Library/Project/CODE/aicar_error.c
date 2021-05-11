@@ -20,29 +20,29 @@ float a_cam=0.0;
 void aicar_camera_error()
 {
     camera_error=0;
-//    if(Mid_Num<=ERROR_EDGE)
-//    {
-//        for(uint8 i=1;i<=Mid_Num;i++)//遍历
-//        {
-//            camera_error+=Mid_X[i]-94;
-//        }
-//        camera_error=camera_error/Mid_Num;
-//    }
-//    else
-//    {
-//        for(uint8 i=1;i<=ERROR_EDGE;i++)//遍历
-//        {
-//            camera_error+=Mid_X[i]-94;
-//        }
-//        camera_error=camera_error/ERROR_EDGE;
-//    }
-    for(uint8 i=1;i<=Mid_Num;i++)//全场遍历
+    if(Mid_Num<=ERROR_EDGE)
     {
-        camera_error+=Mid_X[i]-94;
+        for(uint8 i=1;i<=Mid_Num;i++)//遍历
+        {
+            camera_error+=Mid_X[i]-94;
+        }
+        camera_error=-camera_error/Mid_Num;
     }
-    camera_error=-camera_error/Mid_Num;
+    else
+    {
+        for(uint8 i=1;i<=ERROR_EDGE;i++)//遍历
+        {
+            camera_error+=Mid_X[i]-94;
+        }
+        camera_error=-camera_error/ERROR_EDGE;
+    }
+//    for(uint8 i=1;i<=Mid_Num;i++)//全场遍历
+//    {
+//        camera_error+=Mid_X[i]-94;
+//    }
+//    camera_error=-camera_error/Mid_Num;
     
-    kp_cam=camera_error*camera_error*a_cam;//二次
+//    kp_cam=camera_error*camera_error*a_cam;//二次
     servo_angle=(int16)(kp_cam*camera_error + kd_cam*(camera_error-lasttime_ad));
     lasttime_ad=camera_error;
     

@@ -97,8 +97,8 @@ void aicar_camerapid_printf()
 {
     lcd_showstr(0,2,"cam_err:");
     lcd_showint8(12*8,2,camera_error);
-    lcd_showstr(0,5,"a_cam:");
-    lcd_showfloat(12*8,5,a_cam,1,4);
+//    lcd_showstr(0,5,"a_cam:");
+//    lcd_showfloat(12*8,5,a_cam,1,4);
     lcd_showstr(0,6,"kp_cam:");
     lcd_showfloat(12*8,6,kp_cam,3,2);
     lcd_showstr(0,7,"kd_cam:");

@@ -50,12 +50,12 @@ void aicar_meau()
         if(key1_flag)
         {
             key1_flag=0;
-            a_cam+=0.0003;
+            kp_cam+=0.3;
         }
         else if(key2_flag)
         {
             key2_flag=0;
-            a_cam-=0.0003;
+            kp_cam-=0.3;
         }
         else if(key3_flag)
         {
@@ -89,6 +89,7 @@ void aicar_meau()
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 160, 128);
       
         }        
+        aicar_camera_error();
     }
         
     else if(sw1_status==1&&sw2_status==0)          
@@ -130,7 +131,8 @@ void aicar_meau()
 	    Search_main();    
         }        
         aicar_camera_error();
-        aicar_n_chasu();
+        aicar_adc_get();
+        aicar_chasu();
         lcd_showstr(0,2,"aim_speed:");
         lcd_showint16(12*8,2,aim_speed);
 //        lcd_showstr(0,2,"bk_flag:");

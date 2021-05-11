@@ -47,7 +47,6 @@ void aicar_adc_get()
     ad_value6 = adc_mean_filter(POWER_ADC6_MOD,POWER_ADC6_PIN,10);
     ad_value_all=ad_value1+ad_value2+ad_value3+ad_value4+ad_value5+ad_value6;
     aicar_stop();
-
 }
 
 void aicar_stop(void)
