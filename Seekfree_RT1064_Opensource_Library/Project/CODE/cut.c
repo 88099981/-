@@ -50,9 +50,9 @@ void cut_image_to_img2()
 
 void mv_image_to_img2(void)	//????????????
 {
-	uint8 i,j;
+	uint8 i;
 	for(i=0;i<IMG_H;i++)
 	{
-		 memmove(&img[i][0],&mt9v03x_csi_image[i][0],IMG_W);
+            memmove(&img[i][0],&mt9v03x_csi_image[i][0],IMG_W);
 	}
 }

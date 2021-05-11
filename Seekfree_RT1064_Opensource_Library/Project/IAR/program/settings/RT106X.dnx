@@ -28,7 +28,7 @@
         <EnableCache>1</EnableCache>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>3694353558</Checksum>
+        <Checksum>801952714</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -44,8 +44,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>167375720</CpuClock>
-        <SwoClock>167256712</SwoClock>
+        <CpuClock>913404008</CpuClock>
+        <SwoClock>590426160</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>

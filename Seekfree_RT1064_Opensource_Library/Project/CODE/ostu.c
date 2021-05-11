@@ -199,7 +199,6 @@ uint8 get_ostu_thres()
 void binary_img()
 {
 	//uint8 ostu_thres=get_ostu_thres();
-	ostu_thres=160;
 	uint8 i,j;
 	for(i=0;i<IMG_H;i++)
 	{

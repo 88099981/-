@@ -77,18 +77,38 @@ void aicar_meau()
         {
             lcd_clear(WHITE);    
         }
-        aim_speed=0;
+        break_flag=0;
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
-						cut_image_to_img2();//copy
-						binary_img();
-						Search_main();
+            cut_image_to_img2();//copy						
+            binary_img();			
+            Search_main();
             //使用缩放显示函数，根据原始图像大小 以及设置需要显示的大小自动进行缩放或者放大显示
             //lcd_displayimage032_zoom(mt9v03x_csi_image[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 160, 128);
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 160, 128);
       
         }        
+        if(key1_flag)
+        {
+            key1_flag=0;
+            ostu_thres+=5;
+        }
+        else if(key2_flag)
+        {
+            key2_flag=0;
+            ostu_thres-=5;
+        }
+        else if(key3_flag)
+        {
+            key3_flag=0;
+            ostu_thres+=1;
+        }
+        else if(key4_flag)
+        {
+            key4_flag=0;
+            ostu_thres-=1;
+        }     
         aicar_camera_error();
     }
         
