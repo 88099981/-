@@ -3147,7 +3147,7 @@ void Round_main(void)//11以后出问题
 		{
 			Temp_A = 0;
 			R_edge_angle[0] = 0;
-			for (uint8 i = 4; i < R_edge_Num - 2; i++)
+			for (uint8 i = 4; i < R_edge_Num - 2; i++)	//求边沿最小角度
 			{
 				if (R_edge_angle[Temp_A] < R_edge_angle[i])
 				{
@@ -3156,7 +3156,7 @@ void Round_main(void)//11以后出问题
 			}
 			if (R_edge_angle[Temp_A] > angle_is_S)
 			{
-				R_edge_angle[0] = Temp_A;
+				R_edge_angle[0] = Temp_A;		//FIXME 确定该语句用处
 				flag_type_round = 11;
 			}
 		}
