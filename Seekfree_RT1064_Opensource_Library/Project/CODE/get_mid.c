@@ -234,7 +234,6 @@ void Y_change(void)
 		for (uint8 j = 0; j < IMG_W; j++)
 		{
 			temp = img[i][j];
-<<<<<<< HEAD
 			img[i][j] = img[IMG_H - i - 1][IMG_W];
 			img[IMG_H - i - 1][IMG_W] = temp;
 		}
@@ -252,10 +251,6 @@ void x_change(void)
 			temp = img[i][j];
 			img[i][j] = img[IMG_H][IMG_W - j -1];
 			img[IMG_H][IMG_W - j - 1] = temp;
-=======
-			img[i][j] = img[IMG_H - i - 1][j];
-			img[IMG_H - i - 1][j] = temp;
->>>>>>> parent of e902bd2 (fix: 更�?�图像镜像显示问�?)
 		}
 	}
 }
