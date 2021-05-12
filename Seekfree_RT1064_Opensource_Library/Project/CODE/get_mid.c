@@ -234,8 +234,8 @@ void Y_change(void)
 		for (uint8 j = 0; j < IMG_W; j++)
 		{
 			temp = img[i][j];
-			img[i][j] = img[IMG_H - i - 1][j];
-			img[IMG_H - i - 1][j] = temp;
+			img[i][j] = img[IMG_H - i - 1][IMG_W - j - 1];
+			img[IMG_H - i - 1][IMG_W - j - 1] = temp;
 		}
 	}
 }
