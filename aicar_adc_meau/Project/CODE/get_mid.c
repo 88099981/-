@@ -3139,6 +3139,7 @@ void Round_main(void)//11以后出问题
 					Temp_A = i;
 				}
 			}
+
 			if (R_edge_angle[Temp_A] > angle_is_S)
 			{
 				R_edge_angle[0] = Temp_A;

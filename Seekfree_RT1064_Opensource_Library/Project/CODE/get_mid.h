@@ -11,7 +11,7 @@ extern uint8 flag_type_Number;		//数值为flag_type_L-1作为十位，flag_type_R-1作为
 extern uint8 flag_type_curve;		//急转弯种类（1=L，2=R，0=直道）
 extern uint8 flag_type_cross;		//十字阶段（1=未见后直道，2=十字，3=未见前直道,4=特殊模式且左赛道已知,5=特殊模式且右赛道已知，0=直道）
 extern uint8 flag_type_Y;			//Y种类（0=直道,没写）
-extern uint8 flag_type_round;		//环岛阶段&种类（0=直道,1左环岛初始，2右环岛初始，3左环岛第二阶段，4右环岛第二阶段）
+extern uint8 flag_type_round;		//环岛阶段&种类（0=直道,1左环岛初始，2右环岛初始，3左环岛第二阶段，4右环岛第二阶段,5）
 
 extern uint8 L_edge_Num;			//左边沿个数，需要初始化为0！！
 extern uint8 R_edge_Num;			//右边沿个数，需要初始化为0！！

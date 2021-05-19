@@ -234,8 +234,23 @@ void Y_change(void)
 		for (uint8 j = 0; j < IMG_W; j++)
 		{
 			temp = img[i][j];
-			img[i][j] = img[IMG_H - i - 1][j];
-			img[IMG_H - i - 1][j] = temp;
+			img[i][j] = img[IMG_H - i - 1][IMG_W];
+			img[IMG_H - i - 1][IMG_W] = temp;
+		}
+	}
+}
+
+//x坐标变换，修复显示镜像问题
+void x_change(void)
+{
+	uint8 temp;
+	for (uint8 i = 0; i < IMG_H; i++)
+	{
+		for (uint8 j = 0; j < IMG_W / 2; j++)
+		{
+			temp = img[i][j];
+			img[i][j] = img[IMG_H][IMG_W - j -1];
+			img[IMG_H][IMG_W - j - 1] = temp;
 		}
 	}
 }
@@ -794,7 +809,7 @@ uint8 Get_Curvature(float N, float Mid_Curvature_MAX)
 	return number;
 }
 
-//无奈之举
+//无奈之举 将图像最左/右边界作为赛道边缘 （1左0右）
 void God_FUCK_me(uint8 L_or_R)
 {
 	if (L_or_R)
@@ -2944,7 +2959,7 @@ void Find_L_UP_point(uint8 Start_X, uint8 Start_Y)
 	uint8 Temp = 1;
 	Cross_L_IF_2 = 0;
 	Start_X -= NUM_block_route;
-	for (uint8 i = Start_X; i > Num_lim_search_LR; i--)
+	for (uint8 i = Start_X; i > Num_lim_search_LR; i--)	//平扫
 	{
 		if (img[Start_Y][i] == Black)
 		{
@@ -2955,7 +2970,7 @@ void Find_L_UP_point(uint8 Start_X, uint8 Start_Y)
 			if (Temp)
 			{
 				Cross_L_IF_2 = 1;
-				for (uint8 j = 1; j < NUM_block_route; j++)
+				for (uint8 j = 1; j < NUM_block_route; j++)	//TODO 尚不明确为何要重复扫描
 				{
 					if (img[Start_Y][i - j] != Black)
 					{
@@ -3062,12 +3077,12 @@ void Round_main(void)//11以后出问题
 		break;
 	case 1:
 		//环岛边沿扫描没找到（左环岛）
-		if (flag_type_R == 10)
+		if (flag_type_R == 10)	//右侧丢线
 		{
 			God_FUCK_me(0);
 			flag_type_R = 1;
 		}
-		if (flag_type_L == 10)
+		if (flag_type_L == 10)	//左侧确认出现出环口
 		{
 			flag_type_round = 3;
 		}
@@ -3091,7 +3106,7 @@ void Round_main(void)//11以后出问题
 			God_FUCK_me(0);
 			flag_type_R = 1;
 		}
-		if (flag_type_L != 10)
+		if (flag_type_L != 10)	//
 		{
 			flag_type_round = 5;
 		}
@@ -3112,7 +3127,7 @@ void Round_main(void)//11以后出问题
 		Temp_A = 0;
 		if (flag_type_R == 10)
 		{
-			for (uint8 i = IMG_W - 6; i < IMG_W - 2; i++)
+			for (uint8 i = IMG_W - 6; i < IMG_W - 2; i++)	//大概意思是图像左上角出现白块，确定是环岛出环处
 			{
 				for (uint8 j = IMG_H - 4; j < IMG_H; j++)
 				{
@@ -3127,21 +3142,21 @@ void Round_main(void)//11以后出问题
 		{
 			flag_type_round = 7;
 		}
-		Get_angle_R(1, R_edge_Num);
+		Get_angle_R(1, R_edge_Num);	//获取右边沿斜率
 		if (R_edge_Num > 6)
 		{
 			Temp_A = 0;
 			R_edge_angle[0] = 0;
-			for (uint8 i = 4; i < R_edge_Num - 2; i++)
+			for (uint8 i = 4; i < R_edge_Num - 2; i++)	//求边沿最小角度
 			{
 				if (R_edge_angle[Temp_A] < R_edge_angle[i])
 				{
 					Temp_A = i;
 				}
 			}
-			if (R_edge_angle[Temp_A] > angle_is_S)
+			if (R_edge_angle[Temp_A] > angle_is_S)	//角度过大 Θ∈(0,π)
 			{
-				R_edge_angle[0] = Temp_A;
+				R_edge_angle[0] = Temp_A;		//TODO 确定该语句用处
 				flag_type_round = 11;
 			}
 		}
@@ -3154,7 +3169,7 @@ void Round_main(void)//11以后出问题
 			{
 				for (uint8 j = IMG_H - 4; j < IMG_H; j++)
 				{
-					if (img[j][i])
+					if (img[j][i])	//右上角
 					{
 						Temp_A++;
 					}
@@ -3353,7 +3368,7 @@ void Round_main(void)//11以后出问题
 		//向上补线
 		//左边沿向上扫描处理
 		Croos_Search_up_L2();
-		//无上方转折点，计算斜率，向上拟定边界****************************************************************需要改动
+		//FIXME 无上方转折点，计算斜率，向上拟定边界  需要改动
 		if (Cross_L_IF_2)
 		{
 			if (L_edge_Y[0] < IMG_H - Num_lim_search_UP)
@@ -4163,7 +4178,7 @@ void Print_for_debug(void)
 }
 
 //主程序
-uint8 Search_main(void)
+uint8 Search_main(void)	//TODO 无针对工字形白区、入环环岛中央过小且右侧直线斜率过大时中线过左(判断边沿是否有较大部分为黑)、
 {
 	uint8 flag_type_Number_judge;//flag_type_Number常用的一个flag
 	Init();
@@ -5384,5 +5399,6 @@ uint8 Search_main(void)
 	Mid_Get();
 	//绘画中线和边界
 	Print_Mid_and_Edge();
+	//x_change();	//镜像图像 按需修改
 	return 1;
 }
