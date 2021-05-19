@@ -21,7 +21,7 @@
 #include "aicar_adc.h"
 
 vuint8 break_flag=0;
-
+vuint8 adc_isr_enable=0;
 uint16 stop_cnt=0;
 int16 left_motor=0,right_motor=0;
 uint32 servo_duty=0;

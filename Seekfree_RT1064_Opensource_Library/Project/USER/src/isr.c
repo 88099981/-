@@ -44,10 +44,15 @@ void PIT_IRQHandler(void)
             left_motor=0;
             right_motor=0;
         }
+        if(adc_isr_enable==1&&meau_page==4)//必须是第四页同时开启adc
+        {
+            aicar_adc_get();
+            aicar_adc_error();
+        }
         aicar_servo_control(servo_duty);
         aicar_motor_pid(left_motor,right_motor);
         
-        aicar_pid_wireless();
+        //aicar_pid_wireless();
         if(bb_time)
         {
             gpio_set(BEEP_PIN,1);//打开蜂鸣器

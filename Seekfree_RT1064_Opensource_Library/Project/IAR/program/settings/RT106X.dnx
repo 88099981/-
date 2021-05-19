@@ -19,16 +19,16 @@
         <JetConnSerialNo>SEEKFREE CMSIS-DAP V2:0</JetConnSerialNo>
         <JetConnFoundProbes>SEEKFREE CMSIS-DAP V1:SF95630132813138:SEEKFREE CMSIS-DAP V2:0:</JetConnFoundProbes>
         <PrevWtdReset>Core</PrevWtdReset>
-        <OnlineReset>System</OnlineReset>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>1</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
+        <OnlineReset>System</OnlineReset>
     </Jet>
     <ArmDriver>
         <EnableCache>1</EnableCache>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>801952714</Checksum>
+        <Checksum>3980222817</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -44,8 +44,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>913404008</CpuClock>
-        <SwoClock>590426160</SwoClock>
+        <CpuClock>2147488271</CpuClock>
+        <SwoClock>1734097476</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>
@@ -167,6 +167,15 @@
         <EventLSU>0</EventLSU>
         <EventSLEEP>0</EventSLEEP>
     </SWOTraceWindow>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.46.5" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp1>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.22.5" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.46.5" 0 0 1 "" 0 "" 0</Bp2>
+        <Count>3</Count>
+    </Breakpoints2>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -176,15 +185,6 @@
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.46.5" 0 0 1 "" 0 "" 0</Bp0>
-        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.22.5" 0 0 1 "" 0 "" 0</Bp1>
-        <Bp2>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.46.5" 0 0 1 "" 0 "" 0</Bp2>
-        <Count>3</Count>
-    </Breakpoints2>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

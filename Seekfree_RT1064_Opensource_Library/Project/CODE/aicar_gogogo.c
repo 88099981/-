@@ -18,11 +18,12 @@ void aicar_gogogo()
     systick_delay_ms(1000);
 
     aicar_init();
-    aicar_switch_get();
+    //aicar_switch_get();跑车前选状态
     pit_init();                     //初始化pit外设
     pit_interrupt_ms(PIT_CH0,10);  //初始化pit通道0 周期
     NVIC_SetPriority(PIT_IRQn,5);  //设置中断优先级 范围0-15 越小优先级越高 四路PIT共用一个PIT中断函数
     servo_duty=3850;
+    
     //初始化区，所有都是动态的，这里给一个初始化，后面可以移到init文件
     kp_l=KP_motor_left;
     ki_l=KI_motor_left;
@@ -33,7 +34,7 @@ void aicar_gogogo()
     //a_cam=A_cam;//二次项系数，还不好用
     kp_cam=KP_cam;
     kd_cam=KD_cam;
-    ostu_thres=160;
+    ostu_thres=203;//阈值
 
     EnableGlobalIRQ(0); //总中断最后开启
     while(1)
