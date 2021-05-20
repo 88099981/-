@@ -72,6 +72,7 @@ uint8 A_minus_B_abs(uint8 , uint8 );
 float SquareRootFloat(float );
 void Init(void);
 uint8 th_TO_No(uint8 );
+void X_change(void);
 void Y_change(void);
 void Put_Data_to_L_edge(uint8 , uint8 );
 void Put_Data_to_R_edge(uint8 , uint8 );
@@ -234,8 +235,8 @@ void Y_change(void)
 		for (uint8 j = 0; j < IMG_W; j++)
 		{
 			temp = img[i][j];
-			img[i][j] = img[IMG_H - i - 1][IMG_W];
-			img[IMG_H - i - 1][IMG_W] = temp;
+			img[i][j] = img[IMG_H - i - 1][j];
+			img[IMG_H - i - 1][j] = temp;
 		}
 	}
 }
@@ -249,8 +250,8 @@ void x_change(void)
 		for (uint8 j = 0; j < IMG_W / 2; j++)
 		{
 			temp = img[i][j];
-			img[i][j] = img[IMG_H][IMG_W - j -1];
-			img[IMG_H][IMG_W - j - 1] = temp;
+			img[i][j] = img[i][IMG_W - j -1];
+			img[i][IMG_W - j - 1] = temp;
 		}
 	}
 }

@@ -29,7 +29,7 @@ void aicar_meau()
 {
     aicar_switch_get();
     aicar_key_get();
-    if(sw1_status==0&&sw2_status==0)   
+    if(sw1_status==0&&sw2_status==0)   //可以通过按键调节参数kp kd，可以用摄像头偏差打角
     {
         meau_last_page=meau_page;
         meau_page=1;
@@ -42,9 +42,9 @@ void aicar_meau()
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
-	    cut_image_to_img2();//copy
-	    binary_img();
-	    Search_main();    
+						cut_image_to_img2();//copy
+						binary_img();
+						Search_main();    
         }      
         aicar_camera_error();
         aicar_camerapid_printf();
@@ -70,7 +70,7 @@ void aicar_meau()
         }        
     }
                 
-    else if(sw1_status==0&&sw2_status==1)       
+    else if(sw1_status==0&&sw2_status==1) // 显示图像到lcd上，可以调节阈值并上传图像，可以打角      
     {           
         meau_last_page=meau_page;
         meau_page=2;
@@ -85,8 +85,7 @@ void aicar_meau()
             cut_image_to_img2();//copy						
             binary_img();			
             Search_main();
-            //使用缩放显示函数，根据原始图像大小 以及设置需要显示的大小自动进行缩放或者放大显示
-            //lcd_displayimage032_zoom(mt9v03x_csi_image[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 160, 128);
+
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 160, 128);
       
         }        
@@ -111,10 +110,10 @@ void aicar_meau()
             key4_flag=0;
             bb_time=10;
         }     
-        aicar_camera_error();
+        aicar_camera_error();//打角
     }
         
-    else if(sw1_status==1&&sw2_status==0)          
+    else if(sw1_status==1&&sw2_status==0) //摄像头跑车程序，可通过按键调节速度，已差速         
     {
         meau_last_page=meau_page;
         meau_page=3;
@@ -148,9 +147,9 @@ void aicar_meau()
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
-	    cut_image_to_img2();//copy
-	    binary_img();
-	    Search_main();    
+						cut_image_to_img2();//copy
+						binary_img();
+						Search_main();    
         }        
         aicar_camera_error();
         aicar_adc_get();//停车用
@@ -169,7 +168,7 @@ void aicar_meau()
         lcd_showint16(12*8,7,right_motor);
         //aicar_chasu_printf();
     }
-    else if(sw1_status==1&&sw2_status==1)          
+    else if(sw1_status==1&&sw2_status==1)  //可以通过电感偏差跑车，并上传图像        
     {
         meau_last_page=meau_page;
         meau_page=4;
