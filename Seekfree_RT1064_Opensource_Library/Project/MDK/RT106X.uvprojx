@@ -1459,6 +1459,11 @@
               <FileType>5</FileType>
               <FilePath>..\..\Libraries\seekfree_libraries\zf_sdcard.h</FilePath>
             </File>
+            <File>
+              <FileName>headfile.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Libraries\seekfree_libraries\headfile.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3489,6 +3494,11 @@
               <FileName>zf_sdcard.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\Libraries\seekfree_libraries\zf_sdcard.h</FilePath>
+            </File>
+            <File>
+              <FileName>headfile.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\Libraries\seekfree_libraries\headfile.h</FilePath>
             </File>
           </Files>
         </Group>

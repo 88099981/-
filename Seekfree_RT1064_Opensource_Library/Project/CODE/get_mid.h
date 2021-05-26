@@ -3,6 +3,7 @@
 
 //#include "IMG_include.h"
 #include "camera.h"
+#include "headfile.h"
 
 uint8 Search_main(void);					//Ö÷º¯Êý
 
