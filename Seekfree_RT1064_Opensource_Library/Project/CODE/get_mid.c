@@ -828,7 +828,7 @@ uint8 Get_Curvature(float N, float Mid_Curvature_MAX)
 	return number;
 }
 
-//无奈之举 填充数据
+//无奈之举 填充数据 0R1L
 void God_FUCK_me(uint8 L_or_R)
 {
 	if (L_or_R)
@@ -1413,7 +1413,7 @@ void Err_check(void)
 		//第四步通过两个边沿补全中线
 		Mid_Get();
 		//绘画中线和边界
-		Print_Mid_and_Edge();
+		//Print_Mid_and_Edge(); // FIXME 临时修改
 		IF_Warning_MOD = 1;
 	}
 }
@@ -3082,8 +3082,12 @@ void Simple_MidCheck(void)	//简易中线查错 当中线持续入黑区时报错 (注意再)
 			times_MidInBlack++;
 	}
 	if(times_MidInBlack>=5)
+	{
 		bb_time=20;
+		csi_seekfree_sendimg_03x(USART_8,img[0],MT9V03X_CSI_W,MT9V03X_CSI_H);//逐飞上位机
+	}	
 		//QMessageBox::warning(NULL,"warning","Warng mid line", QMessageBox::Ok);
+		
 }
 
 //环岛处理程序核心
@@ -3114,12 +3118,12 @@ void Round_main(void)//11以后出问题
 		break;
 	case 1:
 		//环岛边沿扫描没找到（左环岛）
-		if (flag_type_R == 10)
+		if (flag_type_R == 10)	//右侧无
 		{
 			God_FUCK_me(0);
 			flag_type_R = 1;
 		}
-		if (flag_type_L == 10)
+		if (flag_type_L == 10)	//左侧无
 		{
 			flag_type_round = 3;
 		}
@@ -3162,7 +3166,7 @@ void Round_main(void)//11以后出问题
 		break;
 	case 5://直道没边（左环岛）
 		Temp_A = 0;
-		if (flag_type_R == 10)
+		if (flag_type_R == 10)	//TODO 检验条件是否可行(进入该状态时是否已转弯)
 		{
 			for (uint8 i = IMG_W - 6; i < IMG_W - 2; i++)
 			{
@@ -3191,9 +3195,9 @@ void Round_main(void)//11以后出问题
 					Temp_A = i;
 				}
 			}
-			if (R_edge_angle[Temp_A] > angle_is_S)
+			if (R_edge_angle[Temp_A] > angle_is_S)	//储存尖点序号
 			{
-				R_edge_angle[0] = Temp_A;
+				R_edge_angle[0] = Temp_A;	
 				flag_type_round = 11;
 			}
 		}
@@ -3250,7 +3254,7 @@ void Round_main(void)//11以后出问题
 		break;
 	case 9://右边出现锐角（左环岛）
 		Get_angle_R(1, R_edge_Num);
-		if (R_edge_Num > 6)
+		if (R_edge_Num > 6)	//再次记录尖点
 		{
 			Temp_A = 0;
 			R_edge_angle[0] = 0;
@@ -3267,6 +3271,9 @@ void Round_main(void)//11以后出问题
 				flag_type_round = 11;
 			}
 		}
+
+		bb_time=40;	//鸣笛示意
+
 		break;
 	case 10://左边出现锐角（右环岛）
 		Get_angle_L(1, L_edge_Num);
@@ -3289,7 +3296,7 @@ void Round_main(void)//11以后出问题
 		}
 		break;
 	case 11://右边界没找到（左环岛）
-		if (flag_type_R == 10)
+		if (flag_type_R == 10)	//TODO 确定条件的可靠性 是否需要补增
 		{
 			flag_type_round = 13;
 		}
@@ -3341,7 +3348,7 @@ void Round_main(void)//11以后出问题
 		}
 		break;
 	case 13://直道边找到了（左环岛）
-		if (flag_type_R != 10 && R_edge_Y[1] < Num_lim_search_UP * 3)
+		if (flag_type_R != 10 && R_edge_Y[1] < Num_lim_search_UP * 3)	//右边界最低点足够小
 		{
 			flag_type_round = 15;
 		}
@@ -3429,7 +3436,7 @@ void Round_main(void)//11以后出问题
 			if (IF_Warning_MOD)
 			{
 				//无上方转折点，计算斜率，向上拟定边界
-				Get_K_To_get_UP_edge(1);
+				Get_K_To_get_UP_edge(1);	//TODO IF_Warning_MOD=1时不起作用
 				IF_Warning_MOD = 0;
 			}
 			else
@@ -4225,7 +4232,7 @@ uint8 Search_main(void)
 	if (flag_type == 4 && flag_type_Y == 2 && IF_Y)
 	{
 		Y_main_2();
-		Print_Mid_and_Edge();
+		//Print_Mid_and_Edge(); // FIXME 临时修改
 		return 1;
 	}
 	if (flag_type == 4 && flag_type_Y == 3 && IF_Y)
@@ -4345,7 +4352,7 @@ uint8 Search_main(void)
 				flag_type_Y = 1;
 			}
 			Y_main();
-			Print_Mid_and_Edge();
+			//Print_Mid_and_Edge(); // FIXME 临时修改
 			return 1;
 		}
 	}
@@ -4356,11 +4363,12 @@ uint8 Search_main(void)
 		//flag_type = 5;
 		//Round_main();	//FIXME 临时暂停环岛处理
 		flag_type = 1;	//消除环岛标识
+		//Get_K_To_get_UP_edge(1);	//入左环测试
 	}
 	if (IF_Warning_MOD)
 	{
 		//绘画中线和边界
-		Print_Mid_and_Edge();
+		//Print_Mid_and_Edge(); // FIXME 临时修改
 		IF_Warning_MOD = 0;
 		return 1;
 	}
@@ -5438,6 +5446,9 @@ uint8 Search_main(void)
 	//简易中线检查
 	Simple_MidCheck();
 	//绘画中线和边界
-	Print_Mid_and_Edge();
+	//Print_Mid_and_Edge();
+	
+	if(meau_page!=4)
+		Print_Mid_and_Edge();
 	return 1;
 }
