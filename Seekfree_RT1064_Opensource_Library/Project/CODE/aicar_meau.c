@@ -147,9 +147,9 @@ void aicar_meau()
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
-						cut_image_to_img2();//copy
-						binary_img();
-						Search_main();    
+            cut_image_to_img2();//copy	
+            binary_img();				
+            Search_main();    
         }        
         aicar_camera_error();
         aicar_adc_get();//Õ£≥µ”√

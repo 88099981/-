@@ -650,7 +650,7 @@ void Get_angle_L(uint8 Start_point, uint8 End_point)
 			Ans = SquareRootFloat((X3 - X1) * (X3 - X1) + (Y3 - Y1) * (Y3 - Y1));
 			FenZi = FenZi / Ans;
 			FenZi = FenZi * 128 + 128;
-			L_edge_angle[i] = FenZi;
+			L_edge_angle[i] = (uint8)FenZi;
 		}
 	}
 }
@@ -679,7 +679,7 @@ void Get_angle_R(uint8 Start_point, uint8 End_point)
 			Ans = SquareRootFloat((X3 - X1) * (X3 - X1) + (Y3 - Y1) * (Y3 - Y1));
 			FenZi = FenZi / Ans;
 			FenZi = FenZi * 128 + 128;
-			R_edge_angle[i] = FenZi;
+			R_edge_angle[i] = (uint8)FenZi;
 		}
 	}
 }
@@ -5399,7 +5399,8 @@ uint8 Search_main(void)	//TODO ÎÞÕë¶Ô¹¤×ÖÐÎ°×Çø¡¢Èë»·»·µºÖÐÑë¹ýÐ¡ÇÒÓÒ²àÖ±ÏßÐ±ÂÊ¹
 	//µÚËÄ²½Í¨¹ýÁ½¸ö±ßÑØ²¹È«ÖÐÏß
 	Mid_Get();
 	//»æ»­ÖÐÏßºÍ±ß½ç
-	Print_Mid_and_Edge();
+	//Print_Mid_and_Edge();//
+        
 	//x_change();	//¾µÏñÍ¼Ïñ °´ÐèÐÞ¸Ä
 	return 1;
 }
