@@ -78,7 +78,8 @@ void aicar_meau()
         {
             lcd_clear(WHITE);    
         }
-        break_flag=1;
+   
+				break_flag=1;
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;

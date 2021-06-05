@@ -3268,7 +3268,8 @@ void Round_main(void)//11以后出问题
 			if (R_edge_angle[Temp_A] > angle_is_S)
 			{
 				R_edge_angle[0] = Temp_A;
-				flag_type_round = 11;
+				flag_type_round=0;
+				//flag_type_round = 11;	//FIXME testpoint
 			}
 		}
 
@@ -3291,7 +3292,8 @@ void Round_main(void)//11以后出问题
 			if (L_edge_angle[Temp_A] > angle_is_S)
 			{
 				L_edge_angle[0] = Temp_A;
-				flag_type_round = 12;
+				flag_type_round=0;
+				//flag_type_round = 12;	//FIXME testpoint
 			}
 		}
 		break;
@@ -3502,7 +3504,7 @@ void Round_main(void)//11以后出问题
 		Mid_Get();
 		IF_Warning_MOD = 2;
 		break;
-	case 3://一边没找到起始点
+	case 3://一边没找到起始点	左环
 		Temp_B = R_edge_Y[R_edge_Num];
 		Cross_L_IF_2 = 0;
 		while (Temp_B > IMG_H - 25 && !Cross_L_IF_2)
@@ -3537,7 +3539,7 @@ void Round_main(void)//11以后出问题
 		}
 		IF_Warning_MOD = 2;
 		break;
-	case 4://一边没找到起始点
+	case 4://一边没找到起始点	右环
 		Temp_B = L_edge_Y[L_edge_Num];
 		Cross_R_IF_2 = 0;
 		while (Temp_B > IMG_H - 25 && !Cross_R_IF_2)
@@ -3572,7 +3574,7 @@ void Round_main(void)//11以后出问题
 		}
 		IF_Warning_MOD = 2;
 		break;
-	case 5://一边起始点为环物*******************************************************************************************去除独立
+	case 5://一边起始点为环物*******************************************************************************************去除独立 直道无边
 		if (flag_type_L < 4)
 		{
 			//左赛道从上方出去
@@ -3654,16 +3656,17 @@ void Round_main(void)//11以后出问题
 		Mid_Get();
 		IF_Warning_MOD = 2;
 		break;
-	case 6://一边起始点为环物
+	case 6://一边起始点为环物	直道无边
 		if (flag_type_R < 4)
 		{
 			//右赛道从上方出去
 		}
 		else if (flag_type_R == 7 || flag_type_R == 8 || flag_type_R == 9 || flag_type_R == 10)
 		{
-			if (flag_type_R == 10)
+			if (flag_type_R == 10)	//强行补直
 			{
-				Put_Data_to_R_edge(IMG_W - Num_lim_search_LR, Num_lim_search_UP);
+				God_FUCK_me(0);	//FIXME testpoint
+				//Put_Data_to_R_edge(IMG_W - Num_lim_search_LR, Num_lim_search_UP);
 			}
 			//右赛道从右方出去
 			//如果左边没找到
@@ -4229,12 +4232,14 @@ uint8 Search_main(void)
 	Y_change();
 
 	//岔道执行
+	/*
 	if (flag_type == 4 && flag_type_Y == 2 && IF_Y)
 	{
 		Y_main_2();
 		//Print_Mid_and_Edge(); // FIXME 临时修改
 		return 1;
 	}
+	*/
 	if (flag_type == 4 && flag_type_Y == 3 && IF_Y)
 	{
 		return 1;
@@ -4360,9 +4365,9 @@ uint8 Search_main(void)
 	//上一个图像是否为环岛
 	if (flag_type == 5 || flag_type_round)
 	{
-		//flag_type = 5;
+		flag_type = 5;
 		//Round_main();	//FIXME 临时暂停环岛处理
-		flag_type = 1;	//消除环岛标识
+		//flag_type = 1;	//消除环岛标识
 		//Get_K_To_get_UP_edge(1);	//入左环测试
 	}
 	if (IF_Warning_MOD)
@@ -4487,7 +4492,8 @@ uint8 Search_main(void)
 			}
 		}
 	}
-		
+
+	/*	
 	//错误情况：左边没边，但是右边是右拐
 	flag_type_Number_judge = 0;
 	for (uint8 i = 0; i < NUM_No_Mod; i++)
@@ -4693,6 +4699,7 @@ uint8 Search_main(void)
 			flag_type_R = 10;
 		}
 	}
+	*/
 
 	//1)理想直道
 	if (!flag_type_Number)
@@ -4894,6 +4901,7 @@ uint8 Search_main(void)
 		}
 	}
 
+	/*
 	//3）十字
 	flag_type_Number_judge = 0;
 	for (uint8 i = 0; i < NUM_cross_Mod; i++)
@@ -5440,11 +5448,12 @@ uint8 Search_main(void)
 			Get_K_To_get_UP_edge(1);
 		}
 	}
+	*/
 
 	//第四步通过两个边沿补全中线
 	Mid_Get();
 	//简易中线检查
-	Simple_MidCheck();
+	//Simple_MidCheck();
 	//绘画中线和边界
 	//Print_Mid_and_Edge();
 	
