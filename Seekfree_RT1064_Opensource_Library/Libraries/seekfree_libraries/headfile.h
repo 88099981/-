@@ -96,6 +96,11 @@
 #include "aicar_error.h"
 #include "aicar_chasu.h"
 #include "Serial_oscilloscope.h"
-#include "include.h"
+
+//------ForgotDoge's Duty
+#include "ostu.h"
+#include "cut.h"
+#include "fd_GetMid.h"
+
 #endif
 

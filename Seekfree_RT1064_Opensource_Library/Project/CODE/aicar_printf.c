@@ -16,7 +16,6 @@
 #include "aicar_key.h"
 #include "aicar_motor.h"
 #include "aicar_error.h"
-#include "include.h"
 void aicar_adc_printf()
 {
     lcd_showstr(0,1,"ad_value1:");    
@@ -99,7 +98,7 @@ void aicar_camerapid_printf()
     lcd_showstr(0,2,"cam_err:");
     lcd_showint16(12*8,2,camera_error);
     lcd_showstr(0,3,"ostu_thres:");
-    lcd_showuint8(12*8,3,ostu_thres);
+//    lcd_showuint8(12*8,3,ostu_thres);
 //    lcd_showstr(0,5,"a_cam:");
 //    lcd_showfloat(12*8,5,a_cam,1,4);
     lcd_showstr(0,6,"kp_cam:");

@@ -1,7 +1,7 @@
 #ifndef __CUT_H__
 #define __CUT_H__
 
-#include "include.h"
+#include "headfile.h"
 #include "common.h"
 #include "camera.h"
 //extern void get_cut_array();		//³õÊ¼»¯º¯Êý 

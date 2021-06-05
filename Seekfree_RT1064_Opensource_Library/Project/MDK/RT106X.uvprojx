@@ -10,7 +10,7 @@
       <TargetName>nor_sdram_zf_dtcm_v5</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -1925,16 +1925,6 @@
               <FilePath>..\CODE\cut.c</FilePath>
             </File>
             <File>
-              <FileName>fd_binarization.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CODE\fd_binarization.c</FilePath>
-            </File>
-            <File>
-              <FileName>get_mid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CODE\get_mid.c</FilePath>
-            </File>
-            <File>
               <FileName>ostu.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CODE\ostu.c</FilePath>
@@ -2000,29 +1990,9 @@
               <FilePath>..\CODE\aicar_wireless.h</FilePath>
             </File>
             <File>
-              <FileName>camera.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\camera.h</FilePath>
-            </File>
-            <File>
               <FileName>cut.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\cut.h</FilePath>
-            </File>
-            <File>
-              <FileName>fd_binarization.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\fd_binarization.h</FilePath>
-            </File>
-            <File>
-              <FileName>get_mid.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\get_mid.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\include.h</FilePath>
             </File>
             <File>
               <FileName>ostu.h</FileName>
@@ -2038,6 +2008,16 @@
               <FileName>本文件夹作用.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\本文件夹作用.txt</FilePath>
+            </File>
+            <File>
+              <FileName>fd_GetMid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\fd_GetMid.c</FilePath>
+            </File>
+            <File>
+              <FileName>fd_GetMid.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\fd_GetMid.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3961,16 +3941,6 @@
               <FilePath>..\CODE\cut.c</FilePath>
             </File>
             <File>
-              <FileName>fd_binarization.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CODE\fd_binarization.c</FilePath>
-            </File>
-            <File>
-              <FileName>get_mid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\CODE\get_mid.c</FilePath>
-            </File>
-            <File>
               <FileName>ostu.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CODE\ostu.c</FilePath>
@@ -4036,29 +4006,9 @@
               <FilePath>..\CODE\aicar_wireless.h</FilePath>
             </File>
             <File>
-              <FileName>camera.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\camera.h</FilePath>
-            </File>
-            <File>
               <FileName>cut.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\cut.h</FilePath>
-            </File>
-            <File>
-              <FileName>fd_binarization.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\fd_binarization.h</FilePath>
-            </File>
-            <File>
-              <FileName>get_mid.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\get_mid.h</FilePath>
-            </File>
-            <File>
-              <FileName>include.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\include.h</FilePath>
             </File>
             <File>
               <FileName>ostu.h</FileName>
@@ -4074,6 +4024,16 @@
               <FileName>本文件夹作用.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\本文件夹作用.txt</FilePath>
+            </File>
+            <File>
+              <FileName>fd_GetMid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\fd_GetMid.c</FilePath>
+            </File>
+            <File>
+              <FileName>fd_GetMid.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\fd_GetMid.h</FilePath>
             </File>
           </Files>
         </Group>

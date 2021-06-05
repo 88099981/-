@@ -2,7 +2,7 @@
 #define __CAMERA_H__
 
 #include <stdio.h>
-#include "include.h"
+
 
 //typedef unsigned char       uint8;  /*  8 bits */
 //typedef unsigned short int  uint16; /* 16 bits */
