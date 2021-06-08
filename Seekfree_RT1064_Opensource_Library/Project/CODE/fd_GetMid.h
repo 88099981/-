@@ -12,6 +12,7 @@
 #define X_LIMIT 4   //横轴搜索边界
 #define EDGE_MAX IMG_X-2*X_LIMIT //边界数组大小
 #define MID_RESOLUTION 20   //中线解析度 越小越接近原始数据
+#define CUR_RESOLUTION 10   //角度解析度 就是向量FA、FB中A_y-B_y的差值，过大会比较粗糙，过小会过于敏感，容易误判
 
 #define WIDTH_BASE 80 //最底层赛道宽度标定值
 #define WIDTH_K 0.98    //变窄比例
@@ -19,13 +20,21 @@
 //struct declear
 typedef struct
 {
-    uint8 Lx;
-    uint8 Rx;
+    int16 Lx;
+    int16 Rx;
 }EDGE;
+
+typedef struct
+{
+    float L;
+    float R;
+}ANGLE;
 
 //function
 void init(void);    //各种变量初始化函数
 void Y_Change(void);    //改成一般的直角坐标系形式，要不然贼不爽
+float Cp_sqrt(float number);    //快速开方求导
+float Get_Angle(uint8 p1_y,uint8 p2_y,uint8 Target_y,uint8 l_or_r);
 void Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r);
 void Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y);
 void Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y);
@@ -38,6 +47,7 @@ uint8 Judge(void);   //元素判断
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
 void If_Lose_Edge(void);    //丢边补全
+void If_Straight(void); //直道判断
 void Set_Mid(void); //设置中线
 void Print_Mid(void);   //绘画中线
 void Simple_Err_Check(void);    //简易中线检错
