@@ -1,3 +1,3 @@
-# 图像处理DEV分支
+# Branch master
 
-### #STILL IN DEV STATUS#
+ `Silence is golden.`
