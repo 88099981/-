@@ -48,7 +48,7 @@ void cut_image_to_img2()
 	}
 }
 
-void mv_image_to_img2(void)	//????????????
+void mv_image_to_img2(void)	//
 {
 	uint8 i;
 	for(i=0;i<IMG_H;i++)

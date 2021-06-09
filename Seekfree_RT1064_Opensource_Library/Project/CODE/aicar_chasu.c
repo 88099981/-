@@ -13,8 +13,7 @@
 #include "aicar_init.h"
 void aicar_chasu()//仅和舵机有关
 {
-    chasu_b=servo_duty*0.1175-452.375;
-    chasu_b=chasu_b*0.01745329;
+    chasu_b=servo_duty*0.00205-7.895;
     chasu_b=sin(chasu_b);
     if(chasu_b<EPSOLON&&chasu_b>-EPSOLON)
     {
@@ -25,15 +24,15 @@ void aicar_chasu()//仅和舵机有关
     else if(chasu_b>=EPSOLON)
     {
         chasu_k=1+(10.5/(20.0/chasu_b-9.25));
-        left_motor=aim_speed;
-        right_motor=(int16)(aim_speed*chasu_k);
+        left_motor=(int16)(aim_speed/chasu_k);
+        right_motor=aim_speed;
     }
     else if(chasu_b<=-EPSOLON)
     {
         chasu_b=-chasu_b;
         chasu_k=1+(10.5/(20.0/chasu_b-9.25));
-        left_motor=(int16)(aim_speed*chasu_k);
-        right_motor=aim_speed;           
+        left_motor=aim_speed;
+        right_motor=(int16)(aim_speed/chasu_k);;           
     }
 }
 

@@ -15,13 +15,13 @@
 #include "aicar_adc.h"
 #include "SEEKFREE_MT9V03X_CSI.h"
 #include "SEEKFREE_18TFT.h"
-#include "include.h"
 #include "camera.h"
 #include "aicar_error.h"
 #include "aicar_chasu.h"
 #include "aicar_wireless.h"
+#include "fd_GetMid.h"
 
-uint8 img[IMG_H][IMG_W];		//收到的图像
+//uint8 img[IMG_H][IMG_W];		//收到的图像
 uint8 meau_page=0;
 uint8 meau_last_page=0;
 
@@ -44,7 +44,7 @@ void aicar_meau()
             mt9v03x_csi_finish_flag = 0;
 						cut_image_to_img2();//copy
 						binary_img();
-						Search_main();    
+						Search();    
         }      
         aicar_camera_error();
         aicar_camerapid_printf();
@@ -78,13 +78,14 @@ void aicar_meau()
         {
             lcd_clear(WHITE);    
         }
-        break_flag=1;
+   
+				break_flag=1;
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
             cut_image_to_img2();//copy						
             binary_img();			
-            Search_main();
+            Search();
 
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 160, 128);
       
@@ -147,9 +148,15 @@ void aicar_meau()
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
+<<<<<<< HEAD
             cut_image_to_img2();//copy	
             binary_img();				
             Search_main();    
+=======
+						cut_image_to_img2();//copy
+						binary_img();
+						Search();    
+>>>>>>> f67ac96477756111932662cbe608ff8fbce197ba
         }        
         aicar_camera_error();
         aicar_adc_get();//停车用
@@ -185,7 +192,7 @@ void aicar_meau()
             mt9v03x_csi_finish_flag = 0;
             cut_image_to_img2();//copy						
             binary_img();			
-            Search_main();
+            Search();
           
             //aicar_camera_wireless(USART_8, img[0], MT9V03X_CSI_W, MT9V03X_CSI_H);//山外上位机
             csi_seekfree_sendimg_03x(USART_8,img[0],MT9V03X_CSI_W,MT9V03X_CSI_H);//逐飞上位机

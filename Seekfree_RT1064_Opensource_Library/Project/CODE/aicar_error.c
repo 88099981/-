@@ -10,8 +10,8 @@
 **********************************************************/
 #include "aicar_error.h"
 #include "aicar_init.h"
-#include "include.h"
 #include "aicar_adc.h"
+#include "fd_GetMid.h"
 
 int16 camera_error=0;
 float kp_cam=0.0;
@@ -20,19 +20,19 @@ float a_cam=0.0;
 void aicar_camera_error()
 {
     camera_error=0;
-    if(Mid_Num<=ERROR_EDGE)
+    if(EdgeNum<=ERROR_EDGE)
     {
-        for(uint8 i=1;i<=Mid_Num;i++)//±éÀú
+        for(uint8 i=0;i<=EdgeNum;i++)//±éÀú
         {
-            camera_error+=Mid_X[i]-94;
+            camera_error+=mid[i]-94;
         }
-        camera_error=-camera_error/Mid_Num;
+        camera_error=-camera_error/EdgeNum;
     }
     else
     {
         for(uint8 i=1;i<=ERROR_EDGE;i++)//±éÀú
         {
-            camera_error+=Mid_X[i]-94;
+            camera_error+=mid[i]-94;
         }
         camera_error=-camera_error/ERROR_EDGE;
     }
