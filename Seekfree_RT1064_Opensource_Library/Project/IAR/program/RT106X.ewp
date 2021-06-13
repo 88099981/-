@@ -1137,6 +1137,12 @@
             <name>$PROJ_DIR$\..\..\CODE\aicar_meau.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_meau_main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_meau_main.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_motor.c</name>
         </file>
         <file>
@@ -1170,13 +1176,10 @@
             <name>$PROJ_DIR$\..\..\CODE\cut.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\CODE\get_mid.c</name>
+            <name>$PROJ_DIR$\..\..\CODE\fd_GetMid.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\CODE\get_mid.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\CODE\include.h</name>
+            <name>$PROJ_DIR$\..\..\CODE\fd_GetMid.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\CODE\ostu.c</name>

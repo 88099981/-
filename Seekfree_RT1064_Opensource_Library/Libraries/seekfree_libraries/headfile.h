@@ -92,6 +92,7 @@
 #include "aicar_wireless.h"
 #include "aicar_adc.h"
 #include "aicar_meau.h"
+#include "aicar_meau_main.h"
 #include "aicar_printf.h"
 #include "aicar_error.h"
 #include "aicar_chasu.h"

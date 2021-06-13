@@ -37,8 +37,11 @@ void aicar_gogogo()
     ostu_thres=203;//阈值
 
     EnableGlobalIRQ(0); //总中断最后开启
+    aicar_meau_init();
     while(1)
     {
-        aicar_meau();
+        aicar_meau_scan();
+        show_page(pointer_page);
+        show_arrow(pointer_arrow);
     }
 }

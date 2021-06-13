@@ -8,6 +8,11 @@ void aicar_motorpid_printf();
 void aicar_chasu_printf();
 void aicar_camerapid_printf();
 
+void print_main();
+void print_debug();
+void print_parameter();
+void print_gogogo();
+void print_ourteam();
 
 #endif
 
