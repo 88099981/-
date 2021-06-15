@@ -141,8 +141,9 @@ void print_parameter()
 
 void print_gogogo()
 {
-    lcd_showstr(0,0,"camera      ");
-    lcd_showstr(0,1,"adc         ");
+    lcd_showstr(0,0,"mix");
+    lcd_showstr(0,1,"adc");    
+    lcd_showstr(0,2,"camera");
 }
 
 

@@ -14,5 +14,6 @@ extern float a_cam;
 
 void aicar_camera_error();
 void aicar_adc_error();
+void aicar_mix_error();
 
 #endif

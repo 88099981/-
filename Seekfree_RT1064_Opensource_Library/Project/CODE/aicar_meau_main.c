@@ -37,8 +37,7 @@ void aicar_meau_scan()
     {
             
 
-    }
-        
+    }        
     else if(sw1_status==1&&sw2_status==0)
     {
             
@@ -89,8 +88,8 @@ void up_status()
             pointer_arrow=3;break; 
     case MEAU_GOGOGO:
         pointer_arrow-=1;
-        if(pointer_arrow>1)
-            pointer_arrow=1;break; 
+        if(pointer_arrow>2)
+            pointer_arrow=2;break; 
     case MEAU_OURTEAM:
         pointer_arrow-=1;
         if(pointer_arrow>2)
@@ -116,7 +115,7 @@ void down_status()
             pointer_arrow=0;break; 
     case MEAU_GOGOGO:
         pointer_arrow+=1;
-        if(pointer_arrow>1)
+        if(pointer_arrow>2)
             pointer_arrow=0;break; 
     case MEAU_OURTEAM:
         pointer_arrow+=1;
@@ -154,6 +153,7 @@ void go_status()
         {
         case 0:pointer_page=MEAU_GOGOGO_0;break;
         case 1:pointer_page=MEAU_GOGOGO_1;break;
+        case 2:pointer_page=MEAU_GOGOGO_2;break;
         }       
         pointer_arrow=MEAU_NON;
         lcd_clear(BLACK);break;

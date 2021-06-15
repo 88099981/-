@@ -17,8 +17,9 @@ typedef enum
     MEAU_DEBUG_4,//电机pid
     MEAU_PARA,//参数显示
     MEAU_GOGOGO,
-    MEAU_GOGOGO_0,
-    MEAU_GOGOGO_1,
+    MEAU_GOGOGO_0,//mix
+    MEAU_GOGOGO_1,//ad
+    MEAU_GOGOGO_2,//cam
     MEAU_OURTEAM,
     MEAU_NON,//不显示
     
@@ -34,5 +35,6 @@ void debug_servo();
 void debug_motor();
 void gogogo_camera();
 void gogogo_adc();
+void gogogo_mix();
 
 #endif
