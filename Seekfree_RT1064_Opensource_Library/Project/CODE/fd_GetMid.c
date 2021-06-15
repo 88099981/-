@@ -11,23 +11,32 @@ int16 mid[EDGE_MAX];    //TODO È·¶¨ÖĞÏßÊı×éËùĞè´óĞ¡      ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 int8 CamError;
 
 //flag
+//------------------------¹¤×÷×´Ì¬±êÖ¾,ÓÉÉ¨Ïßº¯Êıµ÷ÓÃ------------------------//
+uint8 flag_MidStart_in_Black;   //Hor_Search º¯ÊıÖĞ¸ø¶¨ÆğÊ¼µãÔÚºÚÇøÄÚ    ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Ver_Search_Finish;   //´¹Ö±É¨ÃèÍê³É                          ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+
+//-------------------»ù´¡±êÖ¾,Ô­ÔòÉÏ½öÓÉÉ¨Ïßº¯Êı¼°×´Ì¬»úµ÷ÓÃ------------------//
 uint8 flag_LoseEdge_part_L; //×ó²¿·Ö¶ª±ß     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 flag_LoseEdge_part_R; //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 flag_LoseEdge_all_L;  //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 flag_LoseEdge_all_R;  //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Straight_L;  //×óÖ±µÀ    ¼ì²âÖ±µÀ±È¼ì²âÍäµÀ¼òµ¥µÄ¶à            ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Straight_R;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+
+//------------------¸ß¼¶±êÖ¾,Ô­ÔòÉÏÓÉ×´Ì¬»úÈ·¶¨²¹Ïßº¯Êıµ÷ÓÃ-------------------//
 uint8 flag_Cross;    //Ê®×Ö                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 flag_Round_ARM_L;  //×ó»·µºÔ¤Î»
 uint8 flag_Round_ARM_R;  //ÓÒ»·µºÔ¤Î»
 uint8 flag_Is_This_Round;   //»·µº¾ö²ß±êÖ¾  Ñ¯ÎÊµç¸Ğ(µ÷ÓÃÍê¼ÇµÃ¸´Î»)    £¨ÎªÊ²Ã´²»ÎÊÎÊÉñÆæº£ÂİÄØ£¿
 uint8 flag_Round_in_L;   //×ó»·µº»·ÖĞ ´ÓÈë»·¿ªÊ¼ÖÃÎ»
 uint8 flag_Round_in_R;   //ÓÒ»·µº»·ÖĞ
-uint8 flag_MidStart_in_Black;   //Hor_Search º¯ÊıÖĞ¸ø¶¨ÆğÊ¼µãÔÚºÚÇøÄÚ    ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Ver_Search_Finish;   //´¹Ö±É¨ÃèÍê³É                          ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Indct_Help_Me;   //ÇóÖúµç¸ĞÑ­¼£  µ÷ÓÃÍê¼ÇµÃ¸´Î»               ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Straight_L;  //×óÖ±µÀ    ¼ì²âÖ±µÀ±È¼ì²âÍäµÀ¼òµ¥µÄ¶à            ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Straight_R;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Normal_Lose_L;   //Ò»°ã¶ª×ó±ß                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Normal_Lose_R;   //Ò»°ã¶ªÓÒ±ß                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_AprilTag_ARM;    //AprilTagÔ¤Î» ÖÃÎ»ºó½øÈëAprilTagÅĞ¶Ïº¯Êı£¨ÅĞ¶Ï´æÔÚ ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_AprilTag;        //AprilTag´æÔÚ                                     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 
-//TODO Ò»²à¶ª±ß´óÖÂ²ÉÓÃÍ¨¹ıÒ»±ß°´¶¨³¤²¹ÁíÒ»±ßµÄ·½Ê½ »òÕßÖ±½ÓÊ¹ÓÃµ×ÖĞµãºÍ¶¥ÖĞµãµÄÁ¬Ïß £¨¾ßÌåÇé¿ö¾ßÌå·ÖÎö
+//--------------------------------¹ÊÕÏ/¸¨Öú±êÖ¾------------------------------//
+uint8 flag_Indct_Help_Me;   //ÇóÖúµç¸ĞÑ­¼£  µ÷ÓÃÍê¼ÇµÃ¸´Î»               ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 
 
 //******************************* Base Function *********************************/
@@ -44,13 +53,17 @@ void init(void)
     flag_Indct_Help_Me=0;
     flag_Straight_L=0;
     flag_Straight_R=0;
+    flag_Normal_Lose_L=0;
+    flag_Normal_Lose_R=0;
+    flag_AprilTag_ARM=0;
+    flag_AprilTag=0;
     //************************
 
     for(uint8 i=0;i<EDGE_MAX;i++)
     {
         EdgeLosePos[i]=0;
         edge[i].Lx=0;
-        edge[i].Rx=IMG_X-1;
+        edge[i].Rx=camera_raw_data_X-1;
         angle[i].L=180;
         angle[i].R=180;
         mid[i]=0;
@@ -122,6 +135,11 @@ float Get_Angle(uint8 p1_y,uint8 p2_y,uint8 Target_y,uint8 l_or_r)//»ñÈ¡½Ç¶È ¼ÆË
         FB_y=p2_y-Target_y;
     }
 
+    if(FA_x&FB_x&FA_y&FB_y)
+    {
+        return 0;
+    }
+    
     cos=(FA_x*FB_x + FA_y*FB_y); //·Ö×Ó
     cos/=Cp_sqrt(FA_x*FA_x + FA_y*FA_y)*Cp_sqrt(FB_x*FB_x + FB_y*FB_y); //·ÖÄ¸
 
@@ -139,6 +157,10 @@ void Del_Edge_Data(uint8 p1_y,uint8 p2_y)
         edge[i].Rx=0;
     }
 }
+
+
+
+
 //Ê¹ÓÃÇ°Á½¸öµãÁ¬ÏßµÄĞ±ÂÊÉèÖÃÄ¿±êµã
 void Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã
 {
@@ -372,7 +394,6 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)    //Ë®Æ½É¨Ïß£¨µ¥ĞĞ£© *×¢ÒâyÎªÏà¶ÔÏŞÖÆµ
         }
     }
 
-//****************¶ªÏß²¹È«±êÖ¾Î»************************
     if(y)   //²»´¦Àíµ×±ß
     {
         if(edge[y].Lx==0 && edge[y].Rx!=0)
@@ -394,7 +415,6 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)    //Ë®Æ½É¨Ïß£¨µ¥ĞĞ£© *×¢ÒâyÎªÏà¶ÔÏŞÖÆµ
         }
     }
 
-//***********************************************
 
     return ((edge[y].Rx-edge[y].Lx)/2);
 }
@@ -421,7 +441,7 @@ uint8 Ver_Search(uint8 MidStart)    //³õÊ¼´¹Ö±É¨Ïß
         }
     }
 
-    EdgeNum-=Y_LIMIT;
+    //EdgeNum-=Y_LIMIT;
 
     return(EdgeNum);
 }
@@ -452,15 +472,53 @@ uint8 Uni_Ver_Search(uint8 MidStart)    //´¹Ö±É¨Ïß Í¨ÓÃ´¹Ö±É¨Ïß ²»»á¸Ä±äEdgeNumµ
 
 
 
-uint8 Judge(void)   //ÔİÊ±ÎŞÓÃ
+uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 feature[][])    //ÌØÕ÷±È½Ïº¯Êı£¬½«ÌØÕ÷Êı×éºÍÍ¼Ïñ¶ÔÓ¦Î»ÖÃ½øĞĞ±È½Ï£¬·µ»ØÏàËÆ¶È(0~100)
 {
+    int16 rate=0;
+
+    for(uint8 i=0;i<dx;i++)
+    {
+        for(uint8 j=0;j<dy;j++)
+        {
+            if(img[T_x+i][T_y+j]&feature[i][j]])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
+            {
+                rate++;
+            }
+        }
+    }
+
+    rate=(rate/(dx*dy))*100;
+
+    return(rate);
+}
+
+
+
+
+uint8 Judge(void)   //TODO ×´Ì¬»ú
+{
+    if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //Ë«²à¶ª±ßÅĞ¶ÏÎªÊ®×Ö
+    {
+        flag_Cross=1;
+    }
+
+    if(flag_LoseEdge_part_L==1 && flag_LoseEdge_part_R!=1)
+    {
+        flag_Normal_Lose_L=1;   //TODO ÔİÊ±Î´´¦Àí»·µº
+    }
+
+    if(flag_LoseEdge_part_L!=1 && flag_LoseEdge_part_R==0)
+    {
+        flag_Normal_Lose_R=1;    //TODO ÔİÊ±Î´´¦Àí»·µº
+    }
+
     return 1;
 }
 
 
 
 
-inline uint8 Width_Cali(uint8 y)    //¸ù¾İ¸ß¶È¼ÆËãÈüµÀ¿í¶È ÓĞµãÄæÍ¸ÊÓµÄÒâË¼
+inline uint8 Width_Cali(uint8 y)    //¸ù¾İ¸ß¶È¼ÆËãÈüµÀ¿í¶È
 {
     if(0)   //ÔİÊ±¸ÄÎª±ê¶¨Öµ¼ÆËã
         return((edge[0].Rx-edge[0].Lx)-(WIDTH_K*y)); //Ê¹ÓÃ×îµ×²ã¿í¶È¼ÆËã
@@ -590,33 +648,24 @@ if(flag_Edge_Start_Exist && flag_Edge_End_Exist)
 
 void If_Lose_Edge(void) //¶ª±ß²¹È«
 {
-    if(flag_LoseEdge_part_L || flag_LoseEdge_part_R)    //Ö»ÒªÓĞ²¿·Ö¶ª±ß¾Í»áÓĞÈ«¶ª±ß ¹Ê²»¼ÓÈëÈ«¶ª±ßµÄÌõ¼ş
+    if(flag_Cross)  //Á½²à¶ª±ß
     {
-        if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //Á½²à¶ª±ß
+        Damn_Lose_Edge_all();   //Ë«²à¶ª±ßº¯Êı
+    }
+    else if(flag_Normal_Lose_L)  //µ¥×ó¶ª±ß
+    {
+        for(uint8 i=0;i<=EdgeNum;i++)
         {
-
-            Damn_Lose_Edge_all();   //Ë«²à¶ª±ßº¯Êı
-        }
-        else if(flag_LoseEdge_part_L==1 && flag_LoseEdge_part_R==0)  //µ¥×ó¶ª±ß
-        {
-            for(uint8 i=0;i<=EdgeNum;i++)
-            {
-                edge[i].Lx=edge[i].Rx-Width_Cali(i);    //É¾±ß²¹È«  £¨Ö±½Ó¸²Ğ´×ó±ß½çÊı¾İ
-            }
-            //bb_time=20; //ÃùµÑ
-        }
-        else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R==1)  //µ¥ÓÒ¶ª±ß
-        {
-            for(uint8 i=0;i<=EdgeNum;i++)
-            {
-                edge[i].Rx=edge[i].Lx+Width_Cali(i);
-            }
-            //bb_time=20; //ÃùµÑ
+            edge[i].Lx=edge[i].Rx-Width_Cali(i);    //É¾±ß²¹È«  £¨Ö±½Ó¸²Ğ´×ó±ß½çÊı¾İ
         }
     }
-
-    flag_LoseEdge_part_L=0; //ÖØÖÃ±êÖ¾Î»
-    flag_LoseEdge_part_R=0;
+    else if(flag_Normal_Lose_R)  //µ¥ÓÒ¶ª±ß
+    {
+        for(uint8 i=0;i<=EdgeNum;i++)
+        {
+            edge[i].Rx=edge[i].Lx+Width_Cali(i);
+        }
+    }
 }
 
 
@@ -665,17 +714,12 @@ void Set_Mid(void)  //¼ÆËãÖĞµã&¸üĞÂÎªÕÛÏß(¼õÉÙÒâÍâ³ö´í)
         else if(edge[i].Lx==0 && edge[i].Rx!=0)  //
         {
             mid[i]=(edge[i].Lx+edge[i].Rx)/2;
-            //mid[i]=edge[i].Rx-Width_Cali(i)/2;    
-            //mid[i]=edge[i-1].Rx-mid[i-1];
         }
 
         else if(edge[i].Rx==0 && edge[i].Lx!=0)  //
         {
             mid[i]=(edge[i].Lx+edge[i].Rx)/2;
-            //mid[i]=edge[i].Lx-Width_Cali(i)/2;
-            //mid[i]=mid[i-1]-edge[i].Lx;
         }
-				
         
         if(i>=5)    //´ıÖĞÏßÎÈ¶¨ºó£¬¶Ô³¬¹ıÈİ²îµÄÏàÁÚÖĞÏß½øĞĞÅĞ¶Ï
         {
@@ -735,8 +779,9 @@ void Search(void)   //¿ÓµùµÄÉ¨ÏßÖ÷º¯Êı
     init();
     Y_Change();
 
-    Hor_Search_Base(MidStart,0);   //µÚÒ»±éÏÈÈ·¶¨É¨Ãè»ù×¼ÖĞÏß
-    MidStart=(edge[0].Lx+edge[0].Rx)/2;    //TODO ĞèÈ·±£µ×²ã±ßÔµÓĞÖµ Ğè¼Ó¸¨Öúº¯Êı
+    //-------------------É¨Ïß²¿·Ö---------------------//
+    Hor_Search_Base(MidStart);   //µÚÒ»±éÏÈÈ·¶¨É¨Ãè»ù×¼ÖĞÏß
+    MidStart=(edge[0].Lx+edge[0].Rx)/2;
 
     Ver_Search(MidStart);   //´¹Ö±É¨Ïß ¸üĞÂÉ¨Ïß×î´ó¸ß¶È EdgeNum
 
@@ -746,11 +791,32 @@ void Search(void)   //¿ÓµùµÄÉ¨ÏßÖ÷º¯Êı
                                 //TODO È±Ò»¸ö¶Ô¶ª±ß¸ñÊıµÄÅĞ¶ÏÀ´¶Ô flag_LoseEdge_all_XÖÃÎ»
     }
 
-    //If_Straight();
+    If_Straight();  //È·¶¨Ö±±ß
+
+    if(flag_Straight_L) qDebug()<<"L_Straight\n";
+    if(flag_Straight_R) qDebug()<<"R_Straight\n";
+    
+    //-------------------É¨Ïß²¿·Ö---------------------//
+
+
+    //-------------------ÅĞ¶Ï²¿·Ö---------------------//
+    Judge();
+    //-------------------ÅĞ¶Ï²¿·Ö---------------------//
+
+
+    //-------------------²¹Ïß²¿·Ö---------------------//
     If_Lose_Edge(); 
 
     Set_Mid();
+    //-------------------²¹Ïß²¿·Ö---------------------//
+
+
+    //-------------------»æ»­²¿·Ö---------------------//
     Print_Mid();
+    //-------------------»æ»­²¿·Ö---------------------//
+
+
+
 }
 
 

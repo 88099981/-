@@ -42,14 +42,15 @@ uint8 Hor_Search_Base(uint8 MidStart,uint8 y);
 uint8 Hor_Search(uint8 MidStart,uint8 Y);    //水平扫描 MidStart为给定扫描起始中点 y为扫描对应的高度
 uint8 Ver_Search(uint8 Midstart);   //从给定中点垂直扫描到黑区
 uint8 Uni_Ver_Search(uint8 MidStart);
-void Search(void);  //边缘查找函数
-uint8 Judge(void);   //元素判断
+uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 feature[]);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)
+uint8 Judge(void);   //状态机
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
 void If_Lose_Edge(void);    //丢边补全
 void If_Straight(void); //直道判断
 void Set_Mid(void); //设置中线
 void Print_Mid(void);   //绘画中线
+void Search(void);  //边缘查找函数
 void Simple_Err_Check(void);    //简易中线检错
 void CAM_Error(void);
 
@@ -57,4 +58,21 @@ void CAM_Error(void);
 extern uint8 img[IMG_Y][IMG_X];
 extern uint8 EdgeNum;
 extern int16 mid[];
+
+//flag
+extern uint8 flag_Cross;
+extern uint8 flag_Round_ARM_L;
+extern uint8 flag_Round_ARM_R; 
+extern uint8 flag_Is_This_Round;
+extern uint8 flag_Round_in_L;
+extern uint8 flag_Round_in_R;
+extern uint8 flag_Normal_Lose_L;
+extern uint8 flag_Normal_Lose_R;
+extern uint8 flag_AprilTag_ARM;
+extern uint8 flag_AprilTag;
+
+//----故障/辅助标志----//
+extern uint8 flag_Indct_Help_Me;
+
+
 #endif
