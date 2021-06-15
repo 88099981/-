@@ -15,6 +15,8 @@ typedef enum
     MEAU_DEBUG_2,//无显示蓝牙传图像
     MEAU_DEBUG_3,//舵机pid
     MEAU_DEBUG_4,//电机pid
+    MEAU_DEBUG_5,//环岛
+    MEAU_DEBUG_6,//差速
     MEAU_PARA,//参数显示
     MEAU_GOGOGO,
     MEAU_GOGOGO_0,//mix
@@ -33,6 +35,8 @@ void debug_adc();
 void debug_wireless();
 void debug_servo();
 void debug_motor();
+void debug_huandao();
+void debug_chasu();
 void gogogo_camera();
 void gogogo_adc();
 void gogogo_mix();

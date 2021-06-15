@@ -20,6 +20,9 @@
 #include "aicar_key.h"
 #include "aicar_adc.h"
 
+vuint8 zuo_yuanhuan_flag=0;
+vuint8 you_yuanhuan_flag=0;
+
 vuint8 break_flag=0;
 vuint8 adc_isr_enable=0;
 uint16 stop_cnt=0;

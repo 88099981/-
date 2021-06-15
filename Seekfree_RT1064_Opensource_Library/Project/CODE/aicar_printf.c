@@ -97,6 +97,31 @@ void aicar_chasu_printf()
 }
 
 
+void aicar_huandao_printf()
+{
+    lcd_showstr(0,0,"zyh_flag:");
+    lcd_showuint8(10*8,0,zuo_yuanhuan_flag);
+    lcd_showstr(0,1,"yyh_flag:");
+    lcd_showuint8(10*8,1,you_yuanhuan_flag);
+    lcd_showstr(0,2,"ARM_L:");
+    lcd_showuint8(10*8,2,flag_Round_ARM_L);
+    lcd_showstr(0,3,"ARM_R:");
+    lcd_showuint8(10*8,3,flag_Round_ARM_R);
+    lcd_showstr(0,4,"ad_value1:");
+    lcd_showuint16(10*8,4,ad_value1);
+    lcd_showstr(0,5,"ad_value2:");
+    lcd_showint16(10*8,5,ad_value2);
+    lcd_showstr(0,6,"ad_value5:");
+    lcd_showint16(10*8,6,ad_value5);
+    lcd_showstr(0,7,"ad_value6:");
+    lcd_showuint16(10*8,7,ad_value6);
+    lcd_showstr(0,8,"ad_all:");
+    lcd_showuint16(10*8,8,ad_value_all);
+    lcd_showstr(0,9,"ad_error:");
+    lcd_showfloat(9*8,9,ad_error,3,2);
+}
+
+
 void aicar_camerapid_printf()
 {
     lcd_showstr(0,2,"cam_err:");

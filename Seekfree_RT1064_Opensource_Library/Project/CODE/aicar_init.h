@@ -6,6 +6,8 @@
 #define EPSOLON 1e-7
 #define SPEED_SET 70
 
+extern vuint8 zuo_yuanhuan_flag;
+extern vuint8 you_yuanhuan_flag;
 extern int16 left_motor, right_motor;
 extern uint16 bb_time;
 extern int16 encoder1,encoder2;

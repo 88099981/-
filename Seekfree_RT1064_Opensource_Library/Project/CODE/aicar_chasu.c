@@ -32,7 +32,7 @@ void aicar_chasu()//仅和舵机有关
         chasu_b=-chasu_b;
         chasu_k=1+(10.5/(20.0/chasu_b-9.25));
         left_motor=aim_speed;
-        right_motor=(int16)(aim_speed/chasu_k);;           
+        right_motor=(int16)(aim_speed/chasu_k);           
     }
 }
 

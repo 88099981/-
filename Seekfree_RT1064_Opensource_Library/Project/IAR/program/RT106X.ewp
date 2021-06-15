@@ -1107,6 +1107,12 @@
             <name>$PROJ_DIR$\..\..\CODE\aicar_chasu.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_element.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_element.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_error.c</name>
         </file>
         <file>

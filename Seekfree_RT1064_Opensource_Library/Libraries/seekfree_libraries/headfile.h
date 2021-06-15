@@ -96,6 +96,7 @@
 #include "aicar_printf.h"
 #include "aicar_error.h"
 #include "aicar_chasu.h"
+#include "aicar_element.h"
 #include "Serial_oscilloscope.h"
 
 //------ForgotDoge's Duty
