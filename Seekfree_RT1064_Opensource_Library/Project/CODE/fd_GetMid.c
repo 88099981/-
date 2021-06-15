@@ -63,7 +63,7 @@ void init(void)
     {
         EdgeLosePos[i]=0;
         edge[i].Lx=0;
-        edge[i].Rx=camera_raw_data_X-1;
+        edge[i].Rx=IMG_X-1;
         angle[i].L=180;
         angle[i].R=180;
         mid[i]=0;
@@ -135,7 +135,7 @@ float Get_Angle(uint8 p1_y,uint8 p2_y,uint8 Target_y,uint8 l_or_r)//»ñÈ¡½Ç¶È ¼ÆË
         FB_y=p2_y-Target_y;
     }
 
-    if(FA_x&FB_x&FA_y&FB_y)
+    if(FA_x==0 || FB_x==0 || FA_y==0 || FB_y==0)
     {
         return 0;
     }
@@ -472,7 +472,7 @@ uint8 Uni_Ver_Search(uint8 MidStart)    //´¹Ö±É¨Ïß Í¨ÓÃ´¹Ö±É¨Ïß ²»»á¸Ä±äEdgeNumµ
 
 
 
-uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 feature[][])    //ÌØÕ÷±È½Ïº¯Êı£¬½«ÌØÕ÷Êı×éºÍÍ¼Ïñ¶ÔÓ¦Î»ÖÃ½øĞĞ±È½Ï£¬·µ»ØÏàËÆ¶È(0~100)
+uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //ÌØÕ÷±È½Ïº¯Êı£¬½«ÌØÕ÷Êı×éºÍÍ¼Ïñ¶ÔÓ¦Î»ÖÃ½øĞĞ±È½Ï£¬·µ»ØÏàËÆ¶È(0~100)
 {
     int16 rate=0;
 
@@ -480,7 +480,7 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 feature[][])   
     {
         for(uint8 j=0;j<dy;j++)
         {
-            if(img[T_x+i][T_y+j]&feature[i][j]])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
+            if(img[T_x+i][T_y+j]&feature[i*dy+j])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
             {
                 rate++;
             }
@@ -489,7 +489,7 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 feature[][])   
 
     rate=(rate/(dx*dy))*100;
 
-    return(rate);
+    return((uint8)rate);
 }
 
 
@@ -502,12 +502,12 @@ uint8 Judge(void)   //TODO ×´Ì¬»ú
         flag_Cross=1;
     }
 
-    if(flag_LoseEdge_part_L==1 && flag_LoseEdge_part_R!=1)
+    if(flag_LoseEdge_part_L==1 && flag_LoseEdge_part_R==0)
     {
         flag_Normal_Lose_L=1;   //TODO ÔİÊ±Î´´¦Àí»·µº
     }
 
-    if(flag_LoseEdge_part_L!=1 && flag_LoseEdge_part_R==0)
+    if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R==1)
     {
         flag_Normal_Lose_R=1;    //TODO ÔİÊ±Î´´¦Àí»·µº
     }
@@ -780,7 +780,7 @@ void Search(void)   //¿ÓµùµÄÉ¨ÏßÖ÷º¯Êı
     Y_Change();
 
     //-------------------É¨Ïß²¿·Ö---------------------//
-    Hor_Search_Base(MidStart);   //µÚÒ»±éÏÈÈ·¶¨É¨Ãè»ù×¼ÖĞÏß
+    Hor_Search_Base(MidStart,0);   //µÚÒ»±éÏÈÈ·¶¨É¨Ãè»ù×¼ÖĞÏß
     MidStart=(edge[0].Lx+edge[0].Rx)/2;
 
     Ver_Search(MidStart);   //´¹Ö±É¨Ïß ¸üĞÂÉ¨Ïß×î´ó¸ß¶È EdgeNum
@@ -793,8 +793,6 @@ void Search(void)   //¿ÓµùµÄÉ¨ÏßÖ÷º¯Êı
 
     If_Straight();  //È·¶¨Ö±±ß
 
-    if(flag_Straight_L) qDebug()<<"L_Straight\n";
-    if(flag_Straight_R) qDebug()<<"R_Straight\n";
     
     //-------------------É¨Ïß²¿·Ö---------------------//
 

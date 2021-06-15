@@ -4217,8 +4217,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\aicar_meau.h</PathWithFileName>
-      <FilenameWithoutPath>aicar_meau.h</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\aicar_motor.h</PathWithFileName>
+      <FilenameWithoutPath>aicar_motor.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -4229,8 +4229,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\aicar_motor.h</PathWithFileName>
-      <FilenameWithoutPath>aicar_motor.h</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\aicar_printf.h</PathWithFileName>
+      <FilenameWithoutPath>aicar_printf.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -4241,8 +4241,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\CODE\aicar_printf.h</PathWithFileName>
-      <FilenameWithoutPath>aicar_printf.h</FilenameWithoutPath>
+      <PathWithFileName>..\CODE\aicar_meau.h</PathWithFileName>
+      <FilenameWithoutPath>aicar_meau.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -4339,6 +4339,42 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\CODE\fd_GetMid.h</PathWithFileName>
       <FilenameWithoutPath>fd_GetMid.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>313</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\aicar_meau_main.c</PathWithFileName>
+      <FilenameWithoutPath>aicar_meau_main.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>314</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\aicar_meau_main.h</PathWithFileName>
+      <FilenameWithoutPath>aicar_meau_main.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>315</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\CODE\camera.h</PathWithFileName>
+      <FilenameWithoutPath>camera.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

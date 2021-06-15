@@ -1965,11 +1965,6 @@
               <FilePath>..\CODE\aicar_key.h</FilePath>
             </File>
             <File>
-              <FileName>aicar_meau.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\aicar_meau.h</FilePath>
-            </File>
-            <File>
               <FileName>aicar_motor.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_motor.h</FilePath>
@@ -1978,6 +1973,11 @@
               <FileName>aicar_printf.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_printf.h</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_meau.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\aicar_meau.h</FilePath>
             </File>
             <File>
               <FileName>aicar_servo.h</FileName>
@@ -2018,6 +2018,21 @@
               <FileName>fd_GetMid.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\fd_GetMid.h</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_meau_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\aicar_meau_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_meau_main.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\aicar_meau_main.h</FilePath>
+            </File>
+            <File>
+              <FileName>camera.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\camera.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -3981,11 +3996,6 @@
               <FilePath>..\CODE\aicar_key.h</FilePath>
             </File>
             <File>
-              <FileName>aicar_meau.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\CODE\aicar_meau.h</FilePath>
-            </File>
-            <File>
               <FileName>aicar_motor.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_motor.h</FilePath>
@@ -3994,6 +4004,11 @@
               <FileName>aicar_printf.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_printf.h</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_meau.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\aicar_meau.h</FilePath>
             </File>
             <File>
               <FileName>aicar_servo.h</FileName>
@@ -4034,6 +4049,21 @@
               <FileName>fd_GetMid.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\fd_GetMid.h</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_meau_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\aicar_meau_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_meau_main.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\aicar_meau_main.h</FilePath>
+            </File>
+            <File>
+              <FileName>camera.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\camera.h</FilePath>
             </File>
           </Files>
         </Group>

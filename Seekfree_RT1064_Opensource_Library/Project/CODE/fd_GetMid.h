@@ -42,7 +42,7 @@ uint8 Hor_Search_Base(uint8 MidStart,uint8 y);
 uint8 Hor_Search(uint8 MidStart,uint8 Y);    //水平扫描 MidStart为给定扫描起始中点 y为扫描对应的高度
 uint8 Ver_Search(uint8 Midstart);   //从给定中点垂直扫描到黑区
 uint8 Uni_Ver_Search(uint8 MidStart);
-uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 feature[]);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)
+uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)
 uint8 Judge(void);   //状态机
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
