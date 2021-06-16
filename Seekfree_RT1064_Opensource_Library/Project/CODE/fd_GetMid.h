@@ -62,6 +62,7 @@ extern uint8 EdgeNum;
 extern int16 mid[];
 
 //flag
+extern uint8 flag_T_Road;
 extern uint8 flag_Cross;
 extern uint8 flag_Round_ARM_L;
 extern uint8 flag_Round_ARM_R; 
