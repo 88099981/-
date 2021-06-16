@@ -3,6 +3,8 @@
 
 #include "headfile.h"
 
+#define IMG_DEBUG   //图像调试标志，用于激活某些调试特征的显示
+
 #define Black (0x00)
 #define White (0xff)
 #define Gray  (0x80)

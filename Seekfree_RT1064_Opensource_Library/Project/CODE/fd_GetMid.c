@@ -474,15 +474,24 @@ uint8 Uni_Ver_Search(uint8 MidStart)    //´¹Ö±É¨Ïß Í¨ÓÃ´¹Ö±É¨Ïß ²»»á¸Ä±äEdgeNumµ
 
 uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //ÌØÕ÷±È½Ïº¯Êı£¬½«ÌØÕ÷Êı×éºÍÍ¼Ïñ¶ÔÓ¦Î»ÖÃ½øĞĞ±È½Ï£¬·µ»ØÏàËÆ¶È(0~100)
 {
-    int16 rate=0;
+    float rate=0;
+
+    if(IMG_Y-T_y-1<=0 || T_x-1<=0)  //·¶Î§¼ì²é
+    {
+        return(101);
+    }
 
     for(uint8 i=0;i<dx;i++)
     {
         for(uint8 j=0;j<dy;j++)
         {
-            if(img[T_x+i][T_y+j]&feature[i*dy+j])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
+            if(img[IMG_X+i-1][T_x+j-1]&feature[i*dy+j])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
             {
                 rate++;
+
+                #ifdef IMG_DEBUG    //TODO ÒªÇóÔÙ²Ëµ¥³ÌĞòÖĞ¼ÓÈëÍ¼Ïñµ÷ÊÔ¶ÔÓ¦µÄ±êÖ¾Î»ÒÔ´úÌæºê¶¨Òå
+                img[IMG_X-T_y+i-1][T_x+j-1]=Gray;
+                #endif
             }
         }
     }
