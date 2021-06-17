@@ -682,8 +682,8 @@ void debug_chasu()
         if(key4_flag)
         {
             lcd_clear(BLACK);
-            pointer_page=MEAU_GOGOGO;
-            pointer_arrow=0;
+            pointer_page=MEAU_DEBUG;
+            pointer_arrow=6;
         }
     }
     break_flag=0;

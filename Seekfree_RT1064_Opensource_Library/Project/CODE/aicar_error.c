@@ -93,7 +93,7 @@ void aicar_mix_error()
     }
     else
     {
-        for(uint8 i=1;i<=ERROR_EDGE;i++)//±éÀú
+        for(uint8 i=0;i<=ERROR_EDGE;i++)//±éÀú
         {
             camera_error+=mid[i]-94;
         }

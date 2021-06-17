@@ -78,17 +78,17 @@ void aicar_motorpid_printf()
 void aicar_chasu_printf()
 {
     lcd_showstr(0,0,"ad_left:");    
-    lcd_showfloat(10*8,0,ad_left,3,2);
+    lcd_showfloat(9*8,0,ad_left,3,2);
     lcd_showstr(0,1,"ad_right:");
-    lcd_showfloat(10*8,1,ad_right,3,2);
+    lcd_showfloat(9*8,1,ad_right,3,2);
     lcd_showstr(0,2,"ad_error:");
-    lcd_showfloat(10*8,2,ad_error,3,2);
+    lcd_showfloat(9*8,2,ad_error,3,2);
     lcd_showstr(0,3,"angle:");
     lcd_showint16(10*8,3,servo_angle);
     lcd_showstr(0,4,"chasu_k:");    
-    lcd_showfloat(10*8,4,chasu_k,3,2);
+    lcd_showfloat(9*8,4,chasu_k,3,2);
     lcd_showstr(0,5,"chasu_b:");
-    lcd_showfloat(10*8,5,chasu_b,3,2);
+    lcd_showfloat(9*8,5,chasu_b,3,2);
     lcd_showstr(0,6,"left:");
     lcd_showint16(10*8,6,left_motor);
     lcd_showstr(0,7,"right:");
@@ -152,6 +152,8 @@ void print_debug()
     lcd_showstr(0,2,"wireless");//ÎÞÏÔÊ¾´«Í¼Ïñ
     lcd_showstr(0,3,"servo");
     lcd_showstr(0,4,"motor");
+    lcd_showstr(0,5,"huandao");    
+    lcd_showstr(0,6,"chasu");    
 }
 
 
