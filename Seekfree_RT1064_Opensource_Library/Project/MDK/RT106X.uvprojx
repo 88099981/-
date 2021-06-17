@@ -2044,6 +2044,16 @@
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_element.h</FilePath>
             </File>
+            <File>
+              <FileName>fd_FeatureData.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\fd_FeatureData.c</FilePath>
+            </File>
+            <File>
+              <FileName>fd_FeatureData.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\fd_FeatureData.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -4084,6 +4094,16 @@
               <FileName>aicar_element.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_element.h</FilePath>
+            </File>
+            <File>
+              <FileName>fd_FeatureData.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\fd_FeatureData.c</FilePath>
+            </File>
+            <File>
+              <FileName>fd_FeatureData.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\fd_FeatureData.h</FilePath>
             </File>
           </Files>
         </Group>

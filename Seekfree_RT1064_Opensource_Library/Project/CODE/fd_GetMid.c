@@ -474,10 +474,10 @@ uint8 Uni_Ver_Search(uint8 MidStart)    //´¹Ö±É¨Ïß Í¨ÓÃ´¹Ö±É¨Ïß ²»»á¸Ä±äEdgeNumµ
 
 
 uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //ÌØÕ÷±È½Ïº¯Êı£¬½«ÌØÕ÷Êı×éºÍÍ¼Ïñ¶ÔÓ¦Î»ÖÃ½øĞĞ±È½Ï£¬·µ»ØÏàËÆ¶È(0~100)
-{
+{                                                                             //ATTENTION: T_x T_yÎª×óÏÂ½Ç×ø±ê
     float rate=0;
 
-    if(IMG_Y-T_y-1<=0 || T_x-1<=0)  //·¶Î§¼ì²é
+    if(T_y+dy>=IMG_Y || T_x+dx>=IMG_X)  //·¶Î§¼ì²é
     {
         return(101);
     }
@@ -486,14 +486,16 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //
     {
         for(uint8 j=0;j<dy;j++)
         {
-            if(img[IMG_X+i-1][T_x+j-1]&feature[i*dy+j])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
+            if(img[T_y+i][T_x+j]==feature[i*dy+j])    //ÓëÌØÕ÷Êı×é/Í¼Ïñ±È½Ï
             {
                 rate++;
+                img[T_y+i][T_x+j]=Gray;
 
                 #ifdef IMG_DEBUG    //TODO ÒªÇóÔÚ²Ëµ¥³ÌĞòÖĞ¼ÓÈëÍ¼Ïñµ÷ÊÔ¶ÔÓ¦µÄ±êÖ¾Î»ÒÔ´úÌæºê¶¨Òå
-                img[IMG_X-T_y+i-1][T_x+j-1]=Gray;
+                
                 #endif
             }
+            //img[T_y+i][T_x+j]=Gray;
         }
     }
 
@@ -538,11 +540,20 @@ uint8 Judge(void)   //TODO ×´Ì¬»ú
     }
     else if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0)
     {
+        if(Feature_Verify(0,19,30,10,Block_A)>=90)
+        {
+            bb_time=20;
+        }
+
         flag_Normal_Lose_L=1;   //TODO ÔİÊ±Î´´¦Àí»·µº
         return 1;
     }
     else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R!=0)
     {
+        if(Feature_Verify(157,19,30,10,Block_A)>=90)
+        {
+            bb_time=20;
+        }
         flag_Normal_Lose_R=1;    //TODO ÔİÊ±Î´´¦Àí»·µº
         return 1;
     }
