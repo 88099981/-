@@ -542,6 +542,26 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //
 
 uint8 Judge(void)   //TODO 状态机
 {
+    if(flag_Round_ARM_L)    
+    {
+        flag_Round_ARM_L--;
+    }
+    else if(flag_Round_ARM_R)
+    {
+        flag_Round_ARM_R--;
+    }
+
+    if(flag_Round_in_L)
+    {
+        flag_Round_ARM_L=0; //在环中对入环预位标志位清0，避免重复入环状态
+        flag_Round_ARM_R=0;
+    }
+    else if(flag_Round_in_R)
+    {
+        flag_Round_ARM_L=0;
+        flag_Round_ARM_R=0;
+    }
+
     if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //双侧丢边判断为十字
     {
         uint16 NumInBlack=0;
@@ -571,22 +591,35 @@ uint8 Judge(void)   //TODO 状态机
 
         return 1;
     }
-    else if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0)
-    {
-        if(flag_Straight_R && Feature_Verify(0,19,30,10,Block_A)>=90)
-        {
-            bb_time=20;
-        }
 
+    if(Feature_Verify(0,19,30,10,Block_A)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
+    {
+        if(!flag_Round_ARM_L)   //避免重复置位  //FIXME 无法独立进行入环判断(无法判断出来是在一处地方重复置位还是第二次置位 可以用角度算算)
+        {
+            flag_Round_ARM_L=20; //当该标志位不为零时，都应该用电感验证
+        }
+        bb_time=20;
+
+        return 1;
+    }
+    else if(Feature_Verify(157,19,30,10,Block_A)>=90)
+    {
+        if(!flag_Round_ARM_R) //避免重复置位
+        {
+            flag_Round_ARM_R=20; //当该标志位不为零时，都应该用电感验证
+        }
+        bb_time=20;
+
+        return 1;
+    }
+
+    if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0) //单左丢边
+    {
         flag_Normal_Lose_L=1;   //TODO 暂时未处理环岛
         return 1;
     }
-    else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R!=0)
+    else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R!=0) //单右丢边
     {
-        if(flag_Straight_L && Feature_Verify(157,19,30,10,Block_A)>=90)
-        {
-            bb_time=20;
-        }
         flag_Normal_Lose_R=1;    //TODO 暂时未处理环岛
         return 1;
     }
