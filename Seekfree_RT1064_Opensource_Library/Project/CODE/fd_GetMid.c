@@ -614,19 +614,6 @@ uint8 Judge(void)   //状态机
     {
         flag_Round_ARM_R--;
     }
-
-    /*
-    if(flag_Round_in_L)
-    {
-        flag_Round_ARM_L=0; //在环中对入环预位标志位清0，避免重复入环状态
-        flag_Round_ARM_R=0;
-    }
-    else if(flag_Round_in_R)
-    {
-        flag_Round_ARM_L=0;
-        flag_Round_ARM_R=0;
-    }
-    */
    
      //-------状态整理 <bottom>--------//
 
@@ -695,6 +682,10 @@ uint8 Judge(void)   //状态机
         }
     } while (0);    //想写goto又不敢写的屑
     
+    if(Feature_Verify(70,39,50,10,Block_C)>=90)
+    {
+        bb_time=20;
+    }
     //------环岛检测 <bottom>---------//
 
     //-------单侧丢边 <head>--------//

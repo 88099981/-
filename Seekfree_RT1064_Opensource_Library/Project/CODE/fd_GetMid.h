@@ -76,6 +76,8 @@ extern uint8 flag_Round_in_L;
 extern uint8 flag_Round_in_R;
 extern uint8 flag_Normal_Lose_L;
 extern uint8 flag_Normal_Lose_R;
+extern uint8 flag_Garage_L=0;
+extern uint8 flag_Garage_R=0;
 extern uint8 flag_AprilTag_ARM;
 extern uint8 flag_AprilTag;
 
