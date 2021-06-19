@@ -547,6 +547,15 @@ uint8 Judge(void)   //TODO ЧґМ¬»ъ
 
     //-------ЧґМ¬ХыАн <head>--------//
     
+    if(flag_Round_ARM_L)
+    {
+        flag_Round_ARM_L--;
+    }
+    else if(flag_Round_ARM_R)
+    {
+        flag_Round_ARM_R--;
+    }
+    
     /*
     if(flag_Round_in_L)
     {
