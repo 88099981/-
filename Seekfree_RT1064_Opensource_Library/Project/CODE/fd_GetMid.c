@@ -546,27 +546,8 @@ uint8 Judge(void)   //TODO 状态机
 {
 
     //-------状态整理 <head>--------//
-    if(flag_Round_ARM_L)    
-    {
-        flag_Round_ARM_L--;
-        
-        if(Feature_Verify(0,19,40,10,Block_B)>=90)  //出现黑色区域 即环岛中心
-        {
-            flag_Round_ARM_L_B=1;
-            flag_Round_ARM_L=0; //TODO 验证该操作的必要性
-        }
-    }
-    else if(flag_Round_ARM_R)
-    {
-        flag_Round_ARM_R--;
-
-        if(Feature_Verify(147,19,40,10,Block_B)>=90)
-        {
-            flag_Round_ARM_R_B=1;
-            flag_Round_ARM_R=0; //TODO 验证该操作的必要性
-        }
-    }
-
+    
+    /*
     if(flag_Round_in_L)
     {
         flag_Round_ARM_L=0; //在环中对入环预位标志位清0，避免重复入环状态
@@ -577,7 +558,8 @@ uint8 Judge(void)   //TODO 状态机
         flag_Round_ARM_L=0;
         flag_Round_ARM_R=0;
     }
-
+    */
+   
      //-------状态整理 <bottom>--------//
 
      //-------双侧丢边 <head>--------//
@@ -637,28 +619,6 @@ uint8 Judge(void)   //TODO 状态机
         }
     } while (0);    //想写goto又不敢写的屑
     
-    if(flag_Round_ARM_L && flag_Round_ARM_L_B)
-    {
-        flag_Round_in_L=1;
-        flag_Round_ARM_L=0;
-
-        /*******入环处理*********/
-        flag_Normal_Lose_L=1;   //尝试按左侧边沿补
-        /*******入环处理********/
-
-        return 1;
-    }
-    else if(flag_Round_ARM_R && flag_Round_ARM_R_B)
-    {
-        flag_Round_in_R=1;
-        flag_Round_ARM_R=0;
-
-        /*******入环处理*********/
-        flag_Normal_Lose_R=1;   //尝试按右侧边沿补
-        /*******入环处理********/
-
-        return 1;
-    }
     //------环岛检测 <bottom>---------//
 
     //-------单侧丢边 <head>--------//
