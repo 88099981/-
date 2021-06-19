@@ -44,7 +44,7 @@ void aicar_camera_error()
     
 //    kp_cam=camera_error*camera_error*a_cam;//¶þ´Î
     servo_angle=(int16)(kp_cam*camera_error + kd_cam*(camera_error-lasttime_ad));
-    lasttime_ad=camera_error;
+    lasttime_cam=camera_error;
     
     servo_duty=3850+servo_angle;
     if(servo_duty<=3450)
@@ -126,7 +126,7 @@ void aicar_mix_error()
         camera_error=0;
     }
     servo_angle_cam=(int16)(kp_cam*camera_error + kd_cam*(camera_error-lasttime_ad));
-    lasttime_ad=camera_error;      
+    lasttime_cam=camera_error;      
     
     ad_error=(ad_left-ad_right)*100/(ad_left+ad_right);
     servo_angle_ad=(int16)(kp_ad*ad_error + kd_ad*(ad_error-lasttime_ad));

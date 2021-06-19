@@ -576,7 +576,7 @@ void gogogo_mix()
         }        
         if(flag_Cross==1)
             aicar_adc_error();
-        else if(zuo_yuanhuan_flag)
+        else
             aicar_mix_error();
         
         if(sw1_status==1)

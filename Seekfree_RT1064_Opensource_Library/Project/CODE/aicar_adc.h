@@ -41,6 +41,7 @@ extern float ad_error;
 extern float kp_ad, kd_ad;
 extern float ad_right,ad_left;
 extern float lasttime_ad;
+extern float lasttime_cam;
 extern int16 servo_angle;
 
 

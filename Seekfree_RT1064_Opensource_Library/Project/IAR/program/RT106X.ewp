@@ -1182,6 +1182,12 @@
             <name>$PROJ_DIR$\..\..\CODE\cut.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\fd_FeatureData.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\fd_FeatureData.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\fd_GetMid.c</name>
         </file>
         <file>

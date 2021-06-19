@@ -21,6 +21,7 @@ uint16  ad_value6;
 uint16  ad_value_all;
 int16 ad_speed=0;
 float lasttime_ad=0.0;
+float lasttime_cam=0.0;
 //uint16  guiyi_ad1,guiyi_ad2,guiyi_ad3,guiyi_ad4;
 float ad_error=0.0;
 float kp_ad=0.0, kd_ad=0.0;
