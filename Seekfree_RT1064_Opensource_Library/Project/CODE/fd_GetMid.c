@@ -175,12 +175,12 @@ uint8 Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r) //通
     if(l_or_r)
     {
         Slope=(edge[p1_y].Lx - edge[p2_y].Lx)/(p1_y - p2_y);
-        edge[target_p_y].Lx = edge[p1_y].Lx + Slope*target_p_y;
+        edge[target_p_y].Lx = edge[p1_y].Lx + (uint8)(Slope*target_p_y);
     }
     else
     {
         Slope=(edge[p1_y].Rx - edge[p2_y].Rx)/(p1_y - p2_y);
-        edge[target_p_y].Rx = edge[p1_y].Lx + Slope*target_p_y;
+        edge[target_p_y].Rx = edge[p1_y].Lx + (uint8)(Slope*target_p_y);
     }
 
     return 1;
@@ -200,7 +200,7 @@ uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //通过因为高度和
 
             for(int i=1;i<=p2_y-p1_y;i++)
             {
-                Target[p1_y+i].Lx=i*Slope+Target[p1_y].Lx;
+                Target[p1_y+i].Lx=(uint8)(i*Slope+Target[p1_y].Lx);
             }
         }
     }
@@ -212,7 +212,7 @@ uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //通过因为高度和
 
             for(int i=1;i<=p2_y-p1_y;i++)
             {
-                Target[p1_y+i].Rx=i*Slope+Target[p1_y].Rx;
+                Target[p1_y+i].Rx=(uint8)(i*Slope+Target[p1_y].Rx);
             }
         }
     }
@@ -233,7 +233,7 @@ uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y) //通过因为高度和边沿点是
 
         for(int i=1;i<=p2_y-p1_y;i++)
         {
-            Target[p1_y+i]=i*Slope+Target[p1_y];
+            Target[p1_y+i]=(uint8)(i*Slope+Target[p1_y]);
         }
     }
     return 1;
@@ -712,9 +712,9 @@ uint8 Judge(void)   //状态机
 inline uint8 Width_Cali(uint8 y)    //根据高度计算赛道宽度
 {
     if(0)   //暂时改为标定值计算
-        return((edge[0].Rx-edge[0].Lx)-(WIDTH_K*y)); //使用最底层宽度计算
+        return((edge[0].Rx-edge[0].Lx)-(uint8)(WIDTH_K*y)); //使用最底层宽度计算
     else
-        return(WIDTH_BASE-(WIDTH_K*y)); //使用标定值计算
+        return(WIDTH_BASE-(uint8)(WIDTH_K*y)); //使用标定值计算
 }
 
 

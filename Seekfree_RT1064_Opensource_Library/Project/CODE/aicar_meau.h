@@ -18,6 +18,11 @@ typedef enum
     MEAU_DEBUG_5,//环岛
     MEAU_DEBUG_6,//差速
     MEAU_PARA,//参数显示
+    MEAU_PARA_0,//环岛参数
+    MEAU_PARA_0_0,//ruhuan
+    MEAU_PARA_0_1,//chuhuan
+    MEAU_PARA_0_2,//ruhuan_delay
+    MEAU_PARA_0_3,//chuhuan_delay
     MEAU_GOGOGO,
     MEAU_GOGOGO_0,//mix
     MEAU_GOGOGO_1,//ad
@@ -40,5 +45,6 @@ void debug_chasu();
 void gogogo_camera();
 void gogogo_adc();
 void gogogo_mix();
+void para_huandao();
 
 #endif
