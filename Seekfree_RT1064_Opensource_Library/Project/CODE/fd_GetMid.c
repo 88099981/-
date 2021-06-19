@@ -667,7 +667,7 @@ uint8 Judge(void)   //状态机
 
         if(Feature_Verify(0,19,50,10,Block_A)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
         {
-            //FIXME 无法独立进行入环判断(无法判断出来是在一处地方重复置位还是第二次置位 可以用角度算算)
+            //ATTENTION 无法独立进行入环判断(需要电感辅助)
             flag_Round_ARM_L=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
             bb_time=20;
 
