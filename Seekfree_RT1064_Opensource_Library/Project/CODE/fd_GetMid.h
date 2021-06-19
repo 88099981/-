@@ -16,7 +16,7 @@
 #define MID_RESOLUTION 20   //中线解析度 越小越接近原始数据
 #define CUR_RESOLUTION 10   //角度解析度 就是向量FA、FB中A_y-B_y的差值，过大会比较粗糙，过小会过于敏感，容易误判
 
-#define ROUND_ARM_COUNT_TIMES 20
+#define ROUND_ARM_COUNT_TIMES 200
 
 #define WIDTH_BASE 80 //最底层赛道宽度标定值
 #define WIDTH_K 0.98    //变窄比例
@@ -68,11 +68,11 @@ extern uint8 flag_T_Road;
 extern uint8 flag_Cross;
 extern uint8 flag_Round_ARM_L;
 extern uint8 flag_Round_ARM_R; 
+extern uint8 flag_Round_ARM_L_B;
+extern uint8 flag_Round_ARM_R_B;
 extern uint8 flag_Is_This_Round;
 extern uint8 flag_Round_in_L;
 extern uint8 flag_Round_in_R;
-extern uint8 flag_Round_ARM_L_B;
-extern uint8 flag_Round_ARM_R_B;
 extern uint8 flag_Normal_Lose_L;
 extern uint8 flag_Normal_Lose_R;
 extern uint8 flag_AprilTag_ARM;
