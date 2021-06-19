@@ -12,31 +12,33 @@ int8 CamError;
 
 //flag
 //------------------------¹¤×÷×´Ì¬±êÖ¾,ÓÉÉ¨Ïßº¯Êıµ÷ÓÃ------------------------//
-uint8 flag_MidStart_in_Black;   //Hor_Search º¯ÊıÖĞ¸ø¶¨ÆğÊ¼µãÔÚºÚÇøÄÚ    ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Ver_Search_Finish;   //´¹Ö±É¨ÃèÍê³É                          ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_MidStart_in_Black=0;   //Hor_Search º¯ÊıÖĞ¸ø¶¨ÆğÊ¼µãÔÚºÚÇøÄÚ    ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Ver_Search_Finish=0;   //´¹Ö±É¨ÃèÍê³É                          ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 
 //-------------------»ù´¡±êÖ¾,Ô­ÔòÉÏ½öÓÉÉ¨Ïßº¯Êı¼°×´Ì¬»úµ÷ÓÃ------------------//
-uint8 flag_LoseEdge_part_L; //×ó²¿·Ö¶ª±ß     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_LoseEdge_part_R; //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_LoseEdge_all_L;  //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_LoseEdge_all_R;  //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Straight_L;  //×óÖ±µÀ    ¼ì²âÖ±µÀ±È¼ì²âÍäµÀ¼òµ¥µÄ¶à            ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Straight_R;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_LoseEdge_part_L=0; //×ó²¿·Ö¶ª±ß     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_LoseEdge_part_R=0; //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_LoseEdge_all_L=0;  //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_LoseEdge_all_R=0;  //              ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Straight_L=0;  //×óÖ±µÀ    ¼ì²âÖ±µÀ±È¼ì²âÍäµÀ¼òµ¥µÄ¶à            ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Straight_R=0;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 
 //------------------¸ß¼¶±êÖ¾,Ô­ÔòÉÏÓÉ×´Ì¬»úÈ·¶¨²¹Ïßº¯Êıµ÷ÓÃ-------------------//
-uint8 flag_T_Road;   //TĞÎÂ·£¨·ºÖ¸×î¶¥ÉÏ¼¸ĞĞÈ«ºÚ£¬ÒÔÏÂ³öÏÖ´óÃæ»ıÁ½²à¶ª±ßµÄ×´¿ö
-uint8 flag_Cross;    //Ê®×Ö                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Round_ARM_L;  //×ó»·µºÔ¤Î»
-uint8 flag_Round_ARM_R;  //ÓÒ»·µºÔ¤Î»
-uint8 flag_Round_ARM_L_B;  //×ó»·µºÔ¤Î» ÓÃÓÚÏŞÖÆflag_Round_ARM_L/RÔÚÍ¬Ò»Î»ÖÃ¶à´ÎÖÃÎ»µ¼ÖÂ¶ÔÎ»ÖÃµÄ´íÎóÅĞ¶Ï
-uint8 flag_Round_ARM_R_B;  //ÓÒ»·µºÔ¤Î»
-uint8 flag_Is_This_Round;   //»·µº¾ö²ß±êÖ¾  Ñ¯ÎÊµç¸Ğ(µ÷ÓÃÍê¼ÇµÃ¸´Î»)    £¨ÎªÊ²Ã´²»ÎÊÎÊÉñÆæº£ÂİÄØ£¿
-uint8 flag_Round_in_L;   //×ó»·µº»·ÖĞ //ATTENTION ´ÓÈë»·¿ªÊ¼ÖÃÎ»
-uint8 flag_Round_in_R;   //ÓÒ»·µº»·ÖĞ
-uint8 flag_Normal_Lose_L;   //Ò»°ã¶ª×ó±ß                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Normal_Lose_R;   //Ò»°ã¶ªÓÒ±ß                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_AprilTag_ARM;    //AprilTagÔ¤Î» ÖÃÎ»ºó½øÈëAprilTagÅĞ¶Ïº¯Êı£¨ÅĞ¶Ï´æÔÚ ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_AprilTag;        //AprilTag´æÔÚ                                     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_T_Road=0;   //TĞÎÂ·£¨·ºÖ¸×î¶¥ÉÏ¼¸ĞĞÈ«ºÚ£¬ÒÔÏÂ³öÏÖ´óÃæ»ıÁ½²à¶ª±ßµÄ×´¿ö
+uint8 flag_Cross=0;    //Ê®×Ö                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Round_ARM_L=0;  //×ó»·µºÔ¤Î»
+uint8 flag_Round_ARM_R=0;  //ÓÒ»·µºÔ¤Î»
+uint8 flag_Round_ARM_L_B=0;  //×ó»·µºÔ¤Î» ÓÃÓÚÏŞÖÆflag_Round_ARM_L/RÔÚÍ¬Ò»Î»ÖÃ¶à´ÎÖÃÎ»µ¼ÖÂ¶ÔÎ»ÖÃµÄ´íÎóÅĞ¶Ï  ¡¾ÆúÓÃ¡¿
+uint8 flag_Round_ARM_R_B=0;  //ÓÒ»·µºÔ¤Î»                                                                ¡¾ÆúÓÃ¡¿
+uint8 flag_Is_This_Round=0;   //»·µº¾ö²ß±êÖ¾  Ñ¯ÎÊµç¸Ğ(µ÷ÓÃÍê¼ÇµÃ¸´Î»)    £¨ÎªÊ²Ã´²»ÎÊÎÊÉñÆæº£ÂİÄØ£¿
+uint8 flag_Round_in_L=0;   //×ó»·µº»·ÖĞ //ATTENTION ´ÓÈë»·¿ªÊ¼ÖÃÎ»
+uint8 flag_Round_in_R=0;   //ÓÒ»·µº»·ÖĞ
+uint8 flag_Normal_Lose_L=0;   //Ò»°ã¶ª×ó±ß                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Normal_Lose_R=0;   //Ò»°ã¶ªÓÒ±ß                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_Garage_L=0;        //³µ¿âÔÚ×ó²à
+uint8 flag_Garage_R=0;        //³µ¿âÔÚÓÒ²à
+uint8 flag_AprilTag_ARM=0;    //AprilTagÔ¤Î» ÖÃÎ»ºó½øÈëAprilTagÅĞ¶Ïº¯Êı£¨ÅĞ¶Ï´æÔÚ ¡¾µ¥Ö¡³õÊ¼»¯¡¿
+uint8 flag_AprilTag=0;        //AprilTag´æÔÚ                                     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 
 //--------------------------------¹ÊÕÏ/¸¨Öú±êÖ¾------------------------------//
 uint8 flag_Indct_Help_Me;   //ÇóÖúµç¸ĞÑ­¼£  µ÷ÓÃÍê¼ÇµÃ¸´Î»               ¡¾µ¥Ö¡³õÊ¼»¯¡¿
@@ -166,7 +168,7 @@ void Del_Edge_Data(uint8 p1_y,uint8 p2_y)
 
 
 //Ê¹ÓÃÇ°Á½¸öµãÁ¬ÏßµÄĞ±ÂÊÉèÖÃÄ¿±êµã
-void Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã
+uint8 Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã
 {
     float Slope=0;  //Ğ±ÂÊ ÆäÊµÊÇcot
     
@@ -180,12 +182,14 @@ void Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r) //Í¨¹
         Slope=(edge[p1_y].Rx - edge[p2_y].Rx)/(p1_y - p2_y);
         edge[target_p_y].Rx = edge[p1_y].Lx + Slope*target_p_y;
     }
+
+    return 1;
 }
 
 
 
 
-void Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã    ×¢Òâp1_yĞ¡ÓÚp2_y
+uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã //ATTENTION p1_yĞ¡ÓÚp2_y
 {
     float Slope=0;   //Ğ±ÂÊ ÆäÊµÊÇcot
     if(l_or_r)
@@ -212,13 +216,15 @@ void Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±
             }
         }
     }
+
+    return 1;
 }
 
 
 
 
 
-void Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã    ×¢Òâp1_yĞ¡ÓÚp2_y
+uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶ÔÓ¦µÄ£¬ËùÒÔÊäÈë×İ×ø±êÀ´±íÊ¾¶ÔÓ¦µÄµã    ×¢Òâp1_yĞ¡ÓÚp2_y
 {                                                      //ÖØÔØ ÒòÎªmidÎªint16ÀàĞÍ
     float Slope=0;   //Ğ±ÂÊ ÆäÊµÊÇcot
     if((Target[p1_y]-Target[p2_y]) != 0)  //´¹Ö±µÄÊ±ºò¾Í²»ÓÃËãÁË
@@ -230,6 +236,7 @@ void Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y) //Í¨¹ıÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶
             Target[p1_y+i]=i*Slope+Target[p1_y];
         }
     }
+    return 1;
 }
 
 
@@ -357,9 +364,9 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)    //Ë®Æ½É¨Ïß£¨µ¥ĞĞ£© *×¢ÒâyÎªÏà¶ÔÏŞÖÆµ
 
     for(uint8 i=MidStart;i>=X_LIMIT;i--)   //Ïò×óËÑË÷
     {
-        if(img[y+Y_LIMIT][i]==Black)  //TODO ¸Ä½øÅĞ¶ÏÔëµãµÄ·½·¨
+        if(img[y+Y_LIMIT][i]==Black) 
         {
-            edge[y].Lx=i;                         //×¢Òâ£¡¶ªÏßÖ±½ÓÎªÄ¬ÈÏÖµ0 ºóÃæ³ÌĞòÒ²ÊÇ¸ù¾İ0ÅĞ¶Ï±ßÑØÊÇ·ñÎªÌØÊâÇé¿öµÄ
+            edge[y].Lx=i;                         //TODO È·¶¨¸Ã×¢ÊÍµÄÕıÈ·ĞÔ-> ×¢Òâ£¡¶ªÏßÖ±½ÓÎªÄ¬ÈÏÖµ0 ºóÃæ³ÌĞòÒ²ÊÇ¸ù¾İ0ÅĞ¶Ï±ßÑØÊÇ·ñÎªÌØÊâÇé¿öµÄ
             break;
         }
 
@@ -381,6 +388,11 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)    //Ë®Æ½É¨Ïß£¨µ¥ĞĞ£© *×¢ÒâyÎªÏà¶ÔÏŞÖÆµ
         {
             flag_LoseEdge_part_R++;
         }
+    }
+
+    if(edge[y].Rx-edge[y].Lx<=4)    //¿ÉÄÜÊÇ°ßÂíÏß
+    {
+        EdgeNum=y;  //ÏŞÖÆ×î´ó¸ß¶È£¬±ÜÃâ¶ÔÖĞÏß¼°Æ«²î²úÉúÓ°Ïì
     }
 
     if(y>3) // ´ı±ßÑØÎÈ¶¨ºó
@@ -412,7 +424,7 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)    //Ë®Æ½É¨Ïß£¨µ¥ĞĞ£© *×¢ÒâyÎªÏà¶ÔÏŞÖÆµ
             //edge[y].Rx=edge[y].Lx+Width_Cali(y);
         }
         else if(edge[y].Rx==0 && edge[y].Lx==0) //¿ÓµùµÄÁ½²à¶ª±ß    
-        {                                   //TODO ³õ²½Ë¼Â· ´¹Ö±É¨ÃèÑ°ÕÒÄÜÁªÍ¨µÄ´¹Ö±Â·¾¶ È¡×óÓÒÁ½¼«ÏŞÎ»Îª±ßÑØ
+        {
             flag_LoseEdge_part_L++;
             flag_LoseEdge_part_R++;
         }
@@ -542,7 +554,54 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //
 
 
 
-uint8 Judge(void)   //TODO ×´Ì¬»ú
+
+uint8 If_Garage(void)
+{
+    uint8 StripeNum=0;  //ÌõÎÆÊı
+
+    for(uint8 i=0;i<IMG_X-1;i++)
+    {
+        if(img[3][i]==White && img[3][i+1]==Black)
+        {
+            StripeNum++;
+        }
+    }
+
+    if(StripeNum>=6)    //ÌõÎÆÊı´óÓÚÉè¶¨Öµ
+    {
+        #ifdef IMG_DEBUG
+        for(uint8 i=0;i<IMG_X;i++)  //»æ»­¸ÃÏßÒÔ±ãµ÷ÊÔ
+        {
+            img[3][i]=Gray;
+        }
+        #endif
+
+        if(Feature_Verify(0,0,20,10,Block_A)>=90)
+        {
+            flag_Garage_L=1;
+            flag_Garage_R=0;    //ÒòÎªÃ»ÓĞÃ¿Ö¡³õÊ¼»¯£¬ËùÒÔÎªÁË±ÜÃâÎóÖÃÔì³ÉÃ¬¶Ü£¬¹Ê¶ÔÁ½¸ö±êÖ¾Î»¾ùÖÃ¸ß
+            return 1;
+        }
+        else if(Feature_Verify(167,0,20,10,Block_A)>=90)
+        {
+            flag_Garage_L=0;
+            flag_Garage_R=1;
+            return 1;
+        }
+
+        for(uint8 i=0;i<IMG_X;i++)
+        {
+            img[3][i]=Gray;
+        }
+    }
+
+    return 0;
+}
+
+
+
+
+uint8 Judge(void)   //×´Ì¬»ú
 {
 
     //-------×´Ì¬ÕûÀí <head>--------//
@@ -555,7 +614,7 @@ uint8 Judge(void)   //TODO ×´Ì¬»ú
     {
         flag_Round_ARM_R--;
     }
-    
+
     /*
     if(flag_Round_in_L)
     {
@@ -570,6 +629,14 @@ uint8 Judge(void)   //TODO ×´Ì¬»ú
     */
    
      //-------×´Ì¬ÕûÀí <bottom>--------//
+
+    //------³µ¿â¼ì²â <head>---------//
+    if(If_Garage())
+    {
+        bb_time=20;
+        return 1;
+    }
+    //------³µ¿â¼ì²â <bottom>---------//
 
      //-------Ë«²à¶ª±ß <head>--------//
     if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //Ë«²à¶ª±ßÅĞ¶ÏÎªÊ®×Ö
@@ -781,6 +848,25 @@ if(flag_Edge_Start_Exist && flag_Edge_End_Exist)
 
 void If_Lose_Edge(void) //¶ª±ß²¹È«
 {
+    if(flag_Garage_L)
+    {
+        edge[0].Rx=IMG_X-1; //ÉèÖÃÓÒ±ßÑØµÄÊı¾İ
+        edge[IMG_Y-1].Rx=0;
+
+        Connect(edge,0,0,IMG_X-1);  //³µ¿âÔÚ×ó²à£¬½«ÓÒ²à±ßÔµÉèÎª×óÉÏµ½ÓÒÏÂµÄĞ±Ïß
+        EdgeNum=IMG_Y/2;    //ÖĞµãÊıÎª×î´ó¸ß¶ÈÒ»°ë
+        flag_Normal_Lose_L=1;   //ÈÃÆä²¹ÓÒ²àÏß
+    }
+    else if(flag_Garage_R)
+    {
+        edge[0].Lx=0; //ÉèÖÃÓÒ±ßÑØµÄÊı¾İ
+        edge[IMG_Y-1].Lx=IMG_X-1;
+
+        Connect(edge,1,0,IMG_X-1);
+        EdgeNum=IMG_Y/2;    //ÖĞµãÊıÎª×î´ó¸ß¶ÈÒ»°ë
+        flag_Normal_Lose_R=1;   //ÈÃÆä²¹ÓÒ²àÏß
+    }
+
     if(flag_Cross)  //Á½²à¶ª±ß
     {
         Damn_Lose_Edge_all();   //Ë«²à¶ª±ßº¯Êı
@@ -877,8 +963,6 @@ void Search(void)   //¿ÓµùµÄÉ¨ÏßÖ÷º¯Êı
 
     uint8 MidStart=IMG_X/2;   //µ×±ßËÑË÷ÆğÊ¼µãºá×ø±ê    
     //½²µÀÀí£¬ÎÒ¾õµÃÎÒ²»Ó¦¸Ã°ÑsearchÀïºÍhor_searchÀï¸ãÒ»¸öÍ¬ÃûµÄ¾Ö²¿±äÁ¿£¬µ«ÊÇÀÁµÃ¸ÄÁË
-    flag_LoseEdge_all_L=0;
-    flag_LoseEdge_all_R=0;
 
     init();
     Y_Change();
@@ -917,8 +1001,12 @@ void Search(void)   //¿ÓµùµÄÉ¨ÏßÖ÷º¯Êı
     Print_Mid();
     //-------------------»æ»­²¿·Ö---------------------//
 
+    //-------------------½áÊø²¿·Ö---------------------//
+    if(flag_Garage_L || flag_Garage_R)
+    {
 
-
+    }
+    //-------------------½áÊø²¿·Ö---------------------//
 }
 
 
