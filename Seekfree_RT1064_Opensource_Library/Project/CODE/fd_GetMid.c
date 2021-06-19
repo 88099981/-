@@ -669,23 +669,17 @@ uint8 Judge(void)   //状态机
         {
             //ATTENTION 无法独立进行入环判断(需要电感辅助)
             flag_Round_ARM_L=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
-            bb_time=20;
 
             //return 1;
         }
         else if(Feature_Verify(137,19,50,10,Block_A)>=90)
         {
             flag_Round_ARM_R=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
-            bb_time=20;
 
             //return 1;
         }
     } while (0);    //想写goto又不敢写的屑
     
-    if(Feature_Verify(70,39,50,10,Block_C)>=90)
-    {
-        bb_time=20;
-    }
     //------环岛检测 <bottom>---------//
 
     //-------单侧丢边 <head>--------//
