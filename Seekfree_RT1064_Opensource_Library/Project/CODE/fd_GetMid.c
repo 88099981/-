@@ -835,21 +835,25 @@ void If_Lose_Edge(void) //丢边补全
 {
     if(flag_Garage_L)
     {
+        /*
         edge[0].Rx=IMG_X-1; //设置右边沿的数据
         edge[IMG_Y-1].Rx=0;
 
         Connect(edge,0,0,IMG_X-1);  //车库在左侧，将右侧边缘设为左上到右下的斜线
         EdgeNum=IMG_Y/2;    //中点数为最大高度一半
         flag_Normal_Lose_L=1;   //让其补右侧线
+        */
     }
     else if(flag_Garage_R)
     {
+        /*
         edge[0].Lx=0; //设置右边沿的数据
         edge[IMG_Y-1].Lx=IMG_X-1;
 
         Connect(edge,1,0,IMG_X-1);
         EdgeNum=IMG_Y/2;    //中点数为最大高度一半
         flag_Normal_Lose_R=1;   //让其补右侧线
+        */
     }
 
     if(flag_Cross)  //两侧丢边
