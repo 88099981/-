@@ -39,14 +39,15 @@ void init(void);    //各种变量初始化函数
 void Y_Change(void);    //改成一般的直角坐标系形式，要不然贼不爽
 float Cp_sqrt(float number);    //快速开方求导
 float Get_Angle(uint8 p1_y,uint8 p2_y,uint8 Target_y,uint8 l_or_r);
-void Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r);
-void Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y);
-void Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y);
+uint8 Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r);
+uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y);
+uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y);
 uint8 Hor_Search_Base(uint8 MidStart,uint8 y);
 uint8 Hor_Search(uint8 MidStart,uint8 Y);    //水平扫描 MidStart为给定扫描起始中点 y为扫描对应的高度
 uint8 Ver_Search(uint8 Midstart);   //从给定中点垂直扫描到黑区
 uint8 Uni_Ver_Search(uint8 MidStart);
-uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)
+uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)]
+uint8 If_Garage(void);  //车库查找  优先级大于环岛、十字/T字
 uint8 Judge(void);   //状态机
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
