@@ -159,10 +159,11 @@ void print_debug()
 
 void print_parameter()
 {
-    lcd_showstr(0,0,"cam_pid     ");
-    lcd_showstr(0,1,"adc_pid     ");
-    lcd_showstr(0,2,"servo_pd    ");
-    lcd_showstr(0,3,"motor_pi    ");
+    lcd_showstr(0,0,"huandao");
+    lcd_showstr(0,1,"cam_pid     ");
+    lcd_showstr(0,2,"adc_pid     ");
+    lcd_showstr(0,3,"servo_pd    ");
+    lcd_showstr(0,4,"motor_pi    ");
 }
 
 

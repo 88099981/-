@@ -173,12 +173,12 @@ void Set_Edge_BySlope(uint8 p1_y,uint8 p2_y,uint8 target_p_y,uint8 l_or_r) //Í¨¹
     if(l_or_r)
     {
         Slope=(edge[p1_y].Lx - edge[p2_y].Lx)/(p1_y - p2_y);
-        edge[target_p_y].Lx = edge[p1_y].Lx + Slope*target_p_y;
+        edge[target_p_y].Lx = edge[p1_y].Lx + (uint8)(Slope*target_p_y);
     }
     else
     {
         Slope=(edge[p1_y].Rx - edge[p2_y].Rx)/(p1_y - p2_y);
-        edge[target_p_y].Rx = edge[p1_y].Lx + Slope*target_p_y;
+        edge[target_p_y].Rx = edge[p1_y].Lx + (uint8)(Slope*target_p_y);
     }
 }
 
@@ -196,7 +196,7 @@ void Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //Í¨¹ýÒòÎª¸ß¶ÈºÍ±
 
             for(int i=1;i<=p2_y-p1_y;i++)
             {
-                Target[p1_y+i].Lx=i*Slope+Target[p1_y].Lx;
+                Target[p1_y+i].Lx=(uint8)(i*Slope+Target[p1_y].Lx);
             }
         }
     }
@@ -208,7 +208,7 @@ void Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y) //Í¨¹ýÒòÎª¸ß¶ÈºÍ±
 
             for(int i=1;i<=p2_y-p1_y;i++)
             {
-                Target[p1_y+i].Rx=i*Slope+Target[p1_y].Rx;
+                Target[p1_y+i].Rx=(uint8)(i*Slope+Target[p1_y].Rx);
             }
         }
     }
@@ -227,7 +227,7 @@ void Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y) //Í¨¹ýÒòÎª¸ß¶ÈºÍ±ßÑØµãÊÇ¶
 
         for(int i=1;i<=p2_y-p1_y;i++)
         {
-            Target[p1_y+i]=i*Slope+Target[p1_y];
+            Target[p1_y+i]=(uint8)(i*Slope+Target[p1_y]);
         }
     }
 }
@@ -654,9 +654,9 @@ uint8 Judge(void)   //TODO ×´Ì¬»ú
 inline uint8 Width_Cali(uint8 y)    //¸ù¾Ý¸ß¶È¼ÆËãÈüµÀ¿í¶È
 {
     if(0)   //ÔÝÊ±¸ÄÎª±ê¶¨Öµ¼ÆËã
-        return((edge[0].Rx-edge[0].Lx)-(WIDTH_K*y)); //Ê¹ÓÃ×îµ×²ã¿í¶È¼ÆËã
+        return((edge[0].Rx-edge[0].Lx)-(uint8)(WIDTH_K*y)); //Ê¹ÓÃ×îµ×²ã¿í¶È¼ÆËã
     else
-        return(WIDTH_BASE-(WIDTH_K*y)); //Ê¹ÓÃ±ê¶¨Öµ¼ÆËã
+        return(WIDTH_BASE-(uint8)(WIDTH_K*y)); //Ê¹ÓÃ±ê¶¨Öµ¼ÆËã
 }
 
 
