@@ -42,37 +42,39 @@ void aicar_yuanhuan()//仅用作判断
         if(zuo_yuanhuan_flag==0&&you_yuanhuan_flag==0)
         {
             ruhuan++;
-            if(flag_Round_ARM_L&&ruhuan>=10)//zuo
+            if(flag_Round_ARM_L>0&&ruhuan>=2)//zuo
             {                                
                  zuo_yuanhuan_flag=1;
                  ruhuan=0;
+                 ruhuan_delay=50;//防止入不了环
                  bb_time=20;              
             }
-            else if(flag_Round_ARM_R&&ruhuan>=10)//you
+            else if(flag_Round_ARM_R>0&&ruhuan>=2)//you
             {
                  you_yuanhuan_flag=1;
                  ruhuan=0;
+                 ruhuan_delay=50;//防止入不了环
                  bb_time=20;
             }
         }
-        else
+        else if(ruhuan_delay<=0)
         {
             chuhuan++;
-            if(zuo_yuanhuan_flag==1&&chuhuan>=10)
+            if(zuo_yuanhuan_flag==1&&chuhuan>=5)
             {
                 zuo_yuanhuan_flag=0;
                 //camera_down=100;
                 chuhuan=0;
                 bb_time=60;
-                chuhuan_delay=200;//防止二次入环
+                chuhuan_delay=20;//防止二次入环
             }
-            else if(you_yuanhuan_flag==1&&chuhuan>=10)
+            else if(you_yuanhuan_flag==1&&chuhuan>=5)
             {
                 you_yuanhuan_flag=0;
                 //camera_down=100;
                 chuhuan=0;
                 bb_time=60;
-                chuhuan_delay=200;
+                chuhuan_delay=20;
             }
 
         }

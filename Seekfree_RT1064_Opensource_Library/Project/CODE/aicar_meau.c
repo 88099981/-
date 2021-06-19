@@ -485,7 +485,7 @@ void gogogo_camera()
             pointer_arrow=0;
         }
     }
-    break_flag=0;
+    break_flag=1;
     key4_flag=0;
     aim_speed=0;
     servo_duty=3850;
@@ -540,7 +540,7 @@ void gogogo_adc()
             pointer_arrow=1;
         }
     }
-    break_flag=0;
+    break_flag=1;
     key4_flag=0;
     aim_speed=0;
     servo_duty=3850;
@@ -605,7 +605,7 @@ void gogogo_mix()
             pointer_arrow=0;
         }
     }
-    break_flag=0;
+    break_flag=1;
     key4_flag=0;
     aim_speed=0;
     servo_duty=3850;
@@ -686,7 +686,7 @@ void debug_chasu()
             pointer_arrow=6;
         }
     }
-    break_flag=0;
+    break_flag=1;
     key4_flag=0;
     aim_speed=0;
     servo_duty=3850;
