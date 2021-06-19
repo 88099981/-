@@ -22,7 +22,7 @@
 #define POWER_ADC6_PIN  ADC1_CH12_B23//定义通道四 ADC引脚
 
 
-#define KP_ad_str 10.0
+#define KP_ad_str 9.0
 #define KD_ad_str 5.0
 #define KP_ad_turn 1.0
 #define KD_ad_turn 10.0

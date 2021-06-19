@@ -52,7 +52,7 @@ void aicar_adc_get()
 
 void aicar_stop(void)
 {
-    if(ad_value_all <= 50)
+    if(ad_value_all <= 60)
     {
         stop_cnt++;
         if(stop_cnt>=20)
