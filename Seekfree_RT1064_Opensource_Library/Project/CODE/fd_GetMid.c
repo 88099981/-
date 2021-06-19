@@ -481,7 +481,7 @@ void If_Straight(void)
     flag_Straight_L = 1; //先假设为直道
     flag_Straight_R = 1;
 
-    for (uint8 i = 0; i < SearchTimesMax; i++) //TODO 此种方法无法计算到最底下和最顶端CUR_RESOLUTION/2个边沿的角度
+    for (uint8 i = 0; i < SearchTimesMax; i++) //ATTENTION 此种方法无法计算到最底下和最顶端CUR_RESOLUTION/2个边沿的角度
     {
         angle[i].L = Get_Angle(i, i + CUR_RESOLUTION, i + CUR_RESOLUTION / 2, 1);
         angle[i].R = Get_Angle(i, i + CUR_RESOLUTION, i + CUR_RESOLUTION / 2, 0);
@@ -515,11 +515,11 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //
         return(101);
     }
 
-    for(uint8 i=0;i<dx;i++)
+    for(uint8 i=0;i<dy;i++)
     {
-        for(uint8 j=0;j<dy;j++)
+        for(uint8 j=0;j<dx;j++)
         {
-            if(img[T_y+i][T_x+j]==feature[i*dy+j])    //与特征数组/图像比较
+            if(img[T_y+i][T_x+j]==feature[i*dx+j])    //与特征数组/图像比较
             {
                 rate++;
                 img[T_y+i][T_x+j]=Gray;
@@ -592,26 +592,31 @@ uint8 Judge(void)   //TODO 状态机
         return 1;
     }
 
-    if(Feature_Verify(0,19,30,10,Block_A)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
+    do
     {
-        if(!flag_Round_ARM_L)   //避免重复置位  //FIXME 无法独立进行入环判断(无法判断出来是在一处地方重复置位还是第二次置位 可以用角度算算)
+        if(Feature_Verify(83,20,20,20,Block_A)<=90)
         {
-            flag_Round_ARM_L=20; //当该标志位不为零时，都应该用电感验证
+            break;
         }
-        bb_time=20;
 
-        return 1;
-    }
-    else if(Feature_Verify(157,19,30,10,Block_A)>=90)
-    {
-        if(!flag_Round_ARM_R) //避免重复置位
+        if(Feature_Verify(0,19,50,10,Block_A)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
+        {
+            //FIXME 无法独立进行入环判断(无法判断出来是在一处地方重复置位还是第二次置位 可以用角度算算)
+            flag_Round_ARM_L=20; //当该标志位不为零时，都应该用电感验证
+            bb_time=20;
+
+            //return 1;
+        }
+        else if(Feature_Verify(137,19,50,10,Block_A)>=90)
         {
             flag_Round_ARM_R=20; //当该标志位不为零时，都应该用电感验证
-        }
-        bb_time=20;
+            bb_time=20;
 
-        return 1;
-    }
+            //return 1;
+        }
+    } while (0);
+    
+    
 
     if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0) //单左丢边
     {
