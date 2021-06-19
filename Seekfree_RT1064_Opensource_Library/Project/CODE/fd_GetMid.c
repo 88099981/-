@@ -28,8 +28,10 @@ uint8 flag_T_Road;   //T形路（泛指最顶上几行全黑，以下出现大面积两侧丢边的状况
 uint8 flag_Cross;    //十字                 【单帧初始化】
 uint8 flag_Round_ARM_L;  //左环岛预位
 uint8 flag_Round_ARM_R;  //右环岛预位
+uint8 flag_Round_ARM_L_B;  //左环岛预位 用于限制flag_Round_ARM_L/R在同一位置多次置位导致对位置的错误判断
+uint8 flag_Round_ARM_R_B;  //右环岛预位
 uint8 flag_Is_This_Round;   //环岛决策标志  询问电感(调用完记得复位)    （为什么不问问神奇海螺呢？
-uint8 flag_Round_in_L;   //左环岛环中 从入环开始置位
+uint8 flag_Round_in_L;   //左环岛环中 //ATTENTION 从入环开始置位
 uint8 flag_Round_in_R;   //右环岛环中
 uint8 flag_Normal_Lose_L;   //一般丢左边                 【单帧初始化】
 uint8 flag_Normal_Lose_R;   //一般丢右边                 【单帧初始化】
@@ -481,7 +483,7 @@ void If_Straight(void)
     flag_Straight_L = 1; //先假设为直道
     flag_Straight_R = 1;
 
-    for (uint8 i = 0; i < SearchTimesMax; i++) //TODO 此种方法无法计算到最底下和最顶端CUR_RESOLUTION/2个边沿的角度
+    for (uint8 i = 0; i < SearchTimesMax; i++) //ATTENTION 此种方法无法计算到最底下和最顶端CUR_RESOLUTION/2个边沿的角度
     {
         angle[i].L = Get_Angle(i, i + CUR_RESOLUTION, i + CUR_RESOLUTION / 2, 1);
         angle[i].R = Get_Angle(i, i + CUR_RESOLUTION, i + CUR_RESOLUTION / 2, 0);
@@ -507,7 +509,7 @@ void If_Straight(void)
 
 
 uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)
-{                                                                             //ATTENTION: T_x T_y为左下角坐标,另外注意特征数组不要小于dx*dy
+{                                                                             //ATTENTION T_x T_y为左下角坐标,另外注意特征数组不要小于dx*dy
     float rate=0;
 
     if(T_y+dy>=IMG_Y || T_x+dx>=IMG_X)  //范围检查
@@ -515,11 +517,11 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //
         return(101);
     }
 
-    for(uint8 i=0;i<dx;i++)
+    for(uint8 i=0;i<dy;i++)
     {
-        for(uint8 j=0;j<dy;j++)
+        for(uint8 j=0;j<dx;j++)
         {
-            if(img[T_y+i][T_x+j]==feature[i*dy+j])    //与特征数组/图像比较
+            if(img[T_y+i][T_x+j]==feature[i*dx+j])    //与特征数组/图像比较
             {
                 rate++;
                 img[T_y+i][T_x+j]=Gray;
@@ -542,6 +544,43 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)    //
 
 uint8 Judge(void)   //TODO 状态机
 {
+
+    //-------状态整理 <head>--------//
+    if(flag_Round_ARM_L)    
+    {
+        flag_Round_ARM_L--;
+        
+        if(Feature_Verify(0,19,40,10,Block_B)>=90)  //出现黑色区域 即环岛中心
+        {
+            flag_Round_ARM_L_B=1;
+            flag_Round_ARM_L=0; //TODO 验证该操作的必要性
+        }
+    }
+    else if(flag_Round_ARM_R)
+    {
+        flag_Round_ARM_R--;
+
+        if(Feature_Verify(147,19,40,10,Block_B)>=90)
+        {
+            flag_Round_ARM_R_B=1;
+            flag_Round_ARM_R=0; //TODO 验证该操作的必要性
+        }
+    }
+
+    if(flag_Round_in_L)
+    {
+        flag_Round_ARM_L=0; //在环中对入环预位标志位清0，避免重复入环状态
+        flag_Round_ARM_R=0;
+    }
+    else if(flag_Round_in_R)
+    {
+        flag_Round_ARM_L=0;
+        flag_Round_ARM_R=0;
+    }
+
+     //-------状态整理 <bottom>--------//
+
+     //-------双侧丢边 <head>--------//
     if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //双侧丢边判断为十字
     {
         uint16 NumInBlack=0;
@@ -571,25 +610,71 @@ uint8 Judge(void)   //TODO 状态机
 
         return 1;
     }
-    else if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0)
+    //-------双侧丢边 <bottom>--------//
+
+    //------环岛检测 <head>---------//
+    do
     {
-        if(flag_Straight_R && Feature_Verify(0,19,30,10,Block_A)>=90)
+        if(Feature_Verify(83,20,20,20,Block_A)<=90) //判断是否为直赛道，减小直角弯的误报
         {
-            bb_time=20;
+            break;
         }
 
-        flag_Normal_Lose_L=1;   //TODO 暂时未处理环岛
-        return 1;
-    }
-    else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R!=0)
-    {
-        if(flag_Straight_L && Feature_Verify(157,19,30,10,Block_A)>=90)
+        if(Feature_Verify(0,19,50,10,Block_A)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
         {
+            //FIXME 无法独立进行入环判断(无法判断出来是在一处地方重复置位还是第二次置位 可以用角度算算)
+            flag_Round_ARM_L=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
             bb_time=20;
+
+            //return 1;
         }
-        flag_Normal_Lose_R=1;    //TODO 暂时未处理环岛
+        else if(Feature_Verify(137,19,50,10,Block_A)>=90)
+        {
+            flag_Round_ARM_R=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
+            bb_time=20;
+
+            //return 1;
+        }
+    } while (0);    //想写goto又不敢写的屑
+    
+    if(flag_Round_ARM_L && flag_Round_ARM_L_B)
+    {
+        flag_Round_in_L=1;
+        flag_Round_ARM_L=0;
+
+        /*******入环处理*********/
+        flag_Normal_Lose_L=1;   //尝试按左侧边沿补
+        /*******入环处理********/
+
         return 1;
     }
+    else if(flag_Round_ARM_R && flag_Round_ARM_R_B)
+    {
+        flag_Round_in_R=1;
+        flag_Round_ARM_R=0;
+
+        /*******入环处理*********/
+        flag_Normal_Lose_R=1;   //尝试按右侧边沿补
+        /*******入环处理********/
+
+        return 1;
+    }
+    //------环岛检测 <bottom>---------//
+
+    //-------单侧丢边 <head>--------//
+    if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0) //单左丢边
+    {
+        flag_Normal_Lose_L=1;   //普通单左丢边
+        return 1;
+    }
+    else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R!=0) //单右丢边
+    {
+        flag_Normal_Lose_R=1;   //普通单右丢边
+        return 1;
+    }
+
+    //-------单侧丢边 <bottom>--------//
+
 
     return 0;
 }
