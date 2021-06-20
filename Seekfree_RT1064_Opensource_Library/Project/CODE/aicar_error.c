@@ -122,7 +122,11 @@ void aicar_mix_error()
             ad_error=-ad_error;               
         }
                 
-        camera_error=0;
+        //camera_error=0;
+        if(!flag_T_Road)
+        {
+            camera_error=0;
+        }
     }
     else if(you_yuanhuan_flag==1)
     {
@@ -132,7 +136,11 @@ void aicar_mix_error()
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);   
         if(ad_error>0)
             ad_error=Cp_sqrt(ad_error);//Õý×ó¸ºÓÒ
-        camera_error=0;
+        //camera_error=0;
+        if(!flag_T_Road)
+        {
+            camera_error=0;
+        }
     }
     servo_angle_cam=(int16)(kp_cam*camera_error + kd_cam*(camera_error-lasttime_ad));
     lasttime_cam=camera_error;      
