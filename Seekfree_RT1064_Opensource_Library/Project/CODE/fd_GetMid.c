@@ -731,8 +731,24 @@ uint8 Judge(void)
         }
     } while (0);    //想写goto又不敢写的屑
     
-    if(zuo_yuanhuan_flag && flag_Round_ARM_L)    //入环阶段拉线    ruhuan>=hd_in 为外部参数
+    if(zuo_yuanhuan_flag && flag_Round_ARM_L)
     {
+        flag_Round_ARM_L_B=20;
+    }
+    else if(you_yuanhuan_flag && flag_Round_ARM_R)
+    {
+        flag_Round_ARM_R_B=20;
+    }
+
+    if(flag_Round_ARM_L_B)    //入环阶段拉线
+    {
+        edge[0].Rx=120;
+        edge[IMG_Y/3].Rx=20;
+        Connect(edge,0,0,IMG_Y/3);
+
+        flag_Round_ARM_L_B--;
+        flag_Normal_Lose_L=1;
+        /*
         uint8 addition=80;
 
         for(uint8 i=EdgeNum;i>0;i--)
@@ -740,6 +756,7 @@ uint8 Judge(void)
             addition*=0.96;
             edge[i].Rx-=addition;
         }
+        */
         /*
         uint8 Target_y=0;
         uint8 Target_x[2]={0};  //第一元素为当前值，第二元素为上次值
@@ -767,7 +784,7 @@ uint8 Judge(void)
 
         if(Target_y)
         {
-            //edge[0].Rx=IMG_X/2;
+            edge[0].Rx=IMG_X/2;
             edge[Target_y].Rx=Target_x[0];
             Connect(edge,0,0,Target_y);
 
@@ -775,8 +792,15 @@ uint8 Judge(void)
         }
         */
     }
-    else if(you_yuanhuan_flag && flag_Round_ARM_R)   //ruhuan>=hd_in 为外部参数，此时已经过了第一个环口
+    else if(flag_Round_ARM_R_B)
     {
+        edge[0].Lx=68;
+        edge[IMG_Y/3].Lx=168;
+        Connect(edge,1,0,IMG_Y/3);
+
+        flag_Round_ARM_R_B--;
+        flag_Normal_Lose_R=1;
+        /*
         uint8 addition=80;
 
         for(uint8 i=EdgeNum;i>0;i--)
@@ -784,6 +808,7 @@ uint8 Judge(void)
             addition*=0.96;
             edge[i].Lx+=addition;
         }
+        */
         /*
         uint8 Target_y=0;
         uint8 Target_x[2]={0};  //第一元素为当前值，第二元素为上次值
@@ -811,7 +836,7 @@ uint8 Judge(void)
 
         if(Target_y)
         {
-            //edge[0].Lx=IMG_X/2;
+            edge[0].Lx=IMG_X/2;
             edge[Target_y].Lx=Target_x[0];
             Connect(edge,1,0,Target_y);
 
@@ -1011,14 +1036,14 @@ void If_Lose_Edge(void)
             edge[0].Rx=120;
             edge[EdgeNum].Rx=20;
             Connect(edge,0,0,EdgeNum);
-            flag_Normal_Lose_L;
+            flag_Normal_Lose_L=1;
         }
         else if(you_yuanhuan_flag)
         {
             edge[0].Lx=68;
             edge[EdgeNum].Lx=168;
             Connect(edge,1,0,EdgeNum);
-            flag_Normal_Lose_R;
+            flag_Normal_Lose_R=1;
         }
     }
 
