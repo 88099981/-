@@ -195,30 +195,34 @@ uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y)
     float Slope=0;   //斜率 其实是cot
     if(l_or_r)
     {
-        if((Target[p1_y].Lx-Target[p2_y].Lx) != 0)  //垂直的时候就不用算了
+        if((p1_y-p2_y) != 0)  //垂直的时候就不用算了
         {
-            Slope=(p1_y-p2_y)/(Target[p1_y].Lx-Target[p2_y].Lx);
+            Slope=(Target[p2_y].Lx-Target[p1_y].Lx)/(p2_y-p1_y);
 
             for(int i=1;i<=p2_y-p1_y;i++)
             {
                 Target[p1_y+i].Lx=(uint8)(i*Slope+Target[p1_y].Lx);
             }
         }
+
+        return 1;
     }
     else
     {
-        if((Target[p1_y].Rx-Target[p2_y].Rx) != 0)  //垂直的时候就不用算了
+        if((p1_y-p2_y) != 0)  //垂直的时候就不用算了
         {
-            Slope=(p1_y-p2_y)/(Target[p1_y].Rx-Target[p2_y].Rx);
+            Slope=(Target[p2_y].Rx-Target[p1_y].Rx)/(p2_y-p1_y);
 
             for(int i=1;i<=p2_y-p1_y;i++)
             {
                 Target[p1_y+i].Rx=(uint8)(i*Slope+Target[p1_y].Rx);
             }
         }
+
+        return 1;
     }
 
-    return 1;
+    return 0;
 }
 
 
@@ -727,6 +731,95 @@ uint8 Judge(void)
         }
     } while (0);    //想写goto又不敢写的屑
     
+    if(zuo_yuanhuan_flag && flag_Round_ARM_L)    //入环阶段拉线    ruhuan>=hd_in 为外部参数
+    {
+        uint8 addition=80;
+
+        for(uint8 i=EdgeNum;i>0;i--)
+        {
+            addition*=0.96;
+            edge[i].Rx-=addition;
+        }
+        /*
+        uint8 Target_y=0;
+        uint8 Target_x[2]={0};  //第一元素为当前值，第二元素为上次值
+
+        for(uint8 i=EdgeNum;i>=IMG_Y/4;i--)   //入左环，从上到下，从右到左扫线，寻找尖点
+        {   
+            Target_x[1]=Target_x[0];
+
+            for(uint8 j=edge[i].Rx;j>IMG_X/3;j--)
+            {
+                if(img[i][j-1]==Black && img[i][j]==White)
+                {
+                    Target_x[0]=j;
+                    break;
+                }
+            }
+
+            Target_y=i;
+
+            if(i<EdgeNum-1 && Target_x[1]-Target_x[0]>=15) //变化较大
+            {
+                break;
+            }
+        }
+
+        if(Target_y)
+        {
+            //edge[0].Rx=IMG_X/2;
+            edge[Target_y].Rx=Target_x[0];
+            Connect(edge,0,0,Target_y);
+
+            flag_Normal_Lose_L=1;
+        }
+        */
+    }
+    else if(you_yuanhuan_flag && flag_Round_ARM_R)   //ruhuan>=hd_in 为外部参数，此时已经过了第一个环口
+    {
+        uint8 addition=80;
+
+        for(uint8 i=EdgeNum;i>0;i--)
+        {
+            addition*=0.96;
+            edge[i].Lx+=addition;
+        }
+        /*
+        uint8 Target_y=0;
+        uint8 Target_x[2]={0};  //第一元素为当前值，第二元素为上次值
+
+        for(uint8 i=EdgeNum;i>=IMG_Y/4;i--)   //入右环，从上到下，从左到右扫线，寻找尖点
+        {   
+            Target_x[1]=Target_x[0];
+
+            for(uint8 j=edge[i].Lx;j<IMG_X-1;j++)
+            {
+                if(img[i][j]==Black && img[i][j+1]==White)
+                {
+                    Target_x[0]=j;
+                    break;
+                }
+            }
+
+            Target_y=i;
+
+            if(i<EdgeNum-1 && Target_x[0]-Target_x[1]>=15) //变化较大
+            {
+                break;
+            }
+        }
+
+        if(Target_y)
+        {
+            //edge[0].Lx=IMG_X/2;
+            edge[Target_y].Lx=Target_x[0];
+            Connect(edge,1,0,Target_y);
+
+            flag_Normal_Lose_R=1;
+        }
+        */
+    }
+
     //------环岛检测 <bottom>---------//
 
     //------AprilTag检测 <head>---------//
@@ -911,7 +1004,25 @@ void If_Lose_Edge(void)
         */
     }
 
-    if(flag_Cross)  //两侧丢边
+    if(flag_T_Road)
+    {
+        if(zuo_yuanhuan_flag)
+        {
+            edge[0].Rx=120;
+            edge[EdgeNum].Rx=20;
+            Connect(edge,0,0,EdgeNum);
+            flag_Normal_Lose_L;
+        }
+        else if(you_yuanhuan_flag)
+        {
+            edge[0].Lx=68;
+            edge[EdgeNum].Lx=168;
+            Connect(edge,1,0,EdgeNum);
+            flag_Normal_Lose_R;
+        }
+    }
+
+    if(flag_Cross)  //十字
     {
         Damn_Lose_Edge_all();   //双侧丢边函数
     }
