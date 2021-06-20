@@ -112,8 +112,8 @@ void aicar_mix_error()
     ad_error=(ad_left-ad_right)*100/(ad_left+ad_right);
     if(zuo_yuanhuan_flag==1)
     {
-        ad_left=ad_value1*0.8+ad_value2*0.8;
-        ad_right=ad_value5*0.25+ad_value6*0.25;
+        ad_left=ad_value1*0.8+ad_value3*0.1;
+        ad_right=ad_value6*0.25+ad_value4*0.1;
         
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
         if(ad_error<0)//Õý×ó¸ºÓÒ
@@ -130,8 +130,8 @@ void aicar_mix_error()
     }
     else if(you_yuanhuan_flag==1)
     {
-        ad_left=ad_value1*0.25+ad_value2*0.25;
-        ad_right=ad_value5*0.8+ad_value6*0.8;
+        ad_left=ad_value1*0.25;
+        ad_right=ad_value6*0.8;
         
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);   
         if(ad_error>0)

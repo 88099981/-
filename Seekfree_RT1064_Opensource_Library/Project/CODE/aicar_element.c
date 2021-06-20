@@ -15,7 +15,7 @@
 vuint8 ruhuan=0,chuhuan=0;
 vuint8 chuhuan_delay=0;
 vuint8 ruhuan_delay=0;
-vuint8 ruhuan_wait=0;
+vuint8 ruhuan_wait=0;//´ò½ÇÊ±¼ä
 
 uint8 hd_in=HD_IN,hd_out=HD_OUT;
 uint8 hd_in_delay=HD_IN_DELAY,hd_out_delay=HD_OUT_DELAY;

@@ -566,7 +566,7 @@ void para_huandao()
     lcd_showstr(0,1,"out:");
     lcd_showstr(0,2,"in_delay:");
     lcd_showstr(0,3,"out_delay:");
-    lcd_showstr(0,4,"init:");    
+    lcd_showstr(0,4,"init");    
     lcd_showuint8(10*8,0,hd_in);
     lcd_showuint8(10*8,1,hd_out);
     lcd_showuint8(10*8,2,hd_in_delay);
