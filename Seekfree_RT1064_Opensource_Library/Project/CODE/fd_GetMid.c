@@ -53,6 +53,7 @@ void init(void)
     flag_LoseEdge_part_R=0;
     flag_LoseEdge_all_L=0;
     flag_LoseEdge_all_R=0;
+    flag_T_Road=0;
     flag_Cross=0;
     flag_MidStart_in_Black=0;
     flag_Ver_Search_Finish=0;
@@ -559,7 +560,7 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)
 uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,uint8 white_or_black)
 {
     float rate=0;
-    uint8 feature=white_or_black?0xff:0x00; //确定需比较的颜色
+    uint8 feature=white_or_black?White:Black; //确定需比较的颜色
 
     if(T_y+dy>=IMG_Y || T_x+dx>=IMG_X)  //范围检查
     {
@@ -594,7 +595,9 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
         }
     }
 
-    rate=(rate/(dx*dy-(dx-thickness)*(dy-thickness)))*100;
+    rate=(rate/(dx*dy-(dx-2*thickness)*(dy-2*thickness)))*100;
+		
+		return((uint8)rate);
 }
 
 
@@ -659,7 +662,7 @@ uint8 Judge(void)
         flag_Round_ARM_R--;
     }
    
-     //-------状态整理 <bottom>--------//
+    //-------状态整理 <bottom>--------//
 
     //------车库检测 <head>---------//
     if(If_Garage())
@@ -725,6 +728,14 @@ uint8 Judge(void)
     } while (0);    //想写goto又不敢写的屑
     
     //------环岛检测 <bottom>---------//
+
+    //------AprilTag检测 <head>---------//
+    if(Feature_Verify_Box(64,3,60,17,2,1)>=75 && Feature_Verify(66,5,56,13,Block_B)>=20)
+    {
+        bb_time=20;
+        return 1;
+    }
+    //------AprilTag检测 <bottom>---------//
 
     //-------单侧丢边 <head>--------//
     if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0) //单左丢边
@@ -1036,7 +1047,7 @@ void Search(void)
     //-------------------结束部分 <head>---------------//
     if(flag_Garage_L || flag_Garage_R)
     {
-
+        break_flag=1;
     }
     //-------------------结束部分 <bottom>-------------//
 }
