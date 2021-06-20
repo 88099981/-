@@ -34,7 +34,7 @@ void aicar_gogogo()
     //a_cam=A_cam;//二次项系数，还不好用
     kp_cam=KP_cam;
     kd_cam=KD_cam;
-    ostu_thres=203;//阈值
+    //ostu_thres=203;//阈值
 
     EnableGlobalIRQ(0); //总中断最后开启
     aicar_meau_init();

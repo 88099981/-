@@ -16,5 +16,6 @@ extern vuint8 ruhuan_turn;
 
 //º¯Êý
 void aicar_huandao();
+void aicar_garage_out();
 
 #endif

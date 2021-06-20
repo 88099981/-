@@ -17,6 +17,7 @@ extern uint32 servo_duty;
 extern vuint8 break_flag;
 extern vuint8 adc_isr_enable;
 extern uint16 stop_cnt;
+extern int32 turn_sum;
 extern double chasu_k,chasu_b;
 
 void aicar_init();

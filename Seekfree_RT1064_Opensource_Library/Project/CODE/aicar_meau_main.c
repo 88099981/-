@@ -82,8 +82,8 @@ void up_status()
             pointer_arrow=3;break;
     case MEAU_DEBUG:
         pointer_arrow-=1;
-        if(pointer_arrow>6)
-            pointer_arrow=6;break;   
+        if(pointer_arrow>7)
+            pointer_arrow=7;break;   
     case MEAU_PARA:
         pointer_arrow-=1;
         if(pointer_arrow>3)
@@ -123,7 +123,7 @@ void down_status()
             pointer_arrow=0;break;
     case MEAU_DEBUG:
         pointer_arrow+=1;
-        if(pointer_arrow>6)
+        if(pointer_arrow>7)
             pointer_arrow=0;break;       
     case MEAU_PARA:
         pointer_arrow+=1;
@@ -177,6 +177,7 @@ void go_status()
         case 4:pointer_page=MEAU_DEBUG_4;break;
         case 5:pointer_page=MEAU_DEBUG_5;break;//huandao
         case 6:pointer_page=MEAU_DEBUG_6;break;//chasu
+        case 7:pointer_page=MEAU_DEBUG_7;break;//chasu        
         }       
         pointer_arrow=0;
         lcd_clear(BLACK);break;

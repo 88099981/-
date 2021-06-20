@@ -49,6 +49,7 @@ void show_page(uint8 page)
     case MEAU_DEBUG_4:debug_motor();break;
     case MEAU_DEBUG_5:debug_huandao();break;
     case MEAU_DEBUG_6:debug_chasu();break;
+    case MEAU_DEBUG_7:debug_20602();break;
     case MEAU_GOGOGO_0:gogogo_mix();break;
     case MEAU_GOGOGO_1:gogogo_adc();break;
     case MEAU_GOGOGO_2:gogogo_camera();break;
@@ -218,6 +219,7 @@ void debug_servo()
     servo_duty=3850;
 }
 
+
 void debug_motor()
 {
     stop_cnt=0;
@@ -284,6 +286,131 @@ void debug_motor()
     break_flag=1;
     aim_speed=0;
     servo_duty=3850;   
+}
+
+
+void debug_huandao()
+{
+    while(key4_flag!=1)
+    {
+        aicar_key_get();//按键检测
+        aicar_switch_get();//拨码开关
+        aicar_adc_get();
+
+        if(mt9v03x_csi_finish_flag)
+        {      
+            mt9v03x_csi_finish_flag = 0;
+            cut_image_to_img2();//copy	
+            binary_img();				   				
+            Search();    
+        }       
+        aicar_huandao();
+        aicar_huandao_printf();
+
+        if(key1_flag)
+        {
+            key1_flag=0;
+            zuo_yuanhuan_flag=1;
+        }
+        if(key2_flag)
+        {
+            key2_flag=0;
+            you_yuanhuan_flag=1;
+        }
+        if(key4_flag)
+        {
+            lcd_clear(BLACK);
+            pointer_page=MEAU_DEBUG;
+            pointer_arrow=5;
+        }    
+        if(sw1_status==1)
+            aicar_mix_error();
+        else
+            servo_duty=3850;
+    }
+    key4_flag=0;
+    servo_duty=3850;
+}
+
+
+void debug_chasu()
+{
+    stop_cnt=0;
+    break_flag=0;
+    aim_speed=SPEED_SET;
+    while(key4_flag!=1)
+    {
+        aicar_key_get();//按键检测
+        aicar_switch_get();//拨码开关
+        aicar_adc_get();//停车用
+        if(key1_flag)
+        {
+            key1_flag=0;
+            aim_speed+=10;
+        }
+        else if(key2_flag)
+        {
+            key2_flag=0;
+            aim_speed-=10;
+        }     
+        if(mt9v03x_csi_finish_flag)
+        {      
+            mt9v03x_csi_finish_flag = 0;
+            cut_image_to_img2();//copy	
+            binary_img();				   				
+            Search();    
+        }        
+        if(flag_Cross==1)
+            aicar_adc_error();
+        else
+            aicar_mix_error();
+       
+        aicar_chasu_printf();
+        if(key4_flag)
+        {
+            lcd_clear(BLACK);
+            pointer_page=MEAU_DEBUG;
+            pointer_arrow=6;
+        }
+    }
+    break_flag=1;
+    key4_flag=0;
+    aim_speed=0;
+    servo_duty=3850;
+}
+
+void debug_20602()
+{
+    turn_sum=0;
+    while(key4_flag!=1)
+    {
+        aicar_key_get();//按键检测
+        aicar_switch_get();//拨码开关
+        aicar_adc_get();
+
+        get_icm20602_accdata_spi();
+        get_icm20602_gyro_spi();
+        turn_sum+=icm_gyro_z;
+            
+        aicar_20602_printf();        
+        if(key1_flag)
+        {
+            key1_flag=0;
+        }
+        if(key2_flag)
+        {
+            key2_flag=0;
+        }
+        if(key4_flag)
+        {
+            lcd_clear(BLACK);
+            pointer_page=MEAU_DEBUG;
+            pointer_arrow=5;
+        }    
+    }
+    key4_flag=0;
+    servo_duty=3850;
+    
 }
 
 
@@ -409,6 +536,9 @@ void gogogo_mix()
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
+    
+    aicar_garage_out();
+    
     while(key4_flag!=1)
     {
         aicar_key_get();//按键检测
@@ -461,97 +591,6 @@ void gogogo_mix()
             lcd_clear(BLACK);
             pointer_page=MEAU_GOGOGO;
             pointer_arrow=0;
-        }
-    }
-    break_flag=1;
-    key4_flag=0;
-    aim_speed=0;
-    servo_duty=3850;
-}
-
-
-void debug_huandao()
-{
-    while(key4_flag!=1)
-    {
-        aicar_key_get();//按键检测
-        aicar_switch_get();//拨码开关
-        aicar_adc_get();
-
-        if(mt9v03x_csi_finish_flag)
-        {      
-            mt9v03x_csi_finish_flag = 0;
-            cut_image_to_img2();//copy	
-            binary_img();				   				
-            Search();    
-        }       
-        aicar_huandao();
-        aicar_huandao_printf();
-
-        if(key1_flag)
-        {
-            key1_flag=0;
-            zuo_yuanhuan_flag=1;
-        }
-        if(key2_flag)
-        {
-            key2_flag=0;
-            you_yuanhuan_flag=1;
-        }
-        if(key4_flag)
-        {
-            lcd_clear(BLACK);
-            pointer_page=MEAU_DEBUG;
-            pointer_arrow=5;
-        }    
-        if(sw1_status==1)
-            aicar_mix_error();
-        else
-            servo_duty=3850;
-    }
-    key4_flag=0;
-    servo_duty=3850;
-}
-
-
-void debug_chasu()
-{
-    stop_cnt=0;
-    break_flag=0;
-    aim_speed=SPEED_SET;
-    while(key4_flag!=1)
-    {
-        aicar_key_get();//按键检测
-        aicar_switch_get();//拨码开关
-        aicar_adc_get();//停车用
-        if(key1_flag)
-        {
-            key1_flag=0;
-            aim_speed+=10;
-        }
-        else if(key2_flag)
-        {
-            key2_flag=0;
-            aim_speed-=10;
-        }     
-        if(mt9v03x_csi_finish_flag)
-        {      
-            mt9v03x_csi_finish_flag = 0;
-            cut_image_to_img2();//copy	
-            binary_img();				   				
-            Search();    
-        }        
-        if(flag_Cross==1)
-            aicar_adc_error();
-        else
-            aicar_mix_error();
-       
-        aicar_chasu_printf();
-        if(key4_flag)
-        {
-            lcd_clear(BLACK);
-            pointer_page=MEAU_DEBUG;
-            pointer_arrow=6;
         }
     }
     break_flag=1;

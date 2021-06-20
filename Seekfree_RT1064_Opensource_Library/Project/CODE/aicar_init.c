@@ -9,16 +9,21 @@
 **0000000000000000000000000000000000000000000000000000000**
 **********************************************************/
 #include "aicar_init.h"
-#include "zf_pwm.h"
-#include "aicar_servo.h"
-#include "zf_gpio.h"
-#include "SEEKFREE_MT9V03X_CSI.h"
-#include "aicar_motor.h"
-#include "SEEKFREE_18TFT.h"
-#include "zf_qtimer.h"
-#include "SEEKFREE_WIRELESS.h"
 #include "aicar_key.h"
 #include "aicar_adc.h"
+#include "aicar_servo.h"
+#include "aicar_motor.h"
+#include "aicar_flash.h"
+#include "zf_flash.h"
+#include "zf_pwm.h"
+#include "zf_qtimer.h"
+#include "zf_gpio.h"
+#include "SEEKFREE_MT9V03X_CSI.h"
+#include "SEEKFREE_ICM20602.h"
+#include "SEEKFREE_18TFT.h"
+#include "SEEKFREE_WIRELESS.h"
+
+
 
 vuint8 zuo_yuanhuan_flag=0;
 vuint8 you_yuanhuan_flag=0;
@@ -29,9 +34,11 @@ uint16 stop_cnt=0;
 int16 left_motor=0,right_motor=0;
 uint32 servo_duty=0;
 int16 aim_speed=0;//pid用,最大值不是50000，别胡改
-uint16 bb_time=0;
+uint16 bb_time=0;//bb
 int16 encoder1=0,encoder2=0;
 uint16 encoder_str[20]={0};
+
+int32 turn_sum=0;//出库转角
 
 double chasu_k=0.0,chasu_b=0.0;
 
@@ -50,4 +57,5 @@ void aicar_init()
     aicar_motor_init();//motor
     flash_init();   //初始化flash
     aicar_flash_read();//读取flash
+    icm20602_init_spi();//20602    
 }

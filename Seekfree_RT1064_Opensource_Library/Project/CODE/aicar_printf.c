@@ -75,6 +75,8 @@ void aicar_motorpid_printf()
     lcd_showstr(0,7,"speed1:");  
     lcd_showfloat(9*8,7,speed_out1, 5,0);
 }
+
+
 void aicar_chasu_printf()
 {
     lcd_showstr(0,0,"ad_left:");    
@@ -122,6 +124,25 @@ void aicar_huandao_printf()
 }
 
 
+void aicar_20602_printf()
+{
+    lcd_showstr(0,0,"icm_acc_x:");
+    lcd_showint16(10*8,0,icm_acc_x);
+    lcd_showstr(0,1,"icm_acc_y:");
+    lcd_showint16(10*8,1,icm_acc_y);
+    lcd_showstr(0,2,"icm_acc_z:");
+    lcd_showint16(10*8,2,icm_acc_z);
+    lcd_showstr(0,3,"turn_sum:");
+    lcd_showint32(10*8,3,turn_sum,5);
+    lcd_showstr(0,4,"icm_gyro_x:");
+    lcd_showint16(10*8,4,icm_gyro_x);
+    lcd_showstr(0,5,"icm_gyro_y:");
+    lcd_showint16(10*8,5,icm_gyro_y);
+    lcd_showstr(0,6,"icm_gyro_z:");
+    lcd_showint16(10*8,6,icm_gyro_z);
+}
+
+
 void aicar_camerapid_printf()
 {
     lcd_showstr(0,2,"cam_err:");
@@ -153,7 +174,8 @@ void print_debug()
     lcd_showstr(0,3,"servo");
     lcd_showstr(0,4,"motor");
     lcd_showstr(0,5,"huandao");    
-    lcd_showstr(0,6,"chasu");    
+    lcd_showstr(0,6,"chasu");
+    lcd_showstr(0,7,"20602");       
 }
 
 

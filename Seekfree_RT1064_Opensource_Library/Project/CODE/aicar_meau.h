@@ -17,6 +17,7 @@ typedef enum
     MEAU_DEBUG_4,//电机pid
     MEAU_DEBUG_5,//环岛
     MEAU_DEBUG_6,//差速
+    MEAU_DEBUG_7,//陀螺仪20602
     MEAU_PARA,//参数显示
     MEAU_PARA_0,//环岛参数
     MEAU_PARA_0_0,//ruhuan
@@ -43,6 +44,7 @@ void debug_servo();
 void debug_motor();
 void debug_huandao();
 void debug_chasu();
+void debug_20602();
 void gogogo_camera();
 void gogogo_adc();
 void gogogo_mix();
