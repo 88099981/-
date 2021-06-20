@@ -39,19 +39,19 @@
 #define EXAMPLE_FLASH_SECTOR_PAGE   (0)
 
 uint8  write_data1;
-uint16 write_data2;
+int16 write_data2;
 uint32 write_data3;
 float  write_data4;
 
 
-uint8  read_data1;
+int8  read_data1;
 uint16 read_data2;
 uint32 read_data3;
 float  read_data4;
 
-uint8  read_data11;
-uint16 read_data22;
-uint32 read_data33;
+int8  read_data11;
+int16 read_data22;
+int32 read_data33;
 float  read_data44;
 
 uint8 status;
@@ -72,9 +72,9 @@ int main(void)
     
 
     //设置需要写入的数据
-    write_data1 = 66;
-    write_data2 = 6666;
-    write_data3 = 666666;
+    write_data1 = -66;
+    write_data2 = -6666;
+    write_data3 = -666666;
     write_data4 = 6666.66;
 	
     

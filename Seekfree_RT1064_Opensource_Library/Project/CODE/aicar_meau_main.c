@@ -13,6 +13,7 @@
 #include "aicar_meau.h"
 #include "aicar_meau_main.h"
 #include "aicar_element.h"
+#include "aicar_flash.h"
 #include "SEEKFREE_18TFT.h"
 
 uint8 pointer_page=0;
@@ -89,8 +90,8 @@ void up_status()
             pointer_arrow=3;break; 
     case MEAU_PARA_0:
         pointer_arrow-=1;
-        if(pointer_arrow>3)
-            pointer_arrow=3;break; 
+        if(pointer_arrow>4)
+            pointer_arrow=4;break; 
     case MEAU_PARA_0_0:
         hd_in+=1;break;       
     case MEAU_PARA_0_1:
@@ -128,7 +129,7 @@ void down_status()
             pointer_arrow=0;break; 
     case MEAU_PARA_0:
         pointer_arrow+=1;
-        if(pointer_arrow>3)
+        if(pointer_arrow>4)
             pointer_arrow=0;break; 
     case MEAU_PARA_0_0:
         hd_in-=1;break;       
@@ -189,9 +190,15 @@ void go_status()
         case 1:pointer_page=MEAU_PARA_0_1;break;
         case 2:pointer_page=MEAU_PARA_0_2;break;
         case 3:pointer_page=MEAU_PARA_0_3;break;
+        case 4:aicar_flash_init();break;
         }       
         pointer_arrow=MEAU_NON;
         lcd_clear(BLACK);break;
+    case MEAU_PARA_0_0:aicar_flash_write();break;  
+    case MEAU_PARA_0_1:aicar_flash_write();break; 
+    case MEAU_PARA_0_2:aicar_flash_write();break; 
+    case MEAU_PARA_0_3:aicar_flash_write();break; 
+          
     case MEAU_GOGOGO:       
         switch (pointer_arrow)
         {

@@ -48,4 +48,6 @@ void aicar_init()
     gpio_init(BEEP_PIN,GPO,0,GPIO_PIN_CONFIG);//bb
     aicar_servo_init();//servo
     aicar_motor_init();//motor
+    flash_init();   //≥ı ºªØflash
+    aicar_flash_read();//∂¡»°flash
 }

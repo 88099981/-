@@ -1119,6 +1119,12 @@
             <name>$PROJ_DIR$\..\..\CODE\aicar_error.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_flash.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_flash.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_gogogo.c</name>
         </file>
         <file>
