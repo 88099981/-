@@ -90,8 +90,8 @@ void up_status()
             pointer_arrow=3;break; 
     case MEAU_PARA_0:
         pointer_arrow-=1;
-        if(pointer_arrow>4)
-            pointer_arrow=4;break; 
+        if(pointer_arrow>5)
+            pointer_arrow=5;break; 
     case MEAU_PARA_0_0:
         hd_in+=1;break;       
     case MEAU_PARA_0_1:
@@ -99,7 +99,9 @@ void up_status()
     case MEAU_PARA_0_2:
         hd_in_delay+=1;break; 
     case MEAU_PARA_0_3:
-        hd_out_delay+=1;break;              
+        hd_out_delay+=1;break; 
+    case MEAU_PARA_0_4:
+        hd_turn+=1;break;    
     case MEAU_GOGOGO:
         pointer_arrow-=1;
         if(pointer_arrow>2)
@@ -129,7 +131,7 @@ void down_status()
             pointer_arrow=0;break; 
     case MEAU_PARA_0:
         pointer_arrow+=1;
-        if(pointer_arrow>4)
+        if(pointer_arrow>5)
             pointer_arrow=0;break; 
     case MEAU_PARA_0_0:
         hd_in-=1;break;       
@@ -138,7 +140,9 @@ void down_status()
     case MEAU_PARA_0_2:
         hd_in_delay-=1;break; 
     case MEAU_PARA_0_3:
-        hd_out_delay-=1;break;        
+        hd_out_delay-=1;break;  
+    case MEAU_PARA_0_4:
+        hd_turn-=1;break;          
     case MEAU_GOGOGO:
         pointer_arrow+=1;
         if(pointer_arrow>2)
@@ -190,7 +194,8 @@ void go_status()
         case 1:pointer_page=MEAU_PARA_0_1;break;
         case 2:pointer_page=MEAU_PARA_0_2;break;
         case 3:pointer_page=MEAU_PARA_0_3;break;
-        case 4:aicar_flash_init();break;
+        case 4:pointer_page=MEAU_PARA_0_4;break;        
+        case 5:aicar_flash_init();break;
         }       
         pointer_arrow=MEAU_NON;
         lcd_clear(BLACK);break;
@@ -198,6 +203,7 @@ void go_status()
     case MEAU_PARA_0_1:aicar_flash_write();break; 
     case MEAU_PARA_0_2:aicar_flash_write();break; 
     case MEAU_PARA_0_3:aicar_flash_write();break; 
+    case MEAU_PARA_0_4:aicar_flash_write();break;    
           
     case MEAU_GOGOGO:       
         switch (pointer_arrow)
@@ -237,7 +243,10 @@ void back_status()
         pointer_arrow=2;break;   
     case MEAU_PARA_0_3:
         pointer_page=MEAU_PARA_0;
-        pointer_arrow=3;break;          
+        pointer_arrow=3;break;    
+    case MEAU_PARA_0_4:
+        pointer_page=MEAU_PARA_0;
+        pointer_arrow=3;break;         
     case MEAU_GOGOGO:
         pointer_page=MEAU_MAIN;
         pointer_arrow=2;break;

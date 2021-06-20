@@ -23,6 +23,7 @@ typedef enum
     MEAU_PARA_0_1,//chuhuan
     MEAU_PARA_0_2,//ruhuan_delay
     MEAU_PARA_0_3,//chuhuan_delay
+    MEAU_PARA_0_4,//ruhuan_turn
     MEAU_GOGOGO,
     MEAU_GOGOGO_0,//mix
     MEAU_GOGOGO_1,//ad

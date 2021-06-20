@@ -39,6 +39,7 @@ void show_page(uint8 page)
     case MEAU_PARA_0_1:para_huandao();break;
     case MEAU_PARA_0_2:para_huandao();break;
     case MEAU_PARA_0_3:para_huandao();break;
+    case MEAU_PARA_0_4:para_huandao();break;    
     case MEAU_GOGOGO:print_gogogo();break;
     case MEAU_OURTEAM:print_ourteam();break;
     case MEAU_DEBUG_0:debug_camera();break;
@@ -566,9 +567,11 @@ void para_huandao()
     lcd_showstr(0,1,"out:");
     lcd_showstr(0,2,"in_delay:");
     lcd_showstr(0,3,"out_delay:");
-    lcd_showstr(0,4,"init");    
+    lcd_showstr(0,4,"turn:");
+    lcd_showstr(0,5,"init");    
     lcd_showuint8(10*8,0,hd_in);
     lcd_showuint8(10*8,1,hd_out);
     lcd_showuint8(10*8,2,hd_in_delay);
     lcd_showuint8(10*8,3,hd_out_delay);
+    lcd_showuint8(10*8,4,hd_turn);    
 }

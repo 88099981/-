@@ -110,7 +110,7 @@ void aicar_mix_error()
     ad_left=ad_value2*0.3+ad_value3*0.7;
     ad_right=ad_value4*0.7+ad_value5*0.3;
     ad_error=(ad_left-ad_right)*100/(ad_left+ad_right);
-    if(zuo_yuanhuan_flag==1)
+    if(zuo_yuanhuan_flag==1&&ruhuan_turn>0)
     {
         ad_left=ad_value1*0.8+ad_value3*0.1;
         ad_right=ad_value6*0.25+ad_value4*0.1;
@@ -121,14 +121,12 @@ void aicar_mix_error()
             ad_error=Cp_sqrt(-ad_error);
             ad_error=-ad_error;               
         }
-                
+        if(camera_error<0)//正左负右
+            camera_error=0;             
+                       
         //camera_error=0;
-        if(!flag_T_Road)
-        {
-            camera_error=0;
-        }
     }
-    else if(you_yuanhuan_flag==1)
+    else if(you_yuanhuan_flag==1&&ruhuan_turn>0)
     {
         ad_left=ad_value1*0.25;
         ad_right=ad_value6*0.8;
@@ -136,12 +134,10 @@ void aicar_mix_error()
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);   
         if(ad_error>0)
             ad_error=Cp_sqrt(ad_error);//正左负右
-        //camera_error=0;
-        if(!flag_T_Road)
-        {
-            camera_error=0;
-        }
+        if(camera_error>0)
+            camera_error=0;//正左负右        
     }
+    
     servo_angle_cam=(int16)(kp_cam*camera_error + kd_cam*(camera_error-lasttime_ad));
     lasttime_cam=camera_error;      
     

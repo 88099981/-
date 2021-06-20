@@ -9,7 +9,7 @@
 //定义所在扇区的页编号
 #define EXAMPLE_FLASH_SECTOR_PAGE   (0)
 
-#define FLASH_SAVE_NUM  4//宏定义需要存储参数的个数    一个页最多为256字节，一个参数需要占4个字节，因此最多这里为256/4=64
+#define FLASH_SAVE_NUM  5//宏定义需要存储参数的个数    一个页最多为256字节，一个参数需要占4个字节，因此最多这里为256/4=64
 extern uint32 write_buf[FLASH_SAVE_NUM];
 extern uint32 read_buf[FLASH_SAVE_NUM];
 

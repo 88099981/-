@@ -26,7 +26,7 @@ void aicar_flash_read()
     hd_out = read_buf[1];
     hd_in_delay = read_buf[2];
     hd_out_delay = read_buf[3];      //读取浮点数时，应该使用宏函数将uint32类型转换为float
-
+    hd_turn = read_buf[4]; 
 }
 
 
@@ -43,6 +43,7 @@ void aicar_flash_write()
     write_buf[1] = hd_out;
     write_buf[2] = hd_in_delay;
     write_buf[3] = hd_out_delay; 
+    write_buf[4] = hd_turn;    
     //存储浮点时，首先取变量地址然后以uint32 *来访问变量获取数据。
     //write_buf[3] = *(uint32 *)&write_data4; 
     //不能使用此类格式write_buf[3] = (uint32)write_data4;这样会导致强制转换为整型，导致小数部分丢失
@@ -61,5 +62,6 @@ void aicar_flash_init()
     hd_out=HD_OUT;
     hd_in_delay=HD_IN_DELAY;
     hd_out_delay=HD_OUT_DELAY;
+    hd_turn=HD_TURN;
     aicar_flash_write();
 }
