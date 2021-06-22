@@ -742,9 +742,10 @@ uint8 Judge(void)
 
     if(flag_Round_ARM_L_B)    //入环阶段拉线
     {
+        uint8 Height=(1-(flag_Round_ARM_L_B/40))*(IMG_Y-1);
         edge[0].Rx=120;
-        edge[IMG_Y/3].Rx=20;
-        Connect(edge,0,0,IMG_Y/3);
+        edge[Height].Rx=20;
+        Connect(edge,0,0,Height);
 
         flag_Round_ARM_L_B--;
         flag_Normal_Lose_L=1;
@@ -794,9 +795,10 @@ uint8 Judge(void)
     }
     else if(flag_Round_ARM_R_B)
     {
+        uint8 Height=(1-(flag_Round_ARM_R_B/40))*(IMG_Y-1);
         edge[0].Lx=68;
-        edge[IMG_Y/3].Lx=168;
-        Connect(edge,1,0,IMG_Y/3);
+        edge[Height].Lx=168;
+        Connect(edge,1,0,Height);
 
         flag_Round_ARM_R_B--;
         flag_Normal_Lose_R=1;
