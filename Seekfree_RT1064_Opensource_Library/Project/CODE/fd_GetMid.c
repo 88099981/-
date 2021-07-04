@@ -25,11 +25,10 @@ uint8 flag_Straight_R=0;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö
 
 //------------------¸ß¼¶±êÖ¾,Ô­ÔòÉÏÓÉ×´Ì¬»úÈ·¶¨²¹Ïßº¯Êıµ÷ÓÃ-------------------//
 uint8 flag_T_Road=0;   //TĞÎÂ·£¨·ºÖ¸×î¶¥ÉÏ¼¸ĞĞÈ«ºÚ£¬ÒÔÏÂ³öÏÖ´óÃæ»ıÁ½²à¶ª±ßµÄ×´¿ö
+uint8 flag_Y_Road=0;   //Èı²í
 uint8 flag_Cross=0;    //Ê®×Ö                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 flag_Round_ARM_L=0;  //×ó»·µºÔ¤Î»
 uint8 flag_Round_ARM_R=0;  //ÓÒ»·µºÔ¤Î»
-uint8 flag_Round_ARM_L_B=0;  //×ó»·µºÔ¤Î» ÓÃÓÚÏŞÖÆflag_Round_ARM_L/RÔÚÍ¬Ò»Î»ÖÃ¶à´ÎÖÃÎ»µ¼ÖÂ¶ÔÎ»ÖÃµÄ´íÎóÅĞ¶Ï  ¡¾ÆúÓÃ¡¿
-uint8 flag_Round_ARM_R_B=0;  //ÓÒ»·µºÔ¤Î»                                                                ¡¾ÆúÓÃ¡¿
 uint8 flag_Is_This_Round=0;   //»·µº¾ö²ß±êÖ¾  Ñ¯ÎÊµç¸Ğ(µ÷ÓÃÍê¼ÇµÃ¸´Î»)    £¨ÎªÊ²Ã´²»ÎÊÎÊÉñÆæº£ÂİÄØ£¿
 uint8 flag_Round_in_L=0;   //×ó»·µº»·ÖĞ //ATTENTION ´ÓÈë»·¿ªÊ¼ÖÃÎ»
 uint8 flag_Round_in_R=0;   //ÓÒ»·µº»·ÖĞ
@@ -417,24 +416,15 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
 
     if(y)   //²»´¦Àíµ×±ß
     {
-        if(edge[y].Lx==0 && edge[y].Rx!=0)
+        if(edge[y].Lx==0)
         {
             flag_LoseEdge_part_L++;
-            //edge[y].Lx=edge[y].Rx-Width_Cali(y);
         }
-
-        else if(edge[y].Rx==0 && edge[y].Lx!=0)  //
+        else if(edge[y].Rx==0)
         {
-            flag_LoseEdge_part_R++;
-            //edge[y].Rx=edge[y].Lx+Width_Cali(y);
-        }
-        else if(edge[y].Rx==0 && edge[y].Lx==0) //¿ÓµùµÄÁ½²à¶ª±ß    
-        {
-            flag_LoseEdge_part_L++;
             flag_LoseEdge_part_R++;
         }
     }
-
 
     return ((edge[y].Rx-edge[y].Lx)/2);
 }
@@ -461,8 +451,6 @@ uint8 Ver_Search(uint8 MidStart)
             break;
         }
     }
-
-    //EdgeNum-=Y_LIMIT;
 
     return(EdgeNum);
 }
@@ -652,7 +640,7 @@ uint8 If_Garage(void)
 
 
 
-//×´Ì¬»ú
+//×´Ì¬ÅĞ¶Ï
 uint8 Judge(void)
 {
     //-------×´Ì¬ÕûÀí <head>--------//
@@ -665,7 +653,11 @@ uint8 Judge(void)
     {
         flag_Round_ARM_R--;
     }
-   
+    else if(flag_Y_Road)
+    {
+        flag_Y_Road--;
+    }
+    
     //-------×´Ì¬ÕûÀí <bottom>--------//
 
     //------³µ¿â¼ì²â <head>---------//
@@ -676,27 +668,18 @@ uint8 Judge(void)
     }
     //------³µ¿â¼ì²â <bottom>---------//
 
+    //------Èı²í¼ì²â <head>---------//
+    if(!flag_Y_Road && Feature_Verify(74,40,40,5,Block_A)>=90 && Feature_Verify(29,20,130,5,Block_A)>=90) 
+    {
+        flag_Y_Road=20;
+        bb_time=20;
+    }
+    //-------Èı²í¶ª±ß <bottom>--------//
+
      //-------Ë«²à¶ª±ß <head>--------//
     if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //Ë«²à¶ª±ßÅĞ¶ÏÎªÊ®×Ö
     {
-        uint16 NumInBlack=0;
-
-        for(uint8 i=IMG_Y-1;i>IMG_Y-3;i--)  //É¨Á½ĞĞ
-        {
-            for(uint8 j=0;j<IMG_X;j++)
-            {
-                if(img[i][j]==Black)
-                {
-                    NumInBlack++;
-                }
-
-                #ifdef IMG_DEBUG
-                img[i][j]=Gray;
-                #endif
-            }
-        }
-
-        if(NumInBlack>=IMG_X*1.9) //¶î×î¶¥ÉÏÁ½ĞĞ»ù±¾È«ºÚ Õâ¸öÖµ¸ù¾İĞèÇóĞŞ¸Ä
+        if(Feature_Verify(0,47,188,2,Block_A)>=90) //¶î×î¶¥ÉÏÁ½ĞĞ»ù±¾È«ºÚ Õâ¸öÖµ¸ù¾İĞèÇóĞŞ¸Ä
         {
             flag_T_Road=1;
             return 1;
@@ -711,7 +694,7 @@ uint8 Judge(void)
     //------»·µº¼ì²â <head>---------//
     do
     {
-        if(Feature_Verify(83,20,20,20,Block_A)<=90) //ÅĞ¶ÏÊÇ·ñÎªÖ±ÈüµÀ£¬¼õĞ¡Ö±½ÇÍäµÄÎó±¨
+        if(Feature_Verify(83,20,20,20,Block_A)<=90) //ÅĞ¶ÏÊÇ·ñÎªÖ±ÈüµÀ£¬¼õĞ¡Ö±½ÇÍäµÄÎó±¨    //Ìõ¼şÊÇ·ñºÏÊÊ£¿
         {
             break;
         }
@@ -730,122 +713,6 @@ uint8 Judge(void)
             //return 1;
         }
     } while (0);    //ÏëĞ´gotoÓÖ²»¸ÒĞ´µÄĞ¼
-    
-    if(zuo_yuanhuan_flag && flag_Round_ARM_L)
-    {
-        flag_Round_ARM_L_B=20;
-    }
-    else if(you_yuanhuan_flag && flag_Round_ARM_R)
-    {
-        flag_Round_ARM_R_B=20;
-    }
-
-    if(flag_Round_ARM_L_B)    //Èë»·½×¶ÎÀ­Ïß
-    {
-        uint8 Height=(1-(flag_Round_ARM_L_B/40))*(IMG_Y-1);
-        edge[0].Rx=120;
-        edge[Height].Rx=20;
-        Connect(edge,0,0,Height);
-
-        flag_Round_ARM_L_B--;
-        flag_Normal_Lose_L=1;
-        /*
-        uint8 addition=80;
-
-        for(uint8 i=EdgeNum;i>0;i--)
-        {
-            addition*=0.96;
-            edge[i].Rx-=addition;
-        }
-        */
-        /*
-        uint8 Target_y=0;
-        uint8 Target_x[2]={0};  //µÚÒ»ÔªËØÎªµ±Ç°Öµ£¬µÚ¶şÔªËØÎªÉÏ´ÎÖµ
-
-        for(uint8 i=EdgeNum;i>=IMG_Y/4;i--)   //Èë×ó»·£¬´ÓÉÏµ½ÏÂ£¬´ÓÓÒµ½×óÉ¨Ïß£¬Ñ°ÕÒ¼âµã
-        {   
-            Target_x[1]=Target_x[0];
-
-            for(uint8 j=edge[i].Rx;j>IMG_X/3;j--)
-            {
-                if(img[i][j-1]==Black && img[i][j]==White)
-                {
-                    Target_x[0]=j;
-                    break;
-                }
-            }
-
-            Target_y=i;
-
-            if(i<EdgeNum-1 && Target_x[1]-Target_x[0]>=15) //±ä»¯½Ï´ó
-            {
-                break;
-            }
-        }
-
-        if(Target_y)
-        {
-            edge[0].Rx=IMG_X/2;
-            edge[Target_y].Rx=Target_x[0];
-            Connect(edge,0,0,Target_y);
-
-            flag_Normal_Lose_L=1;
-        }
-        */
-    }
-    else if(flag_Round_ARM_R_B)
-    {
-        uint8 Height=(1-(flag_Round_ARM_R_B/40))*(IMG_Y-1);
-        edge[0].Lx=68;
-        edge[Height].Lx=168;
-        Connect(edge,1,0,Height);
-
-        flag_Round_ARM_R_B--;
-        flag_Normal_Lose_R=1;
-        /*
-        uint8 addition=80;
-
-        for(uint8 i=EdgeNum;i>0;i--)
-        {
-            addition*=0.96;
-            edge[i].Lx+=addition;
-        }
-        */
-        /*
-        uint8 Target_y=0;
-        uint8 Target_x[2]={0};  //µÚÒ»ÔªËØÎªµ±Ç°Öµ£¬µÚ¶şÔªËØÎªÉÏ´ÎÖµ
-
-        for(uint8 i=EdgeNum;i>=IMG_Y/4;i--)   //ÈëÓÒ»·£¬´ÓÉÏµ½ÏÂ£¬´Ó×óµ½ÓÒÉ¨Ïß£¬Ñ°ÕÒ¼âµã
-        {   
-            Target_x[1]=Target_x[0];
-
-            for(uint8 j=edge[i].Lx;j<IMG_X-1;j++)
-            {
-                if(img[i][j]==Black && img[i][j+1]==White)
-                {
-                    Target_x[0]=j;
-                    break;
-                }
-            }
-
-            Target_y=i;
-
-            if(i<EdgeNum-1 && Target_x[0]-Target_x[1]>=15) //±ä»¯½Ï´ó
-            {
-                break;
-            }
-        }
-
-        if(Target_y)
-        {
-            edge[0].Lx=IMG_X/2;
-            edge[Target_y].Lx=Target_x[0];
-            Connect(edge,1,0,Target_y);
-
-            flag_Normal_Lose_R=1;
-        }
-        */
-    }
 
     //------»·µº¼ì²â <bottom>---------//
 
@@ -892,114 +759,36 @@ inline uint8 Width_Cali(uint8 y)
 void Damn_Lose_Edge_all(void)
 {
 
-uint8 flag_Edge_Start_Exist=0;
-uint8 flag_Edge_End_Exist=0;
-uint8 EdgeStartPos=0;
-uint8 EdgeEndPos=0;
+    uint8 flag_Edge_Start_Exist=0;
+    uint8 flag_Edge_End_Exist=0;
+    uint8 EdgeStartPos=0;
+    uint8 EdgeEndPos=0;
 
-for(uint8 i=0;i<EdgeNum;i++)
-{
-    if(edge[i].Lx!=0 && edge[i].Rx!=0)  //ÅĞ¶ÏÊÇ·ñ´æÔÚ±ßÑØ
+    for(uint8 i=0;i<EdgeNum;i++)
     {
-        flag_Edge_Start_Exist=1;
-        EdgeStartPos=i;
-        break;
-    }
-}
-
-for(uint8 i=EdgeNum;i>0;i--)
-{
-    if(edge[i].Lx!=0 && edge[i].Rx!=0)  //ÅĞ¶ÏÊÇ·ñ´æÔÚ±ßÑØ
-    {
-        flag_Edge_End_Exist=0;
-        EdgeEndPos=i;
-        break;
-    }
-}
-
-if(flag_Edge_Start_Exist && flag_Edge_End_Exist)
-{
-    Connect(edge,1,EdgeStartPos,EdgeEndPos);
-    Connect(edge,2,EdgeStartPos,EdgeEndPos);
-}
-    /*
-    uint8 flag_Ver_Raise=0; //´¹Ö±¸ß¶È¼¤Ôö
-    uint8 flag_Ver_Drop=0;  //´¹Ö±¸ß¶ÈµøÂä
-
-    uint8 Ver_Raise_X=0;
-    uint8 Ver_Drop_X=0;
-    uint8 ver[camera_raw_data_X-X_LIMIT+1]={0}; //´¹Ö±¸ß¶ÈÊı×é
-    uint8 Lose_Edge_Sum=0;  //¶ª±ßÊı
-    uint8 Max_Ver=0;
-    uint8 Max_Ver_X=0;  //×î³¤´¹ÏßµÄºá×ø±ê
-    uint8 temp=0;
-
-    for(uint8 i=X_LIMIT;i<=camera_raw_data_X-X_LIMIT;i++)
-    {   
-        ver[i-X_LIMIT]=Uni_Ver_Search(i);   //´æÈëÊı¾İ
-    }
-
-    for(uint8 i=X_LIMIT;i<=camera_raw_data_X-X_LIMIT;i++)
-    {
-        if((i-X_LIMIT-5) >= 0)
+        if(edge[i].Lx!=0 && edge[i].Rx!=0)  //ÅĞ¶ÏÊÇ·ñ´æÔÚ±ßÑØ
         {
-            if((ver[i-X_LIMIT]-ver[i-X_LIMIT-5]) >= 10)
-            {
-                Ver_Raise_X=i-X_LIMIT-5;
-            }
-
-            if((ver[i-X_LIMIT-5]-ver[i-X_LIMIT]) >= 10)
-            {
-                Ver_Drop_X=i-X_LIMIT;
-            }
+            flag_Edge_Start_Exist=1;
+            EdgeStartPos=i;
+            break;
         }
     }
 
-    for(uint8 i=0;i<=EdgeNum;i++)
+    for(uint8 i=EdgeNum;i>0;i--)
     {
-        if(Ver_Drop_X!=0 && Ver_Raise_X!=0) //Á½±ß¶¼ÓĞ¸ß¶ÈÍ»±ä
+        if(edge[i].Lx!=0 && edge[i].Rx!=0)  //ÅĞ¶ÏÊÇ·ñ´æÔÚ±ßÑØ
         {
-            mid[i]=(Ver_Drop_X+Ver_Raise_X)/2;   //ÔİÊ±ÓÃ¸ÃÖµ²¹ÖĞÏß
-        }
-        else if(Ver_Drop_X==0 && Ver_Raise_X!=0)
-        {
-            mid[i]=(Ver_Raise_X+0)/2;
-        }
-        else if(Ver_Drop_X!=0 || Ver_Raise_X==0)
-        {
-            mid[i]=(Ver_Drop_X+(camera_raw_data_X-X_LIMIT))/2;
+            flag_Edge_End_Exist=0;
+            EdgeEndPos=i;
+            break;
         }
     }
 
-    for(uint8 i=0;i<=EdgeNum;i++)
+    if(flag_Edge_Start_Exist && flag_Edge_End_Exist)
     {
-        edge[i].Lx=mid[i]-Width_Cali(i)/2;  //FIXME Î´¿¼ÂÇ¸ºÖµÇé¿ö
-        edge[i].Rx=mid[i]+Width_Cali(i)/2;
+        Connect(edge,1,EdgeStartPos,EdgeEndPos);
+        Connect(edge,2,EdgeStartPos,EdgeEndPos);
     }
-
-    qDebug()<<"Drop:"<<Ver_Drop_X<<" Raise:"<<Ver_Raise_X<<"\n";
-    
-
-   for(int i=0;i<=EdgeNum;i++)
-   {
-       for(int j=0;j<EdgeLoseNum;j++)  //¾õµÃ±È½ÏÂé·³ ¾ÍÖ±½ÓÇ¶Ì×ÁË
-       {
-           if(i==EdgeLosePos[j])    //¶ª±ß
-           {
-               if(edge[i-1].Lx!=0)  //±ÜÃâ×îµ×ÏÂ¾ÍÊÇ°×Çø Ğ´µÄÏ¡ÀÃ
-               {
-                   edge[i].Lx=edge[i-1].Lx;
-               }
-               
-               if(edge[i-1].Rx!=0)
-               {
-                   edge[i].Rx=edge[i-1].Rx;
-               }
-
-           }
-       }
-   }
-    */
 
 }
 
@@ -1008,30 +797,7 @@ if(flag_Edge_Start_Exist && flag_Edge_End_Exist)
 //¶ª±ß²¹È«
 void If_Lose_Edge(void)
 {
-    if(flag_Garage_L)
-    {
-        /*
-        edge[0].Rx=IMG_X-1; //ÉèÖÃÓÒ±ßÑØµÄÊı¾İ
-        edge[IMG_Y-1].Rx=0;
-
-        Connect(edge,0,0,IMG_X-1);  //³µ¿âÔÚ×ó²à£¬½«ÓÒ²à±ßÔµÉèÎª×óÉÏµ½ÓÒÏÂµÄĞ±Ïß
-        EdgeNum=IMG_Y/2;    //ÖĞµãÊıÎª×î´ó¸ß¶ÈÒ»°ë
-        flag_Normal_Lose_L=1;   //ÈÃÆä²¹ÓÒ²àÏß
-        */
-    }
-    else if(flag_Garage_R)
-    {
-        /*
-        edge[0].Lx=0; //ÉèÖÃÓÒ±ßÑØµÄÊı¾İ
-        edge[IMG_Y-1].Lx=IMG_X-1;
-
-        Connect(edge,1,0,IMG_X-1);
-        EdgeNum=IMG_Y/2;    //ÖĞµãÊıÎª×î´ó¸ß¶ÈÒ»°ë
-        flag_Normal_Lose_R=1;   //ÈÃÆä²¹ÓÒ²àÏß
-        */
-    }
-
-    if(flag_T_Road)
+    if(flag_T_Road) //³ö»·À­Ïß
     {
         if(zuo_yuanhuan_flag)
         {
@@ -1188,22 +954,4 @@ void Search(void)
         break_flag=1;
     }
     //-------------------½áÊø²¿·Ö <bottom>-------------//
-}
-
-
-
-
-void CAM_Error(void)
-{
-    uint8 unit=EdgeNum/5;
-
-    if(flag_Indct_Help_Me)  //³ö´íµÄ»°Æ«²îÖµÉèÎª0¾ÍºÃÁË
-    {
-        CamError=0;
-    }
-    else
-    {
-        CamError=(IMG_X/2)-(mid[unit]+mid[unit*2]+mid[unit*3]+mid[unit*4]+mid[unit*5-3])/5; //×î¶¥ÉÏµÄ±ßÑØ¿ÉĞÅ¶È½ÏµÍ
-    }
-    
 }
