@@ -26,6 +26,9 @@ uint8 flag_Straight_R=0;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö
 //------------------¸ß¼¶±êÖ¾,Ô­ÔòÉÏÓÉ×´Ì¬»úÈ·¶¨²¹Ïßº¯Êýµ÷ÓÃ-------------------//
 uint8 flag_T_Road=0;   //TÐÎÂ·£¨·ºÖ¸×î¶¥ÉÏ¼¸ÐÐÈ«ºÚ£¬ÒÔÏÂ³öÏÖ´óÃæ»ýÁ½²à¶ª±ßµÄ×´¿ö
 uint8 flag_Y_Road=0;   //Èý²í
+uint8 flag_Y_Road_IN=0; //Èý²íÖÐ
+uint8 flag_Y_Road_L=1;  //Èý²í×ó    //ATTENTION ÓÉopenartÉèÖÃ
+uint8 flag_Y_Road_R=0;  //Èý²íÓÒ
 uint8 flag_Cross=0;    //Ê®×Ö                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 flag_Round_ARM_L=0;  //×ó»·µºÔ¤Î»
 uint8 flag_Round_ARM_R=0;  //ÓÒ»·µºÔ¤Î»
@@ -52,6 +55,7 @@ void init(void)
     flag_LoseEdge_part_R=0;
     flag_LoseEdge_all_L=0;
     flag_LoseEdge_all_R=0;
+    flag_Y_Road=0;
     flag_T_Road=0;
     flag_Cross=0;
     flag_MidStart_in_Black=0;
@@ -530,12 +534,37 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)
             {
                 rate++;
                 img[T_y+i][T_x+j]=Gray;
-
-                #ifdef IMG_DEBUG    //TODO ÒªÇóÔÚ²Ëµ¥³ÌÐòÖÐ¼ÓÈëÍ¼Ïñµ÷ÊÔ¶ÔÓ¦µÄ±êÖ¾Î»ÒÔ´úÌæºê¶¨Òå
-                
-                #endif
             }
-            //img[T_y+i][T_x+j]=Gray;
+        }
+    }
+
+    rate=(rate/(dx*dy))*100;
+
+    return((uint8)rate);
+}
+
+
+
+
+//ÌØÕ÷±È½Ïº¯Êý(ÑÕÉ«),É«²Ê·¶Î§0-255
+uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color)    
+{
+    float rate=0;
+
+    if(T_y+dy>=IMG_Y || T_x+dx>=IMG_X)  //·¶Î§¼ì²é
+    {
+        return(101);
+    }
+
+    for(uint8 i=0;i<dy;i++)
+    {
+        for(uint8 j=0;j<dx;j++)
+        {
+            if(img[T_y+i][T_x+j]==color)    //ÓëÌØÕ÷Êý×é/Í¼Ïñ±È½Ï
+            {
+                rate++;
+                img[T_y+i][T_x+j]=Gray;
+            }
         }
     }
 
@@ -640,24 +669,6 @@ uint8 If_Garage(void)
 
 
 
-
-inline uint8 If_YRoad(void)
-{
-    return (Feature_Verify(74,40,40,5,Block_B)>=80 && Feature_Verify(29,20,130,5,Block_A)>=90);
-}
-
-
-
-
-inline uint8 If_T_or_Cross(void)
-{
-    return (Feature_Verify(0,47,188,2,Block_A)>=90);
-}
-
-
-
-
-
 //×´Ì¬ÅÐ¶Ï
 uint8 Judge(void)
 {
@@ -676,7 +687,7 @@ uint8 Judge(void)
     {
         flag_Y_Road--;
     }
-    
+
     //-------×´Ì¬ÕûÀí <bottom>--------//
 
     //------³µ¿â¼ì²â <head>---------//
@@ -687,18 +698,12 @@ uint8 Judge(void)
     }
     //------³µ¿â¼ì²â <bottom>---------//
 
-    //------Èý²í¼ì²â <head>---------//
-    if(!flag_Y_Road && If_YRoad()) 
-    {
-        flag_Y_Road=20;
-        bb_time=20;
-    }
-    //-------Èý²í¶ª±ß <bottom>--------//
+
 
      //-------Ë«²à¶ª±ß <head>--------//
     if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //Ë«²à¶ª±ßÅÐ¶ÏÎªÊ®×Ö
     {
-        if(If_T_or_Cross()) //¶î×î¶¥ÉÏÁ½ÐÐ»ù±¾È«ºÚ Õâ¸öÖµ¸ù¾ÝÐèÇóÐÞ¸Ä
+        if(Feature_Verify_Color(0,47,188,2,White)>=90) //¶î×î¶¥ÉÏÁ½ÐÐ»ù±¾È«ºÚ Õâ¸öÖµ¸ù¾ÝÐèÇóÐÞ¸Ä
         {
             flag_T_Road=1;
             return 1;
@@ -710,22 +715,56 @@ uint8 Judge(void)
     }
     //-------Ë«²à¶ª±ß <bottom>--------//
 
+
+
+
+    //------Èý²í¼ì²â <head>---------//
+    if(Feature_Verify_Color(74,44,40,5,Black)>=90) 
+    {
+        if(Feature_Verify_Color(29,20,130,5,White)>=90)
+        {
+            flag_Y_Road=1;
+            
+            bb_time=50;
+
+            /*
+                µç¸ÐÈ·¶¨ÊÇ·ñÎªÈý²í£¬openmvÈ·ÈÏÈý²í×ªÏò
+            */
+
+            if(flag_Y_Road_L)   //²¹±ß
+            {
+                flag_Normal_Lose_L=1;
+            }
+            else if(flag_Y_Road_R)
+            {
+                flag_Normal_Lose_R=1;
+            }
+
+            return 1;
+        }
+    }
+    //-------Èý²í¶ª±ß <bottom>--------//
+
+
+
+
+
     //------»·µº¼ì²â <head>---------//
     do
     {
-        if(Feature_Verify(83,20,20,20,Block_A)<=90) //ÅÐ¶ÏÊÇ·ñÎªÖ±ÈüµÀ£¬¼õÐ¡Ö±½ÇÍäµÄÎó±¨    //Ìõ¼þÊÇ·ñºÏÊÊ£¿
+        if(Feature_Verify_Color(83,20,20,20,White)<=90) //ÅÐ¶ÏÊÇ·ñÎªÖ±ÈüµÀ£¬¼õÐ¡Ö±½ÇÍäµÄÎó±¨    //Ìõ¼þÊÇ·ñºÏÊÊ£¿
         {
             break;
         }
 
-        if(Feature_Verify(0,19,50,10,Block_A)>=90)  //ÒòÎªÓÐµÄ´ó»·µºÈë»·±È½ÏÈáºÍ£¬Ã»ÓÐ¶ª±ß£¬ËùÒÔÔÚ¶ª±ßÍâÅÐ¶Ï
+        if(Feature_Verify_Color(0,19,50,10,White)>=90)  //ÒòÎªÓÐµÄ´ó»·µºÈë»·±È½ÏÈáºÍ£¬Ã»ÓÐ¶ª±ß£¬ËùÒÔÔÚ¶ª±ßÍâÅÐ¶Ï
         {
             //ATTENTION ÎÞ·¨¶ÀÁ¢½øÐÐÈë»·ÅÐ¶Ï(ÐèÒªµç¸Ð¸¨Öú)
             flag_Round_ARM_L=ROUND_ARM_COUNT_TIMES; //µ±¸Ã±êÖ¾Î»²»ÎªÁãÊ±£¬¶¼Ó¦¸ÃÓÃµç¸ÐÑéÖ¤
 
             //return 1;
         }
-        else if(Feature_Verify(137,19,50,10,Block_A)>=90)
+        else if(Feature_Verify_Color(137,19,50,10,White)>=90)
         {
             flag_Round_ARM_R=ROUND_ARM_COUNT_TIMES; //µ±¸Ã±êÖ¾Î»²»ÎªÁãÊ±£¬¶¼Ó¦¸ÃÓÃµç¸ÐÑéÖ¤
 
@@ -736,7 +775,7 @@ uint8 Judge(void)
     //------»·µº¼ì²â <bottom>---------//
 
     //------AprilTag¼ì²â <head>---------//
-    if(Feature_Verify_Box(64,3,60,17,2,1)>=75 && Feature_Verify(66,5,56,13,Block_B)>=20)
+    if(Feature_Verify_Box(64,3,60,17,2,1)>=75 && Feature_Verify_Color(66,5,56,13,Black)>=20)
     {
         bb_time=20;
         return 1;
