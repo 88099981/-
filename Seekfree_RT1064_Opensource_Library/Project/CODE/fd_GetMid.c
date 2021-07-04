@@ -221,7 +221,6 @@ uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y)
         return 1;
     }
 
-    return 0;
 }
 
 
@@ -640,6 +639,25 @@ uint8 If_Garage(void)
 
 
 
+
+
+inline uint8 If_YRoad(void)
+{
+    return (Feature_Verify(74,40,40,5,Block_B)>=80 && Feature_Verify(29,20,130,5,Block_A)>=90);
+}
+
+
+
+
+inline uint8 If_T_or_Cross(void)
+{
+    return (Feature_Verify(0,47,188,2,Block_A)>=90);
+}
+
+
+
+
+
 //状态判断
 uint8 Judge(void)
 {
@@ -653,7 +671,8 @@ uint8 Judge(void)
     {
         flag_Round_ARM_R--;
     }
-    else if(flag_Y_Road)
+
+    if(flag_Y_Road)
     {
         flag_Y_Road--;
     }
@@ -669,7 +688,7 @@ uint8 Judge(void)
     //------车库检测 <bottom>---------//
 
     //------三岔检测 <head>---------//
-    if(!flag_Y_Road && Feature_Verify(74,40,40,5,Block_A)>=90 && Feature_Verify(29,20,130,5,Block_A)>=90) 
+    if(!flag_Y_Road && If_YRoad()) 
     {
         flag_Y_Road=20;
         bb_time=20;
@@ -679,7 +698,7 @@ uint8 Judge(void)
      //-------双侧丢边 <head>--------//
     if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //双侧丢边判断为十字
     {
-        if(Feature_Verify(0,47,188,2,Block_A)>=90) //额最顶上两行基本全黑 这个值根据需求修改
+        if(If_T_or_Cross()) //额最顶上两行基本全黑 这个值根据需求修改
         {
             flag_T_Road=1;
             return 1;
