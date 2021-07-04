@@ -49,16 +49,16 @@ uint8 Uni_Ver_Search(uint8 MidStart);
 uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)]
 uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,uint8 white_or_black);
 uint8 If_Garage(void);  //车库查找  优先级大于环岛、十字/T字
-uint8 Judge(void);   //状态机
+uint8 If_YRoad(void);
+uint8 If_T_or_Cross(void);
+uint8 Judge(void);   //状态判断
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
 void If_Lose_Edge(void);    //丢边补全
 void If_Straight(void); //直道判断
 void Set_Mid(void); //设置中线
 void Print_Mid(void);   //绘画中线
-void Search(void);  //边缘查找函数
-void Simple_Err_Check(void);    //简易中线检错
-void CAM_Error(void);
+void Search(void);  //主函数
 
 //data
 extern uint8 img[IMG_Y][IMG_X];
@@ -67,11 +67,10 @@ extern int16 mid[];
 
 //flag
 extern uint8 flag_T_Road;
+extern uint8 flag_Y_Road;
 extern uint8 flag_Cross;
 extern uint8 flag_Round_ARM_L;
 extern uint8 flag_Round_ARM_R; 
-extern uint8 flag_Round_ARM_L_B;
-extern uint8 flag_Round_ARM_R_B;
 extern uint8 flag_Is_This_Round;
 extern uint8 flag_Round_in_L;
 extern uint8 flag_Round_in_R;
