@@ -112,7 +112,7 @@ void aicar_huandao()//½öÓÃ×÷ÅÐ¶Ï
 }
 
 
-void aicar_garage_out()
+void aicar_right_garage_out()
 {
     turn_sum=0;
     while(turn_sum>-18000)
@@ -129,6 +129,66 @@ void aicar_garage_out()
     }
     lcd_clear(BLACK);
     turn_sum=0;
-    
-    
+}
+
+
+void aicar_left_garage_out()
+{
+    turn_sum=0;
+    while(turn_sum<18000)
+    {
+        servo_duty=4150;
+        get_icm20602_gyro_spi();
+        turn_sum+=icm_gyro_z;
+        lcd_showstr(0,3,"turn_sum:");
+        lcd_showint32(10*8,3,turn_sum,5);
+        lcd_showstr(0,6,"icm_gyro_z:");
+        lcd_showint16(10*8,6,icm_gyro_z);
+        
+        aicar_chasu();
+    }
+    lcd_clear(BLACK);
+    turn_sum=0;
+}
+
+
+void aicar_right_garage_in()
+{
+    turn_sum=0;
+    while(turn_sum>-18000)
+    {
+        servo_duty=3550;
+        get_icm20602_gyro_spi();
+        turn_sum+=icm_gyro_z;
+        lcd_showstr(0,3,"turn_sum:");
+        lcd_showint32(10*8,3,turn_sum,5);
+        lcd_showstr(0,6,"icm_gyro_z:");
+        lcd_showint16(10*8,6,icm_gyro_z);
+        
+        aicar_chasu();
+    }
+    lcd_clear(BLACK);
+    turn_sum=0;
+    break_flag=1;
+}
+
+
+void aicar_left_garage_in()
+{
+    turn_sum=0;
+    while(turn_sum<18000)
+    {
+        servo_duty=4150;
+        get_icm20602_gyro_spi();
+        turn_sum+=icm_gyro_z;
+        lcd_showstr(0,3,"turn_sum:");
+        lcd_showint32(10*8,3,turn_sum,5);
+        lcd_showstr(0,6,"icm_gyro_z:");
+        lcd_showint16(10*8,6,icm_gyro_z);
+        
+        aicar_chasu();
+    }
+    lcd_clear(BLACK);
+    turn_sum=0;
+    break_flag=1;
 }

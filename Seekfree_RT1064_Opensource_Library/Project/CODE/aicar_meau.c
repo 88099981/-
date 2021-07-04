@@ -537,7 +537,7 @@ void gogogo_mix()
     break_flag=0;
     aim_speed=SPEED_SET;
     
-    aicar_garage_out();
+    aicar_right_garage_out();//后面要改成菜单
     
     while(key4_flag!=1)
     {
