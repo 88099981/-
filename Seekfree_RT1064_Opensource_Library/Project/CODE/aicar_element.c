@@ -44,7 +44,7 @@ void aicar_huandao()//仅用作判断
 //            you_yuanhuan_flag=0;
 //        }
 //    }
-    
+    /*
     if(ad_value_all>400&&chuhuan_delay<=0)
     {
         if(zuo_yuanhuan_flag==0&&you_yuanhuan_flag==0)
@@ -67,7 +67,7 @@ void aicar_huandao()//仅用作判断
                  bb_time=20;
             }
         }
-        else if(ruhuan_delay==0)
+        else if(ruhuan_delay<=0)
         {
             chuhuan++;
             if(zuo_yuanhuan_flag==1&&chuhuan>=hd_out)
@@ -86,7 +86,6 @@ void aicar_huandao()//仅用作判断
                 bb_time=60;
                 chuhuan_delay=hd_out_delay;
             }
-
         }
     }
     else
@@ -94,7 +93,7 @@ void aicar_huandao()//仅用作判断
         ruhuan=0;
         chuhuan=0;
     }
-
+    */
 //    if(x_move_time>0)
 //    {
 //        x_move_time--;

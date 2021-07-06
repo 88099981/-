@@ -9,7 +9,9 @@ uint8 EdgeLosePos[EDGE_MAX];  //丢边位置 (Y轴           【单帧初始化】
 uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
 int8 CamError;
-
+uint8 RoundInCount; //入环计数
+uint8 RoundOutCount;
+uint8 RoundFuckUpCount;
 //flag
 //------------------------工作状态标志,由扫线函数调用------------------------//
 uint8 flag_MidStart_in_Black=0;   //Hor_Search 函数中给定起始点在黑区内    【单帧初始化】
@@ -23,6 +25,7 @@ uint8 flag_LoseEdge_all_R=0;  //              【单帧初始化】
 uint8 flag_Straight_L=0;  //左直道    检测直道比检测弯道简单的多            【单帧初始化】
 uint8 flag_Straight_R=0;  //右直道                                         【单帧初始化】
 
+uint8 flag_Process_Blocked=0;   //进程阻塞状态，避免多次进入某一状态
 //------------------高级标志,原则上由状态机确定补线函数调用-------------------//
 uint8 flag_T_Road=0;   //T形路（泛指最顶上几行全黑，以下出现大面积两侧丢边的状况
 uint8 flag_Y_Road=0;   //三岔
@@ -77,6 +80,43 @@ void init(void)
         angle[i].L=180;
         angle[i].R=180;
         mid[i]=0;
+    }
+}
+
+
+
+
+uint8 Process_On(uint8 set,uint16 SetDelay)
+{
+    static uint16 StartTime;
+    static uint16 delays;
+    uint16 RealTime=0;
+
+    if(set && !flag_Process_Blocked)    //仅可在未工作的时候设置 //TODO 设置失败返回
+    {
+        StartTime=systick_getval_ms();  //设置初始时间
+        delays=SetDelay;                //设置比较时间
+    }
+
+    RealTime=systick_getval_ms();
+
+    if(RealTime-StartTime<0)
+    {
+        return 0;
+    }
+    else if(RealTime-StartTime<delays)
+    {
+        flag_Process_Blocked=1;
+        return 101;
+    }
+    else if(RealTime-StartTime>=delays)
+    {
+        flag_Process_Blocked=0;
+        return 100;
+    }
+    else
+    {
+        return 1;   //啥事也没干
     }
 }
 
@@ -227,6 +267,41 @@ uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y)
 
 }
 
+
+
+
+
+uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
+{
+    float Slope=0;
+    if(p2_x==p1_x)
+    {
+        Slope=0;
+    }
+
+    if(l_or_r)
+    {
+        Slope=(p2_y-p1_y)/(p2_x-p1_x);
+
+        for(uint8 i=p1_y;i<=p2_y;i++)
+        {
+            edge[i].Lx=p1_x+i*Slope;
+        }
+
+        return 1;
+    }
+    else
+    {
+        Slope=(p2_y-p1_y)/(p2_x-p1_x);
+
+        for(uint8 i=p1_y;i<=p2_y;i++)
+        {
+            edge[i].Rx=p1_x+i*Slope;
+        }
+
+        return 1;
+    }
+}
 
 
 
@@ -688,34 +763,23 @@ uint8 Judge(void)
         flag_Y_Road--;
     }
 
+    if(RoundInCount>0)
+    {
+        RoundInCount--;
+    }
+
+    if(RoundFuckUpCount>0)
+    {
+        RoundFuckUpCount--;
+    }
     //-------状态整理 <bottom>--------//
 
     //------车库检测 <head>---------//
     if(If_Garage())
     {
-        bb_time=20;
         return 1;
     }
     //------车库检测 <bottom>---------//
-
-
-
-     //-------双侧丢边 <head>--------//
-    if(flag_LoseEdge_part_L*flag_LoseEdge_part_R != 0)  //双侧丢边判断为十字
-    {
-        if(Feature_Verify_Color(0,47,188,2,White)>=90) //额最顶上两行基本全黑 这个值根据需求修改
-        {
-            flag_T_Road=1;
-            return 1;
-        }
-
-        flag_Cross=1;   //T形路判断优先级高于十字
-
-        return 1;
-    }
-    //-------双侧丢边 <bottom>--------//
-
-
 
 
     //------三岔检测 <head>---------//
@@ -724,8 +788,8 @@ uint8 Judge(void)
         if(Feature_Verify_Color(29,20,130,5,White)>=90)
         {
             flag_Y_Road=1;
-            
-            bb_time=50;
+
+            //bb_time=50;
 
             /*
                 电感确定是否为三岔，openmv确认三岔转向
@@ -740,13 +804,10 @@ uint8 Judge(void)
                 flag_Normal_Lose_R=1;
             }
 
-            return 1;
+            //return 1;
         }
     }
-    //-------三岔丢边 <bottom>--------//
-
-
-
+    //-------三岔检测 <bottom>--------//V
 
 
     //------环岛检测 <head>---------//
@@ -761,26 +822,78 @@ uint8 Judge(void)
         {
             //ATTENTION 无法独立进行入环判断(需要电感辅助)
             flag_Round_ARM_L=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
-
+            Process_On(1,4000);
             //return 1;
         }
         else if(Feature_Verify_Color(137,19,50,10,White)>=90)
         {
             flag_Round_ARM_R=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
-
+            Process_On(1,4000);
             //return 1;
         }
     } while (0);    //想写goto又不敢写的屑
 
+    if(ad_value_all>=440)   //TODO 此阈值需可在外部菜单调整
+    {
+        flag_Is_This_Round=1;
+        bb_time=5;
+    }
+    else
+    {
+        flag_Is_This_Round=0;
+    }
+
+    if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_L)
+    {
+        flag_Round_in_L=1;
+
+        RoundInCount=30;
+        RoundOutCount=10;
+    }
+    else if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_R)
+    {
+        flag_Round_in_R=1;
+
+        RoundInCount=30;
+        RoundOutCount=10;
+    }
+
+    if(RoundOutCount>0)
+    {
+        RoundFuckUpCount=40;
+    }
+
+    if(flag_Round_in_L || flag_Round_in_R)
+    {
+        if(Feature_Verify_Color(0,46,187,3,Black)>=90) //额最顶上两行基本全黑 这个值根据需求修改
+        {
+            flag_T_Road=1;
+            bb_time=5;
+            return 1;
+        }
+    }
+
     //------环岛检测 <bottom>---------//
+
+
+
 
     //------AprilTag检测 <head>---------//
     if(Feature_Verify_Box(64,3,60,17,2,1)>=75 && Feature_Verify_Color(66,5,56,13,Black)>=20)
     {
-        bb_time=20;
+        //bb_time=50;
         return 1;
     }
     //------AprilTag检测 <bottom>---------//
+
+    //-------双侧丢边 <head>--------//
+    if(flag_LoseEdge_part_L && flag_LoseEdge_part_R)
+    {
+        flag_Cross=1;
+        return 1;
+    }
+    //-------双侧丢边 <bottom>--------//
+
 
     //-------单侧丢边 <head>--------//
     if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0) //单左丢边
@@ -857,20 +970,45 @@ void If_Lose_Edge(void)
 {
     if(flag_T_Road) //出环拉线
     {
-        if(zuo_yuanhuan_flag)
+        if(flag_Round_in_L)
         {
-            edge[0].Rx=120;
-            edge[EdgeNum].Rx=20;
-            Connect(edge,0,0,EdgeNum);
+            Connect_pp(0,120,0,20,40);
             flag_Normal_Lose_L=1;
         }
-        else if(you_yuanhuan_flag)
+        else if(flag_Round_in_R)
         {
-            edge[0].Lx=68;
-            edge[EdgeNum].Lx=168;
-            Connect(edge,1,0,EdgeNum);
+            Connect_pp(1,68,0,168,40);
             flag_Normal_Lose_R=1;
         }
+
+        if(RoundOutCount==0)
+        {
+            flag_Round_in_L=0;
+            flag_Round_in_R=0;
+            RoundOutCount--;
+        }
+    }
+
+    if(flag_Round_in_L && RoundInCount>0)
+    {
+        Connect_pp(0,120,0,30,40);
+        flag_Normal_Lose_L=1;
+    }
+    else if(flag_Round_in_R && RoundInCount>0)
+    {
+        Connect_pp(1,68,0,158,40);
+        flag_Normal_Lose_R=1;
+    }
+
+    if(flag_Round_in_L && flag_Normal_Lose_L)   //避免出环转错方向
+    {
+        flag_Normal_Lose_R=1;
+        flag_Normal_Lose_L=0;
+    }
+    else if(flag_Round_in_R && flag_Normal_Lose_R)
+    {
+        flag_Normal_Lose_L=1;
+        flag_Normal_Lose_R=0;
     }
 
     if(flag_Cross)  //十字
@@ -1007,9 +1145,13 @@ void Search(void)
     //-------------------绘画部分 <bottom>-------------//
 
     //-------------------结束部分 <head>---------------//
-    if(flag_Garage_L || flag_Garage_R)
+    if(flag_Garage_L)
     {
-        break_flag=1;
+        aicar_left_garage_in();
+    }
+    else if(flag_Garage_R)
+    {
+        aicar_right_garage_in();
     }
     //-------------------结束部分 <bottom>-------------//
 }
