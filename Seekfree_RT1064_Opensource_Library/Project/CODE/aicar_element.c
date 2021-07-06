@@ -168,7 +168,10 @@ void aicar_right_garage_in()
     }
     lcd_clear(BLACK);
     turn_sum=0;
+    systick_delay_ms(300);
     break_flag=1;
+    camera_error=0;
+    ad_error=0;
 }
 
 
@@ -189,5 +192,8 @@ void aicar_left_garage_in()
     }
     lcd_clear(BLACK);
     turn_sum=0;
+    systick_delay_ms(300);
     break_flag=1;
+    camera_error=0;
+    ad_error=0;
 }

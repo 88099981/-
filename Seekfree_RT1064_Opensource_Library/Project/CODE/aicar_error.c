@@ -110,28 +110,45 @@ void aicar_mix_error()
     ad_left=ad_value2*0.3+ad_value3*0.7;
     ad_right=ad_value4*0.7+ad_value5*0.3;
     ad_error=(ad_left-ad_right)*100/(ad_left+ad_right);
-    if(zuo_yuanhuan_flag==1&&ruhuan_turn>0)
+
+    if(flag_Round_in_L)
     {
-        ad_left=ad_value1*0.8+ad_value3*0.1;
-        ad_right=ad_value6*0.25+ad_value4*0.1;
-        
+        if(RoundInCount<40)
+        {
+            //ad_left=ad_value1*0.6;
+            //ad_right=ad_value6*0.4;
+        }
+
+        //ad_left=ad_value1*0.8+ad_value3*0.1;
+        //ad_right=ad_value6*0.25+ad_value4*0.1;
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
+
+        //ad_error*=0.8;
+        //camera_error*=1.2;
         if(ad_error<0)//正左负右
         {
-            ad_error=Cp_sqrt(-ad_error);
-            ad_error=-ad_error;               
+            //ad_error=Cp_sqrt(-ad_error);
+            //ad_error=-ad_error;               
         }
         if(camera_error<0)//正左负右
             camera_error=0;             
                        
         //camera_error=0;
     }
-    else if(you_yuanhuan_flag==1&&ruhuan_turn>0)
+    else if(flag_Round_in_R)
     {
-        ad_left=ad_value1*0.25;
-        ad_right=ad_value6*0.8;
-        
+        if(RoundInCount<40)
+        {
+            ad_left=ad_value1*0.4;
+            ad_right=ad_value6*0.6;
+        }
+
+        //ad_left=ad_value1*0.25;
+        //ad_right=ad_value6*0.8;
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);   
+
+        //ad_error*=0.8;
+        //camera_error*=1.2;
         if(ad_error>0)
             ad_error=Cp_sqrt(ad_error);//正左负右
         if(camera_error>0)

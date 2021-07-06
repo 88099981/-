@@ -8,8 +8,8 @@ uint8 EdgeNum;    //边沿数
 uint8 EdgeLosePos[EDGE_MAX];  //丢边位置 (Y轴           【单帧初始化】
 uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
-int8 CamError;
-uint8 RoundInCount; //入环计数
+uint32 RunningCount=0;
+uint16 RoundInCount; //入环计数
 uint8 RoundOutCount;
 uint8 RoundFuckUpCount;
 //flag
@@ -38,6 +38,8 @@ uint8 flag_Round_ARM_R=0;  //右环岛预位
 uint8 flag_Is_This_Round=0;   //环岛决策标志  询问电感(调用完记得复位)    （为什么不问问神奇海螺呢？
 uint8 flag_Round_in_L=0;   //左环岛环中 //ATTENTION 从入环开始置位
 uint8 flag_Round_in_R=0;   //右环岛环中
+uint8 flag_Round_out_L=0;   //左环岛出环
+uint8 flag_Round_out_R=0;   //右环岛出环
 uint8 flag_Normal_Lose_L=0;   //一般丢左边                 【单帧初始化】
 uint8 flag_Normal_Lose_R=0;   //一般丢右边                 【单帧初始化】
 uint8 flag_Garage_L=0;        //车库在左侧
@@ -719,13 +721,13 @@ uint8 If_Garage(void)
         }
         #endif
 
-        if(Feature_Verify(0,0,20,10,Block_A)>=90)
+        if(Feature_Verify_Color(0,0,20,10,White)>=90)
         {
             flag_Garage_L=1;
             flag_Garage_R=0;    //因为没有每帧初始化，所以为了避免误置造成矛盾，故对两个标志位均置高
             return 1;
         }
-        else if(Feature_Verify(167,0,20,10,Block_A)>=90)
+        else if(Feature_Verify_Color(167,0,20,10,White)>=90)
         {
             flag_Garage_L=0;
             flag_Garage_R=1;
@@ -753,6 +755,7 @@ uint8 Judge(void)
     {
         flag_Round_ARM_L--;
     }
+
     else if(flag_Round_ARM_R)
     {
         flag_Round_ARM_R--;
@@ -763,9 +766,14 @@ uint8 Judge(void)
         flag_Y_Road--;
     }
 
-    if(RoundInCount>0)
+    if(RoundInCount)
     {
-        RoundInCount--;
+        RoundInCount++;
+    }
+
+    if(RoundOutCount)
+    {
+        RoundOutCount--;
     }
 
     if(RoundFuckUpCount>0)
@@ -781,11 +789,21 @@ uint8 Judge(void)
     }
     //------车库检测 <bottom>---------//
 
+    //-------双侧丢边 <head>--------//
+    if(flag_LoseEdge_part_L && flag_LoseEdge_part_R)
+    {   
+        if(!RoundInCount)
+        {
+            flag_Cross=1;
+            return 1;
+        }
+    }
+    //-------双侧丢边 <bottom>--------//
 
     //------三岔检测 <head>---------//
     if(Feature_Verify_Color(74,44,40,5,Black)>=90) 
     {
-        if(Feature_Verify_Color(29,20,130,5,White)>=90)
+        if(Feature_Verify_Color(29,20,130,5,White)>=90 && Feature_Verify_Color(0,44,20,5,White)>=90 && Feature_Verify_Color(167,44,20,5,White)>=90)
         {
             flag_Y_Road=1;
 
@@ -818,22 +836,22 @@ uint8 Judge(void)
             break;
         }
 
-        if(Feature_Verify_Color(0,19,50,10,White)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
+        if(Feature_Verify_Color(0,10,50,10,White)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
         {
             //ATTENTION 无法独立进行入环判断(需要电感辅助)
-            flag_Round_ARM_L=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
-            Process_On(1,4000);
+            flag_Round_ARM_L=5; //当该标志位不为零时，都应该用电感验证
+            //Process_On(1,4000);
             //return 1;
         }
-        else if(Feature_Verify_Color(137,19,50,10,White)>=90)
+        else if(Feature_Verify_Color(137,10,50,10,White)>=90)
         {
-            flag_Round_ARM_R=ROUND_ARM_COUNT_TIMES; //当该标志位不为零时，都应该用电感验证
-            Process_On(1,4000);
+            flag_Round_ARM_R=5; //当该标志位不为零时，都应该用电感验证
+            //Process_On(1,4000);
             //return 1;
         }
     } while (0);    //想写goto又不敢写的屑
 
-    if(ad_value_all>=440)   //TODO 此阈值需可在外部菜单调整
+    if(ad_value_all>=600 && !RoundOutCount && (flag_Round_ARM_L || flag_Round_ARM_R))   //TODO 此阈值需可在外部菜单调整
     {
         flag_Is_This_Round=1;
         bb_time=5;
@@ -843,35 +861,116 @@ uint8 Judge(void)
         flag_Is_This_Round=0;
     }
 
+    if(RoundOutCount>0 && RoundOutCount<100)
+    {
+        camera_error=0; //临时关闭
+    }
+
+    if(flag_Is_This_Round && flag_Round_ARM_L)
+    {
+        flag_Round_in_L=1;
+
+        RoundInCount=1;
+    }
+    else if(flag_Is_This_Round && flag_Round_ARM_R)
+    {
+        flag_Round_in_R=1;
+
+        RoundInCount=1;
+    }
+
+    /*
     if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_L)
     {
         flag_Round_in_L=1;
 
-        RoundInCount=30;
-        RoundOutCount=10;
+        RoundInCount=1;
     }
     else if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_R)
     {
         flag_Round_in_R=1;
 
-        RoundInCount=30;
-        RoundOutCount=10;
+        RoundInCount=1;
+
+    }
+    */
+
+    
+    if(flag_Round_in_L && RoundInCount>=100 && (Feature_Verify_Color(167,20,20,10,White)>=90 || ad_value_all>600))
+    {
+        flag_Round_out_L=1;
+        //flag_Round_in_L=0;
+
+        RoundInCount=0; //停止计数
+        RoundOutCount=200;
+        bb_time=5;
+    }
+    else if(flag_Round_in_R && RoundInCount>=100 && (Feature_Verify_Color(0,20,20,10,White)>=90 || ad_value_all>600))
+    {
+        flag_Round_out_R=1;
+        //flag_Round_in_R=0;
+
+        RoundInCount=0;
+        RoundOutCount=200;
+        bb_time=5;
+    }
+    
+
+    if(RoundOutCount==1 && (flag_Round_in_L || flag_Round_in_R))
+    {
+        flag_Round_in_L=0;
+        flag_Round_in_R=0;
+        flag_Round_out_L=0;
+        flag_Round_out_R=0;
     }
 
+/*
+    if(flag_Round_in_L && RoundInCount>=100 && Feature_Verify_Color(167,20,20,10,White)>=90)
+    {
+        //flag_Round_out_L=1;
+        //flag_Round_in_L=0;
+
+        RoundInCount=0; //停止计数
+        RoundOutCount=200;
+        bb_time=5;
+    }
+    else if(flag_Round_in_R && RoundInCount>=100 && Feature_Verify_Color(0,20,20,10,White)>=90)
+    {
+        //flag_Round_out_R=1;
+        //flag_Round_in_R=0;
+
+        RoundInCount=0;
+        RoundOutCount=200;
+        bb_time=5;
+    }
+    
+
+    if(RoundOutCount==1 && (flag_Round_in_L || flag_Round_in_R))
+    {
+        flag_Round_in_L=0;
+        flag_Round_in_R=0;
+        //flag_Round_out_L=0;
+        //flag_Round_out_R=0;
+    }
+*/
+
+/*
     if(RoundOutCount>0)
     {
-        RoundFuckUpCount=40;
-    }
+        RoundFuckUpCount=100;
+*/
 
+/*
     if(flag_Round_in_L || flag_Round_in_R)
     {
         if(Feature_Verify_Color(0,46,187,3,Black)>=90) //额最顶上两行基本全黑 这个值根据需求修改
         {
             flag_T_Road=1;
-            bb_time=5;
+            //bb_time=5;
             return 1;
         }
     }
+*/
 
     //------环岛检测 <bottom>---------//
 
@@ -886,13 +985,7 @@ uint8 Judge(void)
     }
     //------AprilTag检测 <bottom>---------//
 
-    //-------双侧丢边 <head>--------//
-    if(flag_LoseEdge_part_L && flag_LoseEdge_part_R)
-    {
-        flag_Cross=1;
-        return 1;
-    }
-    //-------双侧丢边 <bottom>--------//
+
 
 
     //-------单侧丢边 <head>--------//
@@ -968,26 +1061,20 @@ void Damn_Lose_Edge_all(void)
 //丢边补全
 void If_Lose_Edge(void)
 {
-    if(flag_T_Road) //出环拉线
-    {
-        if(flag_Round_in_L)
-        {
-            Connect_pp(0,120,0,20,40);
-            flag_Normal_Lose_L=1;
-        }
-        else if(flag_Round_in_R)
-        {
-            Connect_pp(1,68,0,168,40);
-            flag_Normal_Lose_R=1;
-        }
 
-        if(RoundOutCount==0)
-        {
-            flag_Round_in_L=0;
-            flag_Round_in_R=0;
-            RoundOutCount--;
-        }
+/*
+    if(flag_Round_out_L && RoundOutCount>80)
+    {
+        Connect_pp(0,120,0,20,40);
+        flag_Normal_Lose_L=1;
     }
+    else if(flag_Round_out_R && RoundOutCount>80)
+    {
+        Connect_pp(1,68,0,168,40);
+        flag_Normal_Lose_R=1;
+    }
+*/
+
 
     if(flag_Round_in_L && RoundInCount>0)
     {

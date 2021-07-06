@@ -63,6 +63,9 @@ void Search(void);  //Ö÷º¯Êý
 extern uint8 img[IMG_Y][IMG_X];
 extern uint8 EdgeNum;
 extern int16 mid[];
+extern uint16 RoundInCount;
+extern uint8 RoundOutCount;
+extern uint8 RoundFuckUpCount;
 
 //flag
 extern uint8 flag_T_Road;
