@@ -8,6 +8,8 @@ uint8 EdgeNum;    //边沿数
 uint8 EdgeLosePos[EDGE_MAX];  //丢边位置 (Y轴           【单帧初始化】
 uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
+uint8 Round_Status=0; //0啥事没有 1第一次看到环口 3看到黑区且电感大于阈值 5第二次看到环口 7环内 9出环 (同理右为偶)
+uint16 Round_ad_limit=600;  //入环ad阈值
 uint32 RunningCount=0;
 uint16 RoundInCount; //入环计数
 uint8 RoundOutCount;
@@ -276,14 +278,14 @@ uint8 Connect(EDGE Target[],uint8 l_or_r,uint8 p1_y,uint8 p2_y)
 uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
 {
     float Slope=0;
-    if(p2_x==p1_x)
+    if(p2_y==p1_y)
     {
         Slope=0;
     }
 
     if(l_or_r)
     {
-        Slope=(p2_y-p1_y)/(p2_x-p1_x);
+        Slope=(p2_x-p1_x)/(p2_y-p1_y);
 
         for(uint8 i=p1_y;i<=p2_y;i++)
         {
@@ -294,7 +296,7 @@ uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
     }
     else
     {
-        Slope=(p2_y-p1_y)/(p2_x-p1_x);
+        Slope=(p2_x-p1_x)/(p2_y-p1_y);
 
         for(uint8 i=p1_y;i<=p2_y;i++)
         {
@@ -782,6 +784,16 @@ uint8 Judge(void)
     }
     //-------状态整理 <bottom>--------//
 
+
+    //------T路检测 <head>---------//
+    if(Feature_Verify_Color(0,44,187,5,Black)>=90)
+    {
+        flag_T_Road=1;
+    }
+    //------T路检测 <bottom>---------//
+
+
+
     //------车库检测 <head>---------//
     if(If_Garage())
     {
@@ -829,6 +841,8 @@ uint8 Judge(void)
 
 
     //------环岛检测 <head>---------//
+
+/*
     do
     {
         if(Feature_Verify_Color(83,20,20,20,White)<=90) //判断是否为直赛道，减小直角弯的误报    //条件是否合适？
@@ -840,13 +854,11 @@ uint8 Judge(void)
         {
             //ATTENTION 无法独立进行入环判断(需要电感辅助)
             flag_Round_ARM_L=5; //当该标志位不为零时，都应该用电感验证
-            //Process_On(1,4000);
             //return 1;
         }
         else if(Feature_Verify_Color(137,10,50,10,White)>=90)
         {
             flag_Round_ARM_R=5; //当该标志位不为零时，都应该用电感验证
-            //Process_On(1,4000);
             //return 1;
         }
     } while (0);    //想写goto又不敢写的屑
@@ -854,18 +866,22 @@ uint8 Judge(void)
     if(ad_value_all>=600 && !RoundOutCount && (flag_Round_ARM_L || flag_Round_ARM_R))   //TODO 此阈值需可在外部菜单调整
     {
         flag_Is_This_Round=1;
-        bb_time=5;
+        //bb_time=5;
     }
     else
     {
         flag_Is_This_Round=0;
     }
+*/
 
+/*
     if(RoundOutCount>0 && RoundOutCount<100)
     {
         camera_error=0; //临时关闭
     }
+*/
 
+/*
     if(flag_Is_This_Round && flag_Round_ARM_L)
     {
         flag_Round_in_L=1;
@@ -878,8 +894,9 @@ uint8 Judge(void)
 
         RoundInCount=1;
     }
+*/
 
-    /*
+/*
     if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_L)
     {
         flag_Round_in_L=1;
@@ -893,9 +910,9 @@ uint8 Judge(void)
         RoundInCount=1;
 
     }
-    */
+*/
 
-    
+/*
     if(flag_Round_in_L && RoundInCount>=100 && (Feature_Verify_Color(167,20,20,10,White)>=90 || ad_value_all>600))
     {
         flag_Round_out_L=1;
@@ -903,7 +920,7 @@ uint8 Judge(void)
 
         RoundInCount=0; //停止计数
         RoundOutCount=200;
-        bb_time=5;
+        //bb_time=5;
     }
     else if(flag_Round_in_R && RoundInCount>=100 && (Feature_Verify_Color(0,20,20,10,White)>=90 || ad_value_all>600))
     {
@@ -912,7 +929,7 @@ uint8 Judge(void)
 
         RoundInCount=0;
         RoundOutCount=200;
-        bb_time=5;
+        //bb_time=5;
     }
     
 
@@ -923,6 +940,7 @@ uint8 Judge(void)
         flag_Round_out_L=0;
         flag_Round_out_R=0;
     }
+*/
 
 /*
     if(flag_Round_in_L && RoundInCount>=100 && Feature_Verify_Color(167,20,20,10,White)>=90)
@@ -972,15 +990,113 @@ uint8 Judge(void)
     }
 */
 
+
+switch(Round_Status)
+{
+    case 0:
+        if(Feature_Verify_Color(83,20,20,20,White)<=90)
+        {
+            break;
+        }
+        
+        if(Feature_Verify_Color(0,10,50,10,White)>=90)
+        {
+            Round_Status=1;
+        }
+        else if(Feature_Verify_Color(137,10,50,10,White)>=90)
+        {
+            Round_Status=2;
+        }
+        
+        break;
+
+    case 1:
+        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,30,10,Black)>=90)
+        {
+            Round_Status=3;
+        }
+        break;
+
+    case 2:
+        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(137,10,30,10,Black)>=90)
+        {
+            Round_Status=4;
+        }
+        break;
+
+    case 3:
+        if(Feature_Verify_Color(0,10,50,10,White)>=90)
+        {
+            Round_Status=5;
+        }
+        break;
+
+    case 4:
+        if(Feature_Verify_Color(137,10,50,10,White)>=90)
+        {
+            Round_Status=6;
+        }
+        break;
+
+    case 5:
+        if(Feature_Verify_Color(167,20,20,10,White)>=90)
+        {
+            Round_Status=7;
+        }
+        break;
+
+    case 6:
+        if(Feature_Verify_Color(0,20,20,10,White)>=90)
+        {
+            Round_Status=8;
+        }
+        break;
+
+    case 7:
+        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,30,10,Black)>=90)
+        {
+            Round_Status=9;
+
+            flag_Normal_Lose_L=1;
+        }
+        break;
+
+    case 8:
+        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(137,10,30,10,Black)>=90)
+        {
+            Round_Status=10;
+
+            flag_Normal_Lose_R=1;
+        }
+        break;
+
+    case 9:
+        if(Feature_Verify_Color(0,10,50,10,White)>=90)
+        {
+            Round_Status=0;
+
+            flag_Normal_Lose_L=1;
+        }
+        break;
+
+    case 10:
+        if(Feature_Verify_Color(137,10,50,10,White)>=90)
+        {
+            Round_Status=0;
+
+            flag_Normal_Lose_R=1;
+        }
+        break;
+}
     //------环岛检测 <bottom>---------//
 
 
 
 
     //------AprilTag检测 <head>---------//
-    if(Feature_Verify_Box(64,3,60,17,2,1)>=75 && Feature_Verify_Color(66,5,56,13,Black)>=20)
+    if(Feature_Verify_Box(64,10,60,20,2,1)>=80 && Feature_Verify_Color(66,5,56,13,Black)>=20)
     {
-        //bb_time=50;
+        //bb_time=40;
         return 1;
     }
     //------AprilTag检测 <bottom>---------//
@@ -1062,6 +1178,55 @@ void Damn_Lose_Edge_all(void)
 void If_Lose_Edge(void)
 {
 
+switch(Round_Status)
+{
+    case 0:
+        break;
+
+    case 1:
+        flag_Normal_Lose_L=1;
+        break;
+
+    case 2:
+        flag_Normal_Lose_R=1;
+        break;
+
+    case 3:
+        bb_time=5;
+        flag_Normal_Lose_L=1;
+        break;
+
+    case 4:
+        bb_time=5;
+        flag_Normal_Lose_R=1;
+        break;
+
+    case 5:
+
+        ad_left=ad_value1*0.6;
+        ad_right=ad_value6*0.4;
+
+        break;
+
+    case 6:
+        ad_left=ad_value1*0.4;
+        ad_right=ad_value6*0.6;
+        
+        break;
+
+    case 7:
+        break;
+
+    case 8:
+        break;
+
+    case 9:
+        break;
+
+    case 10:
+        break;
+}
+
 /*
     if(flag_Round_out_L && RoundOutCount>80)
     {
@@ -1073,7 +1238,7 @@ void If_Lose_Edge(void)
         Connect_pp(1,68,0,168,40);
         flag_Normal_Lose_R=1;
     }
-*/
+
 
 
     if(flag_Round_in_L && RoundInCount>0)
@@ -1086,7 +1251,9 @@ void If_Lose_Edge(void)
         Connect_pp(1,68,0,158,40);
         flag_Normal_Lose_R=1;
     }
+*/
 
+/*
     if(flag_Round_in_L && flag_Normal_Lose_L)   //避免出环转错方向
     {
         flag_Normal_Lose_R=1;
@@ -1096,6 +1263,48 @@ void If_Lose_Edge(void)
     {
         flag_Normal_Lose_L=1;
         flag_Normal_Lose_R=0;
+    }
+*/
+
+    if(flag_T_Road)
+    {
+        uint16 Height_L=0;
+        uint16 Height_R=0;
+
+        for(uint8 i=0;i<IMG_X/2;i++)
+        {
+            for(uint8 j=0;j<IMG_Y-1;j++)
+            {
+                if(img[j][i]==White && img[j+1][i]==Black)
+                {
+                    Height_L+=j;
+                    break;
+                }
+            }
+        }
+
+        for(uint8 i=IMG_X/2;i<IMG_X;i++)
+        {
+            for(uint8 j=0;j<IMG_Y-1;j++)
+            {
+                if(img[j][i]==White && img[j+1][i]==Black)
+                {
+                    Height_R+=j;
+                    break;
+                }
+            }
+        }
+
+        if(Height_L>Height_R)
+        {
+            Connect_pp(0,120,0,20,49);
+            flag_Normal_Lose_L;
+        }
+        else if(Height_L<Height_R)
+        {
+            Connect_pp(1,68,0,168,49);
+            flag_Normal_Lose_R;
+        }
     }
 
     if(flag_Cross)  //十字

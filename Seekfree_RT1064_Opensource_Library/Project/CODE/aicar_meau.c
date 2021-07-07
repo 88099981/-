@@ -80,7 +80,7 @@ void debug_camera()
             binary_img();			
             Search();
             Y_Change();
-            lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 128);
+            lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
       
         }        
         if(key1_flag)

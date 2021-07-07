@@ -115,10 +115,12 @@ void aicar_mix_error()
     {
         if(RoundInCount<40)
         {
-            //ad_left=ad_value1*0.6;
-            //ad_right=ad_value6*0.4;
+            bb_time=5;
+            ad_left=ad_value1*0.6;
+            ad_right=ad_value6*0.4;
         }
-
+        //ad_left=ad_value1*0.5;
+        //ad_right=ad_value6*0.5;
         //ad_left=ad_value1*0.8+ad_value3*0.1;
         //ad_right=ad_value6*0.25+ad_value4*0.1;
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
@@ -139,10 +141,12 @@ void aicar_mix_error()
     {
         if(RoundInCount<40)
         {
+            bb_time=5;
             ad_left=ad_value1*0.4;
             ad_right=ad_value6*0.6;
         }
-
+        //ad_left=ad_value1*0.5;
+        //ad_right=ad_value6*0.5;
         //ad_left=ad_value1*0.25;
         //ad_right=ad_value6*0.8;
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);   
