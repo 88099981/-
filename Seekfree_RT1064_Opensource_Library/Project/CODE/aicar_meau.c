@@ -81,7 +81,8 @@ void debug_camera()
             Search();
             Y_Change();
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
-      
+            lcd_showstr(0,3,"RoundStatus:");
+            lcd_showuint8(0,4,Round_Status);
         }        
         if(key1_flag)
         {
@@ -447,10 +448,18 @@ void gogogo_camera()
             aicar_chasu();
         else
             aicar_n_chasu();
-        lcd_showstr(0,2,"aim_speed:");
-        lcd_showint16(10*8,2,aim_speed);
-        lcd_showstr(0,3,"chasu:");
-        lcd_showuint8(10*8,3,sw1_status);
+        lcd_showstr(0,3,"aim_speed:");
+        lcd_showint16(10*8,3,aim_speed);
+        lcd_showstr(0,4,"chasu:");
+        lcd_showuint8(10*8,4,sw1_status);
+        lcd_showstr(0,5,"RoundStatus:");
+        lcd_showuint8(10*10,5,Round_Status);
+        lcd_showstr(0,6,"RoundIN:");
+        lcd_showuint8(10*10,6,RoundInCount);
+        lcd_showstr(0,7,"RoundOUT:");
+        lcd_showuint8(10*10,7,RoundOutCount);
+        Y_Change();
+        lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");
@@ -502,10 +511,18 @@ void gogogo_adc()
             aicar_chasu();
         else
             aicar_n_chasu();
-        lcd_showstr(0,2,"aim_speed:");
-        lcd_showint16(10*8,2,aim_speed);
-        lcd_showstr(0,3,"chasu:");
-        lcd_showuint8(10*8,3,sw1_status);
+        lcd_showstr(0,3,"aim_speed:");
+        lcd_showint16(10*8,3,aim_speed);
+        lcd_showstr(0,4,"chasu:");
+        lcd_showuint8(10*8,4,sw1_status);
+        lcd_showstr(0,5,"RoundStatus:");
+        lcd_showuint8(10*10,5,Round_Status);
+        lcd_showstr(0,6,"RoundIN:");
+        lcd_showuint8(10*10,6,RoundInCount);
+        lcd_showstr(0,7,"RoundOUT:");
+        lcd_showuint8(10*10,7,RoundOutCount);
+        Y_Change();
+        lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");
@@ -571,10 +588,18 @@ void gogogo_mix()
             aicar_chasu();
         else
             aicar_n_chasu();
-        lcd_showstr(0,2,"aim_speed:");
-        lcd_showint16(10*8,2,aim_speed);
-        lcd_showstr(0,3,"chasu:");
-        lcd_showuint8(10*8,3,sw1_status);
+        lcd_showstr(0,3,"aim_speed:");
+        lcd_showint16(10*8,3,aim_speed);
+        lcd_showstr(0,4,"chasu:");
+        lcd_showuint8(10*8,4,sw1_status);
+        lcd_showstr(0,5,"RoundStatus:");
+        lcd_showuint8(10*10,5,Round_Status);
+        lcd_showstr(0,6,"RoundIN:");
+        lcd_showuint8(10*10,6,RoundInCount);
+        lcd_showstr(0,7,"RoundOUT:");
+        lcd_showuint8(10*10,7,RoundOutCount);
+        Y_Change();
+        lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");

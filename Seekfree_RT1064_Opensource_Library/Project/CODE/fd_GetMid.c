@@ -8,6 +8,7 @@ uint8 EdgeNum;    //边沿数
 uint8 EdgeLosePos[EDGE_MAX];  //丢边位置 (Y轴           【单帧初始化】
 uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
+uint8 MidStart=IMG_X/2;   //底边搜索起始点横坐标
 uint8 Round_Status=0; //0啥事没有 1第一次看到环口 3看到黑区且电感大于阈值 5第二次看到环口 7环内 9出环 (同理右为偶)
 uint16 Round_ad_limit=600;  //入环ad阈值
 uint32 RunningCount=0;
@@ -752,16 +753,6 @@ uint8 If_Garage(void)
 uint8 Judge(void)
 {
     //-------状态整理 <head>--------//
-    
-    if(flag_Round_ARM_L)
-    {
-        flag_Round_ARM_L--;
-    }
-
-    else if(flag_Round_ARM_R)
-    {
-        flag_Round_ARM_R--;
-    }
 
     if(flag_Y_Road)
     {
@@ -770,7 +761,7 @@ uint8 Judge(void)
 
     if(RoundInCount)
     {
-        RoundInCount++;
+        RoundInCount--;
     }
 
     if(RoundOutCount)
@@ -778,10 +769,6 @@ uint8 Judge(void)
         RoundOutCount--;
     }
 
-    if(RoundFuckUpCount>0)
-    {
-        RoundFuckUpCount--;
-    }
     //-------状态整理 <bottom>--------//
 
 
@@ -999,11 +986,11 @@ switch(Round_Status)
             break;
         }
         
-        if(Feature_Verify_Color(0,10,50,10,White)>=90)
+        if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
         {
             Round_Status=1;
         }
-        else if(Feature_Verify_Color(137,10,50,10,White)>=90)
+        else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
         {
             Round_Status=2;
         }
@@ -1011,31 +998,43 @@ switch(Round_Status)
         break;
 
     case 1:
-        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,30,10,Black)>=90)
+        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black)>=90)
         {
             Round_Status=3;
         }
         break;
 
     case 2:
-        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(137,10,30,10,Black)>=90)
+        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black)>=90)
         {
             Round_Status=4;
         }
         break;
 
     case 3:
-        if(Feature_Verify_Color(0,10,50,10,White)>=90)
+        if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White)>=90)
+        {
+            RoundInCount=20;
+        }
+
+        if(RoundInCount==1)
         {
             Round_Status=5;
         }
+
         break;
 
     case 4:
-        if(Feature_Verify_Color(137,10,50,10,White)>=90)
+        if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White)>=90)
+        {
+            RoundInCount=20;
+        }
+
+        if(RoundInCount==1)
         {
             Round_Status=6;
         }
+
         break;
 
     case 5:
@@ -1053,7 +1052,7 @@ switch(Round_Status)
         break;
 
     case 7:
-        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,30,10,Black)>=90)
+        if(ad_value_all>Round_ad_limit)
         {
             Round_Status=9;
 
@@ -1062,7 +1061,7 @@ switch(Round_Status)
         break;
 
     case 8:
-        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(137,10,30,10,Black)>=90)
+        if(ad_value_all>Round_ad_limit)
         {
             Round_Status=10;
 
@@ -1071,19 +1070,20 @@ switch(Round_Status)
         break;
 
     case 9:
-        if(Feature_Verify_Color(0,10,50,10,White)>=90)
+        if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
         {
             Round_Status=0;
 
+            RoundOutCount=40;
             flag_Normal_Lose_L=1;
         }
         break;
 
     case 10:
-        if(Feature_Verify_Color(137,10,50,10,White)>=90)
+        if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
         {
             Round_Status=0;
-
+            RoundOutCount=40;
             flag_Normal_Lose_R=1;
         }
         break;
@@ -1094,7 +1094,7 @@ switch(Round_Status)
 
 
     //------AprilTag检测 <head>---------//
-    if(Feature_Verify_Box(64,10,60,20,2,1)>=80 && Feature_Verify_Color(66,5,56,13,Black)>=20)
+    if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black)>=20)
     {
         //bb_time=40;
         return 1;
@@ -1193,24 +1193,30 @@ switch(Round_Status)
 
     case 3:
         bb_time=5;
-        flag_Normal_Lose_L=1;
+        if(RoundInCount)
+        {
+            Connect_pp(0,120,0,10,48);
+            flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
+        }
+
         break;
 
     case 4:
         bb_time=5;
-        flag_Normal_Lose_R=1;
+
+        if(RoundInCount)
+        {
+            Connect_pp(1,68,0,178,48);
+            flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
+        }
+
         break;
 
     case 5:
 
-        ad_left=ad_value1*0.6;
-        ad_right=ad_value6*0.4;
-
         break;
 
     case 6:
-        ad_left=ad_value1*0.4;
-        ad_right=ad_value6*0.6;
         
         break;
 
@@ -1399,9 +1405,6 @@ void Print_Mid(void)
 //坑爹的扫线主函数
 void Search(void)
 {
-
-    uint8 MidStart=IMG_X/2;   //底边搜索起始点横坐标    
-    //讲道理，我觉得我不应该把search里和hor_search里搞一个同名的局部变量，但是懒得改了
 
     init();
     Y_Change();
