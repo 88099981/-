@@ -111,14 +111,14 @@ void aicar_mix_error()
     ad_right=ad_value4*0.7+ad_value5*0.3;
     ad_error=(ad_left-ad_right)*100/(ad_left+ad_right);
 
-    if(Round_Status==3 && RoundInCount)
+    if(Round_Status==3)
     {
         ad_left=ad_value1*0.7;  //图像扭不过电感，所以给电感加些偏差
         ad_right=ad_value6*0.3;
 
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
     }
-    else if(Round_Status==4 && RoundInCount)
+    else if(Round_Status==4)
     {
         ad_left=ad_value1*0.3;  //图像扭不过电感，所以给电感加些偏差
         ad_right=ad_value6*0.7;
