@@ -829,275 +829,129 @@ uint8 Judge(void)
 
     //------环岛检测 <head>---------//
 
-/*
-    do
+    switch(Round_Status)
     {
-        if(Feature_Verify_Color(83,20,20,20,White)<=90) //判断是否为直赛道，减小直角弯的误报    //条件是否合适？
-        {
-            break;
-        }
-
-        if(Feature_Verify_Color(0,10,50,10,White)>=90)  //因为有的大环岛入环比较柔和，没有丢边，所以在丢边外判断
-        {
-            //ATTENTION 无法独立进行入环判断(需要电感辅助)
-            flag_Round_ARM_L=5; //当该标志位不为零时，都应该用电感验证
-            //return 1;
-        }
-        else if(Feature_Verify_Color(137,10,50,10,White)>=90)
-        {
-            flag_Round_ARM_R=5; //当该标志位不为零时，都应该用电感验证
-            //return 1;
-        }
-    } while (0);    //想写goto又不敢写的屑
-
-    if(ad_value_all>=600 && !RoundOutCount && (flag_Round_ARM_L || flag_Round_ARM_R))   //TODO 此阈值需可在外部菜单调整
-    {
-        flag_Is_This_Round=1;
-        //bb_time=5;
-    }
-    else
-    {
-        flag_Is_This_Round=0;
-    }
-*/
-
-/*
-    if(RoundOutCount>0 && RoundOutCount<100)
-    {
-        camera_error=0; //临时关闭
-    }
-*/
-
-/*
-    if(flag_Is_This_Round && flag_Round_ARM_L)
-    {
-        flag_Round_in_L=1;
-
-        RoundInCount=1;
-    }
-    else if(flag_Is_This_Round && flag_Round_ARM_R)
-    {
-        flag_Round_in_R=1;
-
-        RoundInCount=1;
-    }
-*/
-
-/*
-    if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_L)
-    {
-        flag_Round_in_L=1;
-
-        RoundInCount=1;
-    }
-    else if(!RoundFuckUpCount && flag_Is_This_Round && flag_Round_ARM_R)
-    {
-        flag_Round_in_R=1;
-
-        RoundInCount=1;
-
-    }
-*/
-
-/*
-    if(flag_Round_in_L && RoundInCount>=100 && (Feature_Verify_Color(167,20,20,10,White)>=90 || ad_value_all>600))
-    {
-        flag_Round_out_L=1;
-        //flag_Round_in_L=0;
-
-        RoundInCount=0; //停止计数
-        RoundOutCount=200;
-        //bb_time=5;
-    }
-    else if(flag_Round_in_R && RoundInCount>=100 && (Feature_Verify_Color(0,20,20,10,White)>=90 || ad_value_all>600))
-    {
-        flag_Round_out_R=1;
-        //flag_Round_in_R=0;
-
-        RoundInCount=0;
-        RoundOutCount=200;
-        //bb_time=5;
-    }
-    
-
-    if(RoundOutCount==1 && (flag_Round_in_L || flag_Round_in_R))
-    {
-        flag_Round_in_L=0;
-        flag_Round_in_R=0;
-        flag_Round_out_L=0;
-        flag_Round_out_R=0;
-    }
-*/
-
-/*
-    if(flag_Round_in_L && RoundInCount>=100 && Feature_Verify_Color(167,20,20,10,White)>=90)
-    {
-        //flag_Round_out_L=1;
-        //flag_Round_in_L=0;
-
-        RoundInCount=0; //停止计数
-        RoundOutCount=200;
-        bb_time=5;
-    }
-    else if(flag_Round_in_R && RoundInCount>=100 && Feature_Verify_Color(0,20,20,10,White)>=90)
-    {
-        //flag_Round_out_R=1;
-        //flag_Round_in_R=0;
-
-        RoundInCount=0;
-        RoundOutCount=200;
-        bb_time=5;
-    }
-    
-
-    if(RoundOutCount==1 && (flag_Round_in_L || flag_Round_in_R))
-    {
-        flag_Round_in_L=0;
-        flag_Round_in_R=0;
-        //flag_Round_out_L=0;
-        //flag_Round_out_R=0;
-    }
-*/
-
-/*
-    if(RoundOutCount>0)
-    {
-        RoundFuckUpCount=100;
-*/
-
-/*
-    if(flag_Round_in_L || flag_Round_in_R)
-    {
-        if(Feature_Verify_Color(0,46,187,3,Black)>=90) //额最顶上两行基本全黑 这个值根据需求修改
-        {
-            flag_T_Road=1;
-            //bb_time=5;
-            return 1;
-        }
-    }
-*/
-
-
-switch(Round_Status)
-{
-    case 0:
-        if(Feature_Verify_Color(83,20,20,20,White)<=90)
-        {
-            break;
-        }
+        case 0:
+            if(Feature_Verify_Color(83,20,20,20,White)<=90)
+            {
+                break;
+            }
         
-        if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
-        {
-            Round_Status=1;
-        }
-        else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
-        {
-            Round_Status=2;
-        }
+            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
+            {
+                Round_Status=1;
+            }
+            else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
+            {
+                Round_Status=2;
+            }
         
-        break;
+            break;
 
-    case 1:
-        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black)>=90)
-        {
-            Round_Status=3;
-        }
-        break;
+        case 1:
+            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black)>=90)
+            {
+                Round_Status=3;
+            }
+            break;
 
-    case 2:
-        if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black)>=90)
-        {
-            Round_Status=4;
-        }
-        break;
+        case 2:
+            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black)>=90)
+            {
+                Round_Status=4;
+            }
+            break;
 
-    case 3:
-        if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White)>=90)
-        {
-            RoundInCount=20;
-        }
+        case 3:
+            if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White)>=90)
+            {
+                RoundInCount=20;
+            }
 
-        if(RoundInCount==1)
-        {
-            Round_Status=5;
-        }
+            if(RoundInCount==1)
+            {
+                Round_Status=5;
+            }
 
-        break;
+            break;
 
-    case 4:
-        if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White)>=90)
-        {
-            RoundInCount=20;
-        }
+        case 4:
+            if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White)>=90)
+            {
+                RoundInCount=20;
+            }
 
-        if(RoundInCount==1)
-        {
-            Round_Status=6;
-        }
+            if(RoundInCount==1)
+            {
+                Round_Status=6;
+            }
 
-        break;
+            break;
 
-    case 5:
-        if(Feature_Verify_Color(167,20,20,10,White)>=90)
-        {
-            Round_Status=7;
-        }
-        break;
+        case 5:
+            if(Feature_Verify_Color(167,20,20,10,White)>=90)
+            {
+                Round_Status=7;
+            }
+            break;
 
-    case 6:
-        if(Feature_Verify_Color(0,20,20,10,White)>=90)
-        {
-            Round_Status=8;
-        }
-        break;
+        case 6:
+            if(Feature_Verify_Color(0,20,20,10,White)>=90)
+            {
+                Round_Status=8;
+            }
+            break;
 
-    case 7:
-        if(ad_value_all>Round_ad_limit)
-        {
-            Round_Status=9;
+        case 7:
+            if(ad_value_all>Round_ad_limit)
+            {
+                Round_Status=9;
 
-            flag_Normal_Lose_L=1;
-        }
-        break;
+                flag_Normal_Lose_L=1;
+            }
+            break;
 
-    case 8:
-        if(ad_value_all>Round_ad_limit)
-        {
-            Round_Status=10;
+        case 8:
+            if(ad_value_all>Round_ad_limit)
+            {
+                Round_Status=10;
 
-            flag_Normal_Lose_R=1;
-        }
-        break;
+                flag_Normal_Lose_R=1;
+            }
+            break;
 
-    case 9:
-        if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
-        {
-            Round_Status=0;
+        case 9:
+            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
+            {
+                Round_Status=0;
 
-            RoundOutCount=40;
-            flag_Normal_Lose_L=1;
-        }
-        break;
+                RoundOutCount=40;
+                flag_Normal_Lose_L=1;
+            }
+            break;
 
-    case 10:
-        if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
-        {
-            Round_Status=0;
-            RoundOutCount=40;
-            flag_Normal_Lose_R=1;
-        }
-        break;
-}
+        case 10:
+            if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
+            {
+                Round_Status=0;
+                RoundOutCount=40;
+                flag_Normal_Lose_R=1;
+            }
+            break;
+    }
     //------环岛检测 <bottom>---------//
 
 
 
 
     //------AprilTag检测 <head>---------//
-    if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black)>=20)
+    for(uint8 i=20;i<IMG_X-80;i+=5)
     {
-        //bb_time=40;
-        return 1;
+        if(Feature_Verify_Box(i,10,50,23,2,1)>=80 && Feature_Verify_Color(i,5,46,16,Black)>=30)
+        {
+            //bb_time=40;
+            return 1;
+        }
     }
     //------AprilTag检测 <bottom>---------//
 
