@@ -50,6 +50,8 @@ void show_page(uint8 page)
     case MEAU_DEBUG_5:debug_huandao();break;
     case MEAU_DEBUG_6:debug_chasu();break;
     case MEAU_DEBUG_7:debug_20602();break;
+    case MEAU_DEBUG_8:debug_apriltag();break;
+    case MEAU_DEBUG_9:debug_number();break;
     case MEAU_GOGOGO_0:gogogo_mix();break;
     case MEAU_GOGOGO_1:gogogo_adc();break;
     case MEAU_GOGOGO_2:gogogo_camera();break;
@@ -62,7 +64,7 @@ void show_arrow(uint8 arrow)
 {
     if(arrow!=MEAU_NON)
     {
-        for(int i=0;i<8;i++)
+        for(int i=0;i<10;i++)
             (i==arrow)?lcd_showstr(14*8,i,"<-"):lcd_showstr(14*8,i,"  ");
     }
 
@@ -406,7 +408,7 @@ void debug_20602()
         {
             lcd_clear(BLACK);
             pointer_page=MEAU_DEBUG;
-            pointer_arrow=5;
+            pointer_arrow=7;
         }    
     }
     key4_flag=0;
@@ -414,6 +416,22 @@ void debug_20602()
     
 }
 
+
+void debug_apriltag()
+{
+    find_apriltag();
+    lcd_clear(BLACK);
+    pointer_page=MEAU_DEBUG;
+    pointer_arrow=8;
+}
+
+void debug_number()
+{
+    sancha_stop();
+    lcd_clear(BLACK);
+    pointer_page=MEAU_DEBUG;
+    pointer_arrow=9;
+}
 
 void gogogo_camera()
 {

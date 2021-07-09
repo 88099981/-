@@ -1281,6 +1281,12 @@
             <name>$PROJ_DIR$\..\..\CODE\aicar_servo.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_uart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\..\CODE\aicar_uart.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\..\CODE\aicar_wireless.c</name>
         </file>
         <file>

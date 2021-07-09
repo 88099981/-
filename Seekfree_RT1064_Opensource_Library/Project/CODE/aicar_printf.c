@@ -176,6 +176,8 @@ void print_debug()
     lcd_showstr(0,5,"huandao");    
     lcd_showstr(0,6,"chasu");
     lcd_showstr(0,7,"20602");       
+    lcd_showstr(0,8,"apriltag");
+    lcd_showstr(0,9,"number");  
 }
 
 

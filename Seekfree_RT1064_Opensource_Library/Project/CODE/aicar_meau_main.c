@@ -29,25 +29,25 @@ void aicar_meau_init()
 
 void aicar_meau_scan()
 {
-    aicar_switch_get();//拨码开关预留位，可放标志位
-    if(sw1_status==0&&sw2_status==0)
-    {
-            
-        
-    }    
-    else if(sw1_status==0&&sw2_status==1)   
-    {
-            
-
-    }        
-    else if(sw1_status==1&&sw2_status==0)
-    {
-            
-    }
-    else if(sw1_status==1&&sw2_status==1)
-    {
-            
-    }
+//    aicar_switch_get();//拨码开关预留位，可放标志位
+//    if(sw1_status==0&&sw2_status==0)
+//    {
+//            
+//        
+//    }    
+//    else if(sw1_status==0&&sw2_status==1)   
+//    {
+//            
+//
+//    }        
+//    else if(sw1_status==1&&sw2_status==0)
+//    {
+//            
+//    }
+//    else if(sw1_status==1&&sw2_status==1)
+//    {
+//            
+//    }
     aicar_key_get();//按键控制菜单
     if(key1_flag)
     {
@@ -82,8 +82,8 @@ void up_status()
             pointer_arrow=3;break;
     case MEAU_DEBUG:
         pointer_arrow-=1;
-        if(pointer_arrow>7)
-            pointer_arrow=7;break;   
+        if(pointer_arrow>9)
+            pointer_arrow=9;break;   
     case MEAU_PARA:
         pointer_arrow-=1;
         if(pointer_arrow>3)
@@ -123,7 +123,7 @@ void down_status()
             pointer_arrow=0;break;
     case MEAU_DEBUG:
         pointer_arrow+=1;
-        if(pointer_arrow>7)
+        if(pointer_arrow>9)
             pointer_arrow=0;break;       
     case MEAU_PARA:
         pointer_arrow+=1;
@@ -177,7 +177,9 @@ void go_status()
         case 4:pointer_page=MEAU_DEBUG_4;break;
         case 5:pointer_page=MEAU_DEBUG_5;break;//huandao
         case 6:pointer_page=MEAU_DEBUG_6;break;//chasu
-        case 7:pointer_page=MEAU_DEBUG_7;break;//chasu        
+        case 7:pointer_page=MEAU_DEBUG_7;break;//20602   
+        case 8:pointer_page=MEAU_DEBUG_8;break;
+        case 9:pointer_page=MEAU_DEBUG_9;break;
         }       
         pointer_arrow=0;
         lcd_clear(BLACK);break;

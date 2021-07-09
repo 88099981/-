@@ -202,7 +202,7 @@ void aicar_mix_error()
             //ad_error=Cp_sqrt(-ad_error);
             //ad_error=-ad_error;               
         }
-        if(camera_error<0)//正左负右
+        if(camera_error<0)//左正右负
             camera_error=0;             
                        
         //camera_error=0;
@@ -224,9 +224,9 @@ void aicar_mix_error()
         //ad_error*=0.8;
         //camera_error*=1.2;
         if(ad_error>0)
-            ad_error=Cp_sqrt(ad_error);//正左负右
+            ad_error=Cp_sqrt(ad_error);//左正右负
         if(camera_error>0)
-            camera_error=0;//正左负右        
+            camera_error=0;//左正右负       
     }
 */
 
