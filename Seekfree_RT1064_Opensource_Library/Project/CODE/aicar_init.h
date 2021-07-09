@@ -6,6 +6,16 @@
 #define EPSOLON 1e-7
 #define SPEED_SET 70
 
+typedef enum
+{
+    HOLDER_LEFT,
+    HOLDER_RIGHT,
+    SERVO_LEFT,
+    SERVO_RIGHT,
+    ANIMAL,
+    FRUIT
+}KIND;
+
 extern vuint8 zuo_yuanhuan_flag;
 extern vuint8 you_yuanhuan_flag;
 extern int16 left_motor, right_motor;
@@ -18,7 +28,10 @@ extern vuint8 break_flag;
 extern vuint8 adc_isr_enable;
 extern uint16 stop_cnt;
 extern int32 turn_sum;
-extern double chasu_k,chasu_b;
+extern float chasu_k,chasu_b;
+extern vuint8 magic_mode;
+extern uint8 magic_data[];
+extern uint16 use_time;
 
 void aicar_init();
 

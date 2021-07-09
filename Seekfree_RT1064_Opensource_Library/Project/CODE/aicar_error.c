@@ -121,7 +121,7 @@ void aicar_mix_error()
             ad_error=Cp_sqrt(-ad_error);
             ad_error=-ad_error;               
         }
-        if(camera_error<0)//正左负右
+        if(camera_error<0)//左正右负
             camera_error=0;             
                        
         //camera_error=0;
@@ -133,9 +133,9 @@ void aicar_mix_error()
         
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);   
         if(ad_error>0)
-            ad_error=Cp_sqrt(ad_error);//正左负右
+            ad_error=Cp_sqrt(ad_error);//左正右负
         if(camera_error>0)
-            camera_error=0;//正左负右        
+            camera_error=0;//左正右负       
     }
     
     servo_angle_cam=(int16)(kp_cam*camera_error + kd_cam*(camera_error-lasttime_ad));

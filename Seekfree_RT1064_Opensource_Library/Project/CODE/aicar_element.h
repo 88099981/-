@@ -20,5 +20,14 @@ void aicar_left_garage_out();
 void aicar_right_garage_out();
 void aicar_left_garage_in();
 void aicar_right_garage_in();
+void holder_l_turn();
+void holder_r_turn();
+void servo_l_turn();
+void servo_r_turn();
+void wait_animal();
+void shot_fruit();
+void sancha_stop();
+void find_apriltag();
+void sort_animalorfruit();
 
 #endif

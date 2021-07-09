@@ -9,7 +9,7 @@ extern uint8 pointer_arrow;
 typedef enum
 {
     MEAU_MAIN,
-    MEAU_DEBUG,//无显示蓝牙传图像
+    MEAU_DEBUG,//debug主菜单
     MEAU_DEBUG_0,//摄像头显示图像
     MEAU_DEBUG_1,//电感显示值
     MEAU_DEBUG_2,//无显示蓝牙传图像
@@ -18,6 +18,8 @@ typedef enum
     MEAU_DEBUG_5,//环岛
     MEAU_DEBUG_6,//差速
     MEAU_DEBUG_7,//陀螺仪20602
+    MEAU_DEBUG_8,//apriltags识别
+    MEAU_DEBUG_9,//number识别
     MEAU_PARA,//参数显示
     MEAU_PARA_0,//环岛参数
     MEAU_PARA_0_0,//ruhuan
@@ -45,6 +47,8 @@ void debug_motor();
 void debug_huandao();
 void debug_chasu();
 void debug_20602();
+void debug_apriltag();
+void debug_number();
 void gogogo_camera();
 void gogogo_adc();
 void gogogo_mix();
