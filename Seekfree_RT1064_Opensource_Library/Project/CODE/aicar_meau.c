@@ -574,9 +574,9 @@ void gogogo_mix()
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;
-            cut_image_to_img2();//copy	
-            binary_img();				   				
-            Search();    
+            mv_image_to_img2();//copy	
+            binary_img();
+            Search();
         }        
         aicar_huandao();
         if(flag_Cross==1)
@@ -588,6 +588,7 @@ void gogogo_mix()
             aicar_chasu();
         else
             aicar_n_chasu();
+
         lcd_showstr(0,3,"aim_speed:");
         lcd_showint16(10*8,3,aim_speed);
         lcd_showstr(0,4,"chasu:");
@@ -600,6 +601,28 @@ void gogogo_mix()
         lcd_showuint8(10*10,7,RoundOutCount);
         Y_Change();
         lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
+
+        if(flag_Y_Road)
+        {
+            lcd_showstr(0,8,"Y_Road");
+        }
+        else if(Round_Status)
+        {
+            lcd_showstr(0,8,"Round");
+        }
+        else if(flag_Garage_L || flag_Garage_R)
+        {
+            lcd_showstr(0,8,"Garage");
+        }
+        else if(flag_Cross)
+        {
+            lcd_showstr(0,8,"Cross");
+        }
+        else
+        {
+            lcd_showstr(0,8,"Normal");
+        }
+
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");

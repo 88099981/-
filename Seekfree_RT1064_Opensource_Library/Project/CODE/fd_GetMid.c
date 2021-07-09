@@ -613,7 +613,7 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)
             if(img[T_y+i][T_x+j]==feature[i*dx+j])    //与特征数组/图像比较
             {
                 rate++;
-                img[T_y+i][T_x+j]=Gray;
+                //img[T_y+i][T_x+j]=Gray;
             }
         }
     }
@@ -643,7 +643,7 @@ uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color)
             if(img[T_y+i][T_x+j]==color)    //与特征数组/图像比较
             {
                 rate++;
-                img[T_y+i][T_x+j]=Gray;
+                //img[T_y+i][T_x+j]=Gray;
             }
         }
     }
@@ -676,9 +676,8 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
                 if(img[T_y+i][T_x+j]==feature)
                 rate++;
 
-                #ifdef IMG_DEBUG
-                img[T_y+i][T_x+j]=Gray;
-                #endif
+                //img[T_y+i][T_x+j]=Gray;
+
             }
             else
             {
@@ -687,9 +686,7 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
                     if(img[T_y+i][T_x+j]==feature)
                     rate++;
 
-                    #ifdef IMG_DEBUG
-                    img[T_y+i][T_x+j]=Gray;
-                    #endif
+                    //img[T_y+i][T_x+j]=Gray;
                 }
             }
         }
@@ -754,9 +751,10 @@ uint8 Judge(void)
 {
     //-------状态整理 <head>--------//
 
-    if(flag_Y_Road)
+    if(flag_Y_Road_IN)
     {
-        flag_Y_Road--;
+        flag_Y_Road_IN--;
+        flag_Y_Road=0;
     }
 
     if(RoundInCount)
@@ -773,7 +771,7 @@ uint8 Judge(void)
 
 
     //------T路检测 <head>---------//
-    if(Feature_Verify_Color(0,44,187,5,Black)>=90)
+    if(Feature_Verify_Color(0,44,187,5,Black)>=95)
     {
         flag_T_Road=1;
     }
@@ -788,16 +786,8 @@ uint8 Judge(void)
     }
     //------车库检测 <bottom>---------//
 
-    //-------双侧丢边 <head>--------//
-    if(flag_LoseEdge_part_L && flag_LoseEdge_part_R)
-    {   
-        if(!RoundInCount)
-        {
-            flag_Cross=1;
-            return 1;
-        }
-    }
-    //-------双侧丢边 <bottom>--------//
+
+
 
     //------三岔检测 <head>---------//
     if(Feature_Verify_Color(74,44,40,5,Black)>=90) 
@@ -824,7 +814,29 @@ uint8 Judge(void)
             //return 1;
         }
     }
-    //-------三岔检测 <bottom>--------//V
+
+    if(ad_value_all<=300)
+    {
+        flag_Y_Road_IN=40;
+    }
+    //-------三岔检测 <bottom>--------//
+
+
+
+
+
+    //-------双侧丢边 <head>--------//
+    if(flag_LoseEdge_part_L && flag_LoseEdge_part_R)
+    {   
+        if(!Round_Status && !flag_Y_Road_IN)
+        {
+            flag_Cross=1;
+            return 1;
+        }
+    }
+    //-------双侧丢边 <bottom>--------//
+
+
 
 
     //------环岛检测 <head>---------//
@@ -832,7 +844,7 @@ uint8 Judge(void)
     switch(Round_Status)
     {
         case 0:
-            if(Feature_Verify_Color(83,20,20,20,White)<=90)
+            if(flag_Y_Road || Feature_Verify_Color(83,20,20,20,White)<=90)
             {
                 break;
             }
@@ -840,10 +852,14 @@ uint8 Judge(void)
             if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
             {
                 Round_Status=1;
+
+                flag_Normal_Lose_L=1; //避免打偏
             }
             else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
             {
                 Round_Status=2;
+
+                flag_Normal_Lose_R=1;
             }
         
             break;
@@ -873,6 +889,8 @@ uint8 Judge(void)
                 Round_Status=5;
             }
 
+            flag_Normal_Lose_L=1;
+
             break;
 
         case 4:
@@ -886,12 +904,16 @@ uint8 Judge(void)
                 Round_Status=6;
             }
 
+            flag_Normal_Lose_R=1;
+
             break;
 
         case 5:
             if(Feature_Verify_Color(167,20,20,10,White)>=90)
             {
                 Round_Status=7;
+
+                flag_Normal_Lose_L=1;   //否则在大环内容易晃
             }
             break;
 
@@ -899,6 +921,8 @@ uint8 Judge(void)
             if(Feature_Verify_Color(0,20,20,10,White)>=90)
             {
                 Round_Status=8;
+
+                flag_Normal_Lose_R=1;
             }
             break;
 
@@ -921,9 +945,19 @@ uint8 Judge(void)
             break;
 
         case 9:
+            /*
             if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
             {
-                Round_Status=0;
+                Round_Status=10;
+
+                RoundOutCount=40;
+                flag_Normal_Lose_L=1;
+            }
+            */
+
+            if(!RoundOutCount)
+            {
+                Round_Status=11;
 
                 RoundOutCount=40;
                 flag_Normal_Lose_L=1;
@@ -931,13 +965,42 @@ uint8 Judge(void)
             break;
 
         case 10:
+            /*
             if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
             {
-                Round_Status=0;
+                Round_Status=11;
                 RoundOutCount=40;
                 flag_Normal_Lose_R=1;
             }
             break;
+            */
+
+            if(!RoundOutCount)
+            {
+                Round_Status=12;
+                RoundOutCount=40;
+                flag_Normal_Lose_R=1;
+            }
+            break;
+
+        case 11:
+            if(RoundOutCount==1)
+            {
+                Round_Status=0;
+            }
+            break;
+
+        case 12:
+            if(RoundOutCount==1)
+            {
+                Round_Status=0;
+            }
+            break;
+    }
+
+    if((flag_Y_Road || flag_Y_Road_IN) && flag_Y_Road<3)    //防止三岔误识别为环岛
+    {
+        Round_Status=0;
     }
     //------环岛检测 <bottom>---------//
 
@@ -945,13 +1008,11 @@ uint8 Judge(void)
 
 
     //------AprilTag检测 <head>---------//
-    for(uint8 i=20;i<IMG_X-80;i+=5)
+    if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black)>=20)
     {
-        if(Feature_Verify_Box(i,10,50,23,2,1)>=80 && Feature_Verify_Color(i,5,46,16,Black)>=30)
-        {
-            //bb_time=40;
-            return 1;
-        }
+        bb_time=40;
+
+        return 1;
     }
     //------AprilTag检测 <bottom>---------//
 
@@ -992,7 +1053,7 @@ inline uint8 Width_Cali(uint8 y)
 //双侧丢边
 void Damn_Lose_Edge_all(void)
 {
-
+    /*
     uint8 flag_Edge_Start_Exist=0;
     uint8 flag_Edge_End_Exist=0;
     uint8 EdgeStartPos=0;
@@ -1023,7 +1084,7 @@ void Damn_Lose_Edge_all(void)
         Connect(edge,1,EdgeStartPos,EdgeEndPos);
         Connect(edge,2,EdgeStartPos,EdgeEndPos);
     }
-
+    */
 }
 
 
@@ -1085,6 +1146,21 @@ switch(Round_Status)
 
     case 10:
         break;
+
+    case 11:
+        if(RoundOutCount>30)
+        {
+            Connect_pp(0,120,0,10,48);
+            flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
+        }
+        break;
+
+    case 12:
+        if(RoundOutCount>30)
+        {
+            Connect_pp(1,68,0,178,48);
+            flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
+        }
 }
 
 /*
@@ -1135,6 +1211,12 @@ switch(Round_Status)
         {
             for(uint8 j=0;j<IMG_Y-1;j++)
             {
+                if(j==IMG_Y-2)
+                {
+                    Height_L+=j;
+                    break;
+                }
+
                 if(img[j][i]==White && img[j+1][i]==Black)
                 {
                     Height_L+=j;
@@ -1147,6 +1229,12 @@ switch(Round_Status)
         {
             for(uint8 j=0;j<IMG_Y-1;j++)
             {
+                if(j==IMG_Y-2)
+                {
+                    Height_R+=j;
+                    break;
+                }
+
                 if(img[j][i]==White && img[j+1][i]==Black)
                 {
                     Height_R+=j;

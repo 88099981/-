@@ -159,10 +159,11 @@ void aicar_right_garage_in()
         servo_duty=3550;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
-        lcd_showstr(0,3,"turn_sum:");
-        lcd_showint32(10*8,3,turn_sum,5);
-        lcd_showstr(0,6,"icm_gyro_z:");
-        lcd_showint16(10*8,6,icm_gyro_z);
+        //lcd_showstr(0,3,"turn_sum:");
+        //lcd_showint32(10*8,3,turn_sum,5);
+        //lcd_showstr(0,6,"icm_gyro_z:");
+        //lcd_showint16(10*8,6,icm_gyro_z);
+        //lcd_showstr(0,7,"Garage R");
         
         aicar_chasu();
     }
@@ -183,11 +184,12 @@ void aicar_left_garage_in()
         servo_duty=4150;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
-        lcd_showstr(0,3,"turn_sum:");
-        lcd_showint32(10*8,3,turn_sum,5);
-        lcd_showstr(0,6,"icm_gyro_z:");
-        lcd_showint16(10*8,6,icm_gyro_z);
-        
+        //lcd_showstr(0,3,"turn_sum:");
+        //lcd_showint32(10*8,3,turn_sum,5);
+        //lcd_showstr(0,6,"icm_gyro_z:");
+        //lcd_showint16(10*8,6,icm_gyro_z);
+        //lcd_showstr(0,7,"Garage L");
+
         aicar_chasu();
     }
     lcd_clear(BLACK);
