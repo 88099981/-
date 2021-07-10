@@ -64,5 +64,5 @@ void aicar_init()
     icm20602_init_spi();//20602    
     aicar_uart_init();
     aicar_holder_init();//ÔÆÌ¨
-    aicar_laser_init();//¼¤¹âÆ÷
+    //aicar_laser_init();//¼¤¹âÆ÷
 }
