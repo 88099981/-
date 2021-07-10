@@ -47,7 +47,7 @@ float chasu_k=0.0,chasu_b=0.0;//差速数据
 
 void aicar_init()
 {
-    //mt9v03x_csi_init();//摄像头
+    mt9v03x_csi_init();//摄像头
     aicar_adc_init();//adc
     qtimer_quad_init(QTIMER_1,QTIMER1_TIMER0_C0,QTIMER1_TIMER1_C1);
     qtimer_quad_init(QTIMER_1,QTIMER1_TIMER2_C2,QTIMER1_TIMER3_C24);//encoder
@@ -60,7 +60,7 @@ void aicar_init()
     aicar_motor_init();//motor
     flash_init();   //初始化flash
     aicar_flash_read();//读取flash
-    //icm20602_init_spi();//20602    
+    icm20602_init_spi();//20602    
     aicar_uart_init();
     aicar_holder_init();//云台
     aicar_laser_init();//激光器
