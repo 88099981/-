@@ -571,23 +571,36 @@ void gogogo_mix()
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
-    
+    aim_speed_set=SPEED_SET;
     aicar_right_garage_out();//后面要改成菜单
     
     while(key4_flag!=1)
     {
+        if(Round_Status)
+        {
+            aim_speed=80;
+        }
+        else if(flag_Straight)
+        {
+            aim_speed=aim_speed_set+15;
+        }
+        else
+        {
+            aim_speed=aim_speed_set;
+        }
+
         aicar_key_get();//按键检测
         aicar_switch_get();//拨码开关
         aicar_adc_get();//停车用
         if(key1_flag)
         {
             key1_flag=0;
-            aim_speed+=10;
+            aim_speed_set+=10;
         }
         else if(key2_flag)
         {
             key2_flag=0;
-            aim_speed-=10;
+            aim_speed_set-=10;
         }     
         if(mt9v03x_csi_finish_flag)
         {      

@@ -9,12 +9,12 @@ uint8 EdgeLosePos[EDGE_MAX];  //丢边位置 (Y轴           【单帧初始化】
 uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
 uint8 MidStart=IMG_X/2;   //底边搜索起始点横坐标
-uint8 Round_Status=0; //0啥事没有 1第一次看到环口 3看到黑区且电感大于阈值 5第二次看到环口 7环内 9出环 (同理右为偶)
 uint16 Round_ad_limit=600;  //入环ad阈值
 uint32 RunningCount=0;
 uint16 RoundInCount; //入环计数
 uint8 RoundOutCount;
-uint8 RoundFuckUpCount;
+uint8 YRoadInCount;
+
 //flag
 //------------------------工作状态标志,由扫线函数调用------------------------//
 uint8 flag_MidStart_in_Black=0;   //Hor_Search 函数中给定起始点在黑区内    【单帧初始化】
@@ -28,21 +28,14 @@ uint8 flag_LoseEdge_all_R=0;  //              【单帧初始化】
 uint8 flag_Straight_L=0;  //左直道    检测直道比检测弯道简单的多            【单帧初始化】
 uint8 flag_Straight_R=0;  //右直道                                         【单帧初始化】
 
-uint8 flag_Process_Blocked=0;   //进程阻塞状态，避免多次进入某一状态
 //------------------高级标志,原则上由状态机确定补线函数调用-------------------//
+uint8 flag_Straight=0;
 uint8 flag_T_Road=0;   //T形路（泛指最顶上几行全黑，以下出现大面积两侧丢边的状况
 uint8 flag_Y_Road=0;   //三岔
 uint8 flag_Y_Road_IN=0; //三岔中
-uint8 flag_Y_Road_L=1;  //三岔左    //ATTENTION 由openart设置
-uint8 flag_Y_Road_R=0;  //三岔右
+uint8 Y_Road_Status=1;  //三岔左    //ATTENTION 由openart设置 0右1左
 uint8 flag_Cross=0;    //十字                 【单帧初始化】
-uint8 flag_Round_ARM_L=0;  //左环岛预位
-uint8 flag_Round_ARM_R=0;  //右环岛预位
-uint8 flag_Is_This_Round=0;   //环岛决策标志  询问电感(调用完记得复位)    （为什么不问问神奇海螺呢？
-uint8 flag_Round_in_L=0;   //左环岛环中 //ATTENTION 从入环开始置位
-uint8 flag_Round_in_R=0;   //右环岛环中
-uint8 flag_Round_out_L=0;   //左环岛出环
-uint8 flag_Round_out_R=0;   //右环岛出环
+uint8 Round_Status=0; //0啥事没有 1第一次看到环口 3看到黑区且电感大于阈值 5第二次看到环口 7环内 9出环 (同理右为偶)
 uint8 flag_Normal_Lose_L=0;   //一般丢左边                 【单帧初始化】
 uint8 flag_Normal_Lose_R=0;   //一般丢右边                 【单帧初始化】
 uint8 flag_Garage_L=0;        //车库在左侧
@@ -75,6 +68,7 @@ void init(void)
     flag_Normal_Lose_R=0;
     flag_AprilTag_ARM=0;
     flag_AprilTag=0;
+    flag_Straight=0;
     //************************
 
     for(uint8 i=0;i<EDGE_MAX;i++)
@@ -85,43 +79,6 @@ void init(void)
         angle[i].L=180;
         angle[i].R=180;
         mid[i]=0;
-    }
-}
-
-
-
-
-uint8 Process_On(uint8 set,uint16 SetDelay)
-{
-    static uint16 StartTime;
-    static uint16 delays;
-    uint16 RealTime=0;
-
-    if(set && !flag_Process_Blocked)    //仅可在未工作的时候设置 //TODO 设置失败返回
-    {
-        StartTime=systick_getval_ms();  //设置初始时间
-        delays=SetDelay;                //设置比较时间
-    }
-
-    RealTime=systick_getval_ms();
-
-    if(RealTime-StartTime<0)
-    {
-        return 0;
-    }
-    else if(RealTime-StartTime<delays)
-    {
-        flag_Process_Blocked=1;
-        return 101;
-    }
-    else if(RealTime-StartTime>=delays)
-    {
-        flag_Process_Blocked=0;
-        return 100;
-    }
-    else
-    {
-        return 1;   //啥事也没干
     }
 }
 
@@ -768,6 +725,11 @@ uint8 Judge(void)
         flag_Y_Road=0;
     }
 
+    if(YRoadInCount)
+    {
+        YRoadInCount--;
+    }
+
     if(RoundInCount)
     {
         RoundInCount--;
@@ -781,8 +743,10 @@ uint8 Judge(void)
     //-------状态整理 <bottom>--------//
 
 
+
+
     //------T路检测 <head>---------//
-    if(Feature_Verify_Color(0,44,187,5,Black,90))
+    if((Round_Status==0 || Round_Status>=7) && Feature_Verify_Color(0,44,187,5,Black,90))
     {
         flag_T_Road=1;
     }
@@ -810,19 +774,12 @@ uint8 Judge(void)
             //bb_time=50;
 
             /*
-                电感确定是否为三岔，openmv确认三岔转向
+                    openmv确认三岔转向
             */
 
-            if(flag_Y_Road_L)   //补边
-            {
-                flag_Normal_Lose_L=1;
-            }
-            else if(flag_Y_Road_R)
-            {
-                flag_Normal_Lose_R=1;
-            }
-
             //return 1;
+            YRoadInCount=5;
+            flag_Y_Road_IN=40;
         }
     }
 
@@ -1018,10 +975,19 @@ uint8 Judge(void)
 
 
 
+    //------直路检测 <head>---------//
+    if((!Round_Status || flag_Y_Road || flag_Y_Road_IN) && Feature_Verify_Color(84,40,20,8,White,90))
+    {
+        flag_Straight=1;
+    }
+    //------T路检测 <bottom>---------//
+
+
+
     //------AprilTag检测 <head>---------//
     if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black,20))
     {
-        bb_time=40;
+        //bb_time=40;
 
         return 1;
     }
@@ -1213,6 +1179,18 @@ switch(Round_Status)
     }
 */
 
+    if(flag_Y_Road)
+    {
+        if(Y_Road_Status && YRoadInCount)
+        {
+
+        }
+        else if(!Y_Road_Status && YRoadInCount)
+        {
+
+        }
+    }
+
     if(flag_T_Road)
     {
         uint16 Height_L=0;
@@ -1257,12 +1235,12 @@ switch(Round_Status)
         if(Height_L>Height_R)
         {
             Connect_pp(0,120,0,20,49);
-            flag_Normal_Lose_L;
+            flag_Normal_Lose_L=1;
         }
         else if(Height_L<Height_R)
         {
             Connect_pp(1,68,0,168,49);
-            flag_Normal_Lose_R;
+            flag_Normal_Lose_R=1;
         }
     }
 
