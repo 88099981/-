@@ -1195,41 +1195,33 @@ switch(Round_Status)
     {
         uint16 Height_L=0;
         uint16 Height_R=0;
-
+        uint8 Height=0;
         for(uint8 i=0;i<IMG_X/2;i++)
-        {
+        {   
+            Height=0;
             for(uint8 j=0;j<IMG_Y-1;j++)
             {
-                if(j==IMG_Y-2)
+                if(img[j][i]==Black || j==IMG_Y-2)
                 {
-                    Height_L+=j;
-                    break;
-                }
-
-                if(img[j][i]==White && img[j+1][i]==Black)
-                {
-                    Height_L+=j;
+                    Height=j;
                     break;
                 }
             }
+            Height_L+=Height;
         }
 
         for(uint8 i=IMG_X/2;i<IMG_X;i++)
         {
+            Height=0;
             for(uint8 j=0;j<IMG_Y-1;j++)
             {
-                if(j==IMG_Y-2)
+                if(img[j][i]==Black || j==IMG_Y-2)
                 {
-                    Height_R+=j;
-                    break;
-                }
-
-                if(img[j][i]==White && img[j+1][i]==Black)
-                {
-                    Height_R+=j;
+                    Height=j;
                     break;
                 }
             }
+            Height_R+=Height;
         }
 
         if(Height_L>Height_R)
