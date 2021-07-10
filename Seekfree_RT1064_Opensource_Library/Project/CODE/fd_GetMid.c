@@ -626,10 +626,11 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)
 
 
 
-//特征比较函数(颜色),色彩范围0-255
-uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color)    
+//特征比较函数(颜色),色彩范围0-255,expect_rate期望率0~100
+uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color,float expect_rate)    
 {
-    float rate=0;
+    uint16 rate=0;
+    uint16 unexpect_rate=((100-expect_rate)/100)*(dx*dy);
 
     if(T_y+dy>=IMG_Y || T_x+dx>=IMG_X)  //范围检查
     {
@@ -640,17 +641,27 @@ uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color)
     {
         for(uint8 j=0;j<dx;j++)
         {
-            if(img[T_y+i][T_x+j]==color)    //与特征数组/图像比较
+            if(img[T_y+i][T_x+j]!=color)    //与特征数组/图像比较
             {
                 rate++;
+
+                if(rate-unexpect_rate>0)  //快速模板匹配，不符特征个数超限时即退出
+                {
+                    return 0;
+                }
                 //img[T_y+i][T_x+j]=Gray;
             }
         }
     }
 
+    /*
+    rate=(dx*dy)-rate;
     rate=(rate/(dx*dy))*100;
 
+    if(rate)
     return((uint8)rate);
+    */
+   return 1;    //运行到此处时说明已符合要求
 }
 
 
@@ -721,13 +732,13 @@ uint8 If_Garage(void)
         }
         #endif
 
-        if(Feature_Verify_Color(0,0,20,10,White)>=90)
+        if(Feature_Verify_Color(0,0,20,10,White,90))
         {
             flag_Garage_L=1;
             flag_Garage_R=0;    //因为没有每帧初始化，所以为了避免误置造成矛盾，故对两个标志位均置高
             return 1;
         }
-        else if(Feature_Verify_Color(167,0,20,10,White)>=90)
+        else if(Feature_Verify_Color(167,0,20,10,White,90))
         {
             flag_Garage_L=0;
             flag_Garage_R=1;
@@ -771,7 +782,7 @@ uint8 Judge(void)
 
 
     //------T路检测 <head>---------//
-    if(Feature_Verify_Color(0,44,187,5,Black)>=95)
+    if(Feature_Verify_Color(0,44,187,5,Black,90))
     {
         flag_T_Road=1;
     }
@@ -790,9 +801,9 @@ uint8 Judge(void)
 
 
     //------三岔检测 <head>---------//
-    if(Feature_Verify_Color(74,44,40,5,Black)>=90) 
+    if(Feature_Verify_Color(74,44,40,5,Black,90)) 
     {
-        if(Feature_Verify_Color(29,20,130,5,White)>=90 && Feature_Verify_Color(0,44,20,5,White)>=90 && Feature_Verify_Color(167,44,20,5,White)>=90)
+        if(Feature_Verify_Color(29,20,130,5,White,90) && Feature_Verify_Color(0,44,20,5,White,90) && Feature_Verify_Color(167,44,20,5,White,90))
         {
             flag_Y_Road=1;
 
@@ -844,18 +855,18 @@ uint8 Judge(void)
     switch(Round_Status)
     {
         case 0:
-            if(flag_Y_Road || Feature_Verify_Color(83,20,20,20,White)<=90)
+            if(flag_Y_Road || Feature_Verify_Color(83,20,20,20,Black,10))
             {
                 break;
             }
         
-            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
+            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White,90))
             {
                 Round_Status=1;
 
                 flag_Normal_Lose_L=1; //避免打偏
             }
-            else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
+            else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White,90))
             {
                 Round_Status=2;
 
@@ -865,21 +876,21 @@ uint8 Judge(void)
             break;
 
         case 1:
-            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black)>=90)
+            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black,90))
             {
                 Round_Status=3;
             }
             break;
 
         case 2:
-            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black)>=90)
+            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black,90))
             {
                 Round_Status=4;
             }
             break;
 
         case 3:
-            if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White)>=90)
+            if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White,90))
             {
                 RoundInCount=20;
             }
@@ -894,7 +905,7 @@ uint8 Judge(void)
             break;
 
         case 4:
-            if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White)>=90)
+            if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White,90))
             {
                 RoundInCount=20;
             }
@@ -909,7 +920,7 @@ uint8 Judge(void)
             break;
 
         case 5:
-            if(Feature_Verify_Color(167,20,20,10,White)>=90)
+            if(Feature_Verify_Color(167,20,20,10,White,90))
             {
                 Round_Status=7;
 
@@ -918,7 +929,7 @@ uint8 Judge(void)
             break;
 
         case 6:
-            if(Feature_Verify_Color(0,20,20,10,White)>=90)
+            if(Feature_Verify_Color(0,20,20,10,White,90))
             {
                 Round_Status=8;
 
@@ -1008,7 +1019,7 @@ uint8 Judge(void)
 
 
     //------AprilTag检测 <head>---------//
-    if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black)>=20)
+    if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black,20))
     {
         bb_time=40;
 
