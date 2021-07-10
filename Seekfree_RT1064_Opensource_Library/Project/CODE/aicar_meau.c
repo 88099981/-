@@ -649,6 +649,10 @@ void gogogo_mix()
         {
             lcd_showstr(0,8,"Cross");
         }
+        else if(flag_T_Road)
+        {
+            lcd_showstr(0,8,"T_Road");
+        }
         else
         {
             lcd_showstr(0,8,"Normal");
