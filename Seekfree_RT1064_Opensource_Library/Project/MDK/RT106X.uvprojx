@@ -2064,6 +2064,16 @@
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_flash.h</FilePath>
             </File>
+            <File>
+              <FileName>aicar_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\aicar_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\aicar_uart.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -4124,6 +4134,16 @@
               <FileName>aicar_flash.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CODE\aicar_flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CODE\aicar_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>aicar_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CODE\aicar_uart.h</FilePath>
             </File>
           </Files>
         </Group>
