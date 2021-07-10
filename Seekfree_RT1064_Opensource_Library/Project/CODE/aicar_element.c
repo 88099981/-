@@ -26,8 +26,8 @@ uint8 uart_send=0;//1为云台转向完成，2为舵机转向完成, 3为等待完成， 4为打靶完成
 int8 lasttime_holder=0;
 uint16 holder_duty;
 
-float kp_holder=10.0;
-float kd_holder=5.0;
+float kp_holder=5.0;
+float kd_holder=1.5;
 
 void aicar_huandao()//仅用作判断
 {
@@ -210,10 +210,23 @@ void holder_l_turn()
     use_time=0;
     uart_flag=E_START;
     systick_start();
-    while(uart_flag!=E_OK&&use_time<3000)
+    while((temp_buff[3]!=0x05&&temp_buff[3]!=0x06)&&use_time<3000)
     {
         use_time = systick_getval_ms();//等待
+        lcd_showstr(0,1,"temp1:");    
+        lcd_showuint8(10*8,1,temp_buff[0]);
+        lcd_showstr(0,2,"temp2:");
+        lcd_showuint8(10*8,2,temp_buff[1]);
+        lcd_showstr(0,3,"temp3:");
+        lcd_showuint8(10*8,3,temp_buff[2]);
+        lcd_showstr(0,4,"temp4:");
+        lcd_showuint8(10*8,4,temp_buff[3]);
+        lcd_showstr(0,5,"temp5:");
+        lcd_showuint8(10*8,5,temp_buff[4]);
+        lcd_showstr(0,6,"temp6:");
+        lcd_showuint8(10*8,6,temp_buff[5]);
     }
+    lcd_clear(BLACK);
     if(magic_mode)
     {
         switch (magic_data[2]){
@@ -221,11 +234,8 @@ void holder_l_turn()
         case FRUIT: shot_fruit();break;
         }
     }
-    else if(uart_flag==E_OK) sort_animalorfruit();
-    else
-    {
-        wait_animal();
-    } 
+    else if(temp_buff[3]==0x05||temp_buff[3]==0x06) sort_animalorfruit();
+    else wait_animal();
         
 }
 
@@ -239,10 +249,23 @@ void holder_r_turn()
     use_time=0;
     uart_flag=E_START;
     systick_start();
-    while(uart_flag!=E_OK&&use_time<3000)
+    while((temp_buff[3]!=0x05&&temp_buff[3]!=0x06)&&use_time<3000)
     {
         use_time = systick_getval_ms();//等待
+        lcd_showstr(0,1,"temp1:");    
+        lcd_showuint8(10*8,1,temp_buff[0]);
+        lcd_showstr(0,2,"temp2:");
+        lcd_showuint8(10*8,2,temp_buff[1]);
+        lcd_showstr(0,3,"temp3:");
+        lcd_showuint8(10*8,3,temp_buff[2]);
+        lcd_showstr(0,4,"temp4:");
+        lcd_showuint8(10*8,4,temp_buff[3]);
+        lcd_showstr(0,5,"temp5:");
+        lcd_showuint8(10*8,5,temp_buff[4]);
+        lcd_showstr(0,6,"temp6:");
+        lcd_showuint8(10*8,6,temp_buff[5]);
     }
+    lcd_clear(BLACK);
     if(magic_mode)
     {
         switch (magic_data[2]){
@@ -250,11 +273,9 @@ void holder_r_turn()
         case FRUIT: shot_fruit();break;
         }
     }
-    else if(uart_flag==E_OK) sort_animalorfruit();
-    else
-    {
-        wait_animal();
-    } 
+    else if(temp_buff[3]==0x05||temp_buff[3]==0x06) sort_animalorfruit();
+    else wait_animal();
+
 }
 
 
@@ -342,10 +363,23 @@ void sancha_stop()
     uart_flag=E_START;
     use_time=0;
     systick_start();
-    while(uart_flag!=E_OK&&use_time<3000)
+    while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<3000)
     {
         use_time = systick_getval_ms();//等待
+        lcd_showstr(0,1,"temp1:");    
+        lcd_showuint8(10*8,1,temp_buff[0]);
+        lcd_showstr(0,2,"temp2:");
+        lcd_showuint8(10*8,2,temp_buff[1]);
+        lcd_showstr(0,3,"temp3:");
+        lcd_showuint8(10*8,3,temp_buff[2]);
+        lcd_showstr(0,4,"temp4:");
+        lcd_showuint8(10*8,4,temp_buff[3]);
+        lcd_showstr(0,5,"temp5:");
+        lcd_showuint8(10*8,5,temp_buff[4]);
+        lcd_showstr(0,6,"temp6:");
+        lcd_showuint8(10*8,6,temp_buff[5]);
     }
+    lcd_clear(BLACK);
     bb_time=12;
     if(magic_mode)
     {
@@ -354,7 +388,7 @@ void sancha_stop()
         case SERVO_RIGHT: servo_r_turn();break;
         }
     }
-    else if(uart_flag==E_OK)    data_analysis(temp_buff);
+    else if(temp_buff[2]==0x03||temp_buff[2]==0x04)    data_analysis(temp_buff);
     else servo_l_turn();
 }
 
@@ -364,10 +398,23 @@ void find_apriltag()
     uart_flag=E_START;
     use_time=0;
     systick_start();
-    while(uart_flag!=E_OK&&use_time<3000)
+    while((temp_buff[1]!=0x01&&temp_buff[1]!=0x02)&&use_time<3000)
     {
         use_time = systick_getval_ms();//等待
+        lcd_showstr(0,1,"temp1:");    
+        lcd_showuint8(10*8,1,temp_buff[0]);
+        lcd_showstr(0,2,"temp2:");
+        lcd_showuint8(10*8,2,temp_buff[1]);
+        lcd_showstr(0,3,"temp3:");
+        lcd_showuint8(10*8,3,temp_buff[2]);
+        lcd_showstr(0,4,"temp4:");
+        lcd_showuint8(10*8,4,temp_buff[3]);
+        lcd_showstr(0,5,"temp5:");
+        lcd_showuint8(10*8,5,temp_buff[4]);
+        lcd_showstr(0,6,"temp6:");
+        lcd_showuint8(10*8,6,temp_buff[5]);
     }
+    lcd_clear(BLACK);
     bb_time=12;
     if(magic_mode)
     {
@@ -376,11 +423,8 @@ void find_apriltag()
         case HOLDER_RIGHT: holder_r_turn();
         }
     }
-    else if(uart_flag==E_OK)    data_analysis(temp_buff);
-    else
-    {
-       holder_r_turn();
-    }
+    else if(temp_buff[1]==0x01||temp_buff[1]==0x02)    data_analysis(temp_buff);
+    else holder_r_turn();
 }
 
 void sort_animalorfruit()
