@@ -209,7 +209,7 @@ void holder_l_turn()
 {
     holder_duty=5450;
     pwm_duty(S_MOTOR2_PIN,holder_duty);
-    uart_send = 0x01;
+    uart_send = 0x0A;
     uart_putchar(USART_1,uart_send);
     use_time=0;
     uart_flag=E_START;
@@ -248,7 +248,7 @@ void holder_r_turn()
 {
     holder_duty=2250;
     pwm_duty(S_MOTOR2_PIN,holder_duty);
-    uart_send = 0x01;
+    uart_send = 0x0A;
     uart_putchar(USART_1,uart_send);
     use_time=0;
     uart_flag=E_START;
@@ -291,15 +291,15 @@ void servo_l_turn()
         servo_duty=4050;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
-        //lcd_showstr(0,3,"turn_sum:");
-        //lcd_showint32(10*8,3,turn_sum,5);
-        //lcd_showstr(0,6,"icm_gyro_z:");
-        //lcd_showint16(10*8,6,icm_gyro_z);
-        //lcd_showstr(0,7,"Garage L");
+        lcd_showstr(0,3,"turn_sum:");
+        lcd_showint32(10*8,3,turn_sum,5);
+        lcd_showstr(0,6,"icm_gyro_z:");
+        lcd_showint16(10*8,6,icm_gyro_z);
+        lcd_showstr(0,7,"sancha L");
 
         aicar_chasu();
     }
-    uart_send = 0x02;
+    uart_send = 0x0B;
     uart_putchar(USART_1,uart_send);
     lcd_clear(BLACK);
     servo_duty=3850;
@@ -320,7 +320,7 @@ void servo_r_turn()
         
         aicar_chasu();
     }
-    uart_send = 0x02;
+    uart_send = 0x0B;
     uart_putchar(USART_1,uart_send);
     lcd_clear(BLACK);
     servo_duty=3850;
@@ -335,7 +335,7 @@ void wait_animal()
     {
         use_time = systick_getval_ms();//µÈ´ý
     }
-    uart_send = 0x03;
+    uart_send = 0x0C;
     uart_putchar(USART_1,uart_send);
     aicar_holder_control(3850);
     break_flag=0;
@@ -355,7 +355,7 @@ void shot_fruit()
         aicar_holder_control(holder_angle+holder_duty);
     }
     pwm_duty(S_MOTOR3_PIN,25000);
-    uart_send = 0x04;
+    uart_send = 0x0D;
     uart_putchar(USART_1,uart_send);
     aicar_holder_control(3850);
     break_flag=0;
@@ -364,11 +364,13 @@ void shot_fruit()
 
 void sancha_stop()
 {
+    uart_send = 0xB0;
+    uart_putchar(USART_1,uart_send);
     break_flag=1;
     uart_flag=E_START;
     use_time=0;
     systick_start();
-    while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<3000)
+    while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<10000)
     {
         use_time = systick_getval_ms();//µÈ´ý
         lcd_showstr(0,1,"temp1:");    
@@ -399,6 +401,8 @@ void sancha_stop()
 
 void find_apriltag()
 {
+    uart_send = 0xA0;
+    uart_putchar(USART_1,uart_send);
     break_flag=1;
     uart_flag=E_START;
     use_time=0;
