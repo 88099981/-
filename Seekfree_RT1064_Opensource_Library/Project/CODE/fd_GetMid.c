@@ -10,10 +10,12 @@ uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
 uint8 MidStart=IMG_X/2;   //底边搜索起始点横坐标
 uint16 Round_ad_limit=600;  //入环ad阈值
+uint16 Croess_ad_limit=120;
 uint32 RunningCount=0;
-uint16 RoundInCount; //入环计数
-uint8 RoundOutCount;
-uint8 YRoadInCount;
+uint16 RoundInCount=0; //入环计数
+uint8 RoundOutCount=0;
+uint8 YRoadInCount=0;
+uint8 CrossInCount=0;
 
 //flag
 //------------------------工作状态标志,由扫线函数调用------------------------//
@@ -740,13 +742,18 @@ uint8 Judge(void)
         RoundOutCount--;
     }
 
+    if(CrossInCount)
+    {
+        CrossInCount--;
+    }
+
     //-------状态整理 <bottom>--------//
 
 
 
 
     //------T路检测 <head>---------//
-    if((Round_Status==0 || Round_Status>=7) && Feature_Verify_Color(0,44,187,5,Black,90))
+    if(Round_Status==0 && Feature_Verify_Color(0,44,187,5,Black,90))
     {
         flag_T_Road=1;
     }
@@ -794,13 +801,27 @@ uint8 Judge(void)
 
 
     //-------双侧丢边 <head>--------//
-    if(flag_LoseEdge_part_L && flag_LoseEdge_part_R)
+    if(CrossInCount && Round_Status<=4)
+    {
+        Round_Status=0;
+    }
+
+    if(!flag_T_Road && (Round_Status<=5))
     {   
-        if(!Round_Status && !flag_Y_Road_IN)
+        if(Feature_Verify_Color(0,23,187,3,White,90))
         {
             flag_Cross=1;
+            CrossInCount=15;
             return 1;
         }
+        /*
+        else if(ad_value1>=120 && ad_value6>=120)
+        {
+            flag_Cross=1;
+            CrossInCount=15;
+            return 1;
+        }
+        */
     }
     //-------双侧丢边 <bottom>--------//
 
@@ -812,18 +833,18 @@ uint8 Judge(void)
     switch(Round_Status)
     {
         case 0:
-            if(flag_Y_Road || Feature_Verify_Color(83,20,20,20,Black,10))
+            if(flag_Y_Road || Feature_Verify_Color(83,9,20,40,Black,10))
             {
                 break;
             }
         
-            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White,90))
+            if(!RoundOutCount && Feature_Verify_Color(10,10,50,8,White,90) && !Feature_Verify_Color(127,10,50,3,White,90))
             {
                 Round_Status=1;
 
                 flag_Normal_Lose_L=1; //避免打偏
             }
-            else if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White,90))
+            else if(!RoundOutCount && Feature_Verify_Color(127,10,50,8,White,90) && !Feature_Verify_Color(10,10,50,3,White,90))
             {
                 Round_Status=2;
 
@@ -849,7 +870,7 @@ uint8 Judge(void)
         case 3:
             if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White,90))
             {
-                RoundInCount=20;
+                RoundInCount=25;
             }
 
             if(RoundInCount==1)
@@ -864,7 +885,7 @@ uint8 Judge(void)
         case 4:
             if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White,90))
             {
-                RoundInCount=20;
+                RoundInCount=25;
             }
 
             if(RoundInCount==1)
@@ -877,7 +898,7 @@ uint8 Judge(void)
             break;
 
         case 5:
-            if(Feature_Verify_Color(167,20,20,10,White,90))
+            if(Feature_Verify_Color(167,39,20,10,White,90))
             {
                 Round_Status=7;
 
@@ -886,7 +907,7 @@ uint8 Judge(void)
             break;
 
         case 6:
-            if(Feature_Verify_Color(0,20,20,10,White,90))
+            if(Feature_Verify_Color(0,39,20,10,White,90))
             {
                 Round_Status=8;
 
@@ -1030,6 +1051,8 @@ inline uint8 Width_Cali(uint8 y)
 //双侧丢边
 void Damn_Lose_Edge_all(void)
 {
+    Connect_pp(1,40,0,70,48);
+    Connect_pp(0,148,0,118,48);
     /*
     uint8 flag_Edge_Start_Exist=0;
     uint8 flag_Edge_End_Exist=0;
@@ -1067,7 +1090,7 @@ void Damn_Lose_Edge_all(void)
 
 
 //丢边补全
-void If_Lose_Edge(void)
+uint8 If_Lose_Edge(void)
 {
 
 switch(Round_Status)
@@ -1085,7 +1108,7 @@ switch(Round_Status)
 
     case 3:
         bb_time=5;
-        if(RoundInCount)
+        if(RoundInCount>10)
         {
             Connect_pp(0,120,0,10,48);
             flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
@@ -1096,7 +1119,7 @@ switch(Round_Status)
     case 4:
         bb_time=5;
 
-        if(RoundInCount)
+        if(RoundInCount>10)
         {
             Connect_pp(1,68,0,178,48);
             flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
@@ -1113,9 +1136,13 @@ switch(Round_Status)
         break;
 
     case 7:
+        Connect_pp(0,120,0,10,48);
+        flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 8:
+        Connect_pp(1,68,0,178,48);
+        flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 9:
@@ -1236,9 +1263,10 @@ switch(Round_Status)
         }
     }
 
-    if(flag_Cross)  //十字
+    if(CrossInCount)  //十字
     {
         Damn_Lose_Edge_all();   //双侧丢边函数
+        return 1;
     }
     else if(flag_Normal_Lose_L)  //单左丢边
     {
@@ -1246,6 +1274,7 @@ switch(Round_Status)
         {
             edge[i].Lx=edge[i].Rx-Width_Cali(i);    //删边补全  （直接覆写左边界数据
         }
+        return 1;
     }
     else if(flag_Normal_Lose_R)  //单右丢边
     {
@@ -1253,7 +1282,10 @@ switch(Round_Status)
         {
             edge[i].Rx=edge[i].Lx+Width_Cali(i);
         }
+        return 1;
     }
+
+    return 0;
 }
 
 

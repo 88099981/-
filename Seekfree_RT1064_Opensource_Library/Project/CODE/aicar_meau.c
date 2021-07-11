@@ -582,7 +582,7 @@ void gogogo_mix()
         }
         else if(flag_Straight)
         {
-            aim_speed=aim_speed_set+15;
+            aim_speed=aim_speed_set;
         }
         else
         {

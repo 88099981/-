@@ -53,7 +53,7 @@ uint8 If_Garage(void);  //车库查找  优先级大于环岛、十字/T字
 uint8 Judge(void);   //状态判断
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
-void If_Lose_Edge(void);    //丢边补全
+uint8 If_Lose_Edge(void);    //丢边补全
 void If_Straight(void); //直道判断
 void Set_Mid(void); //设置中线
 void Print_Mid(void);   //绘画中线
