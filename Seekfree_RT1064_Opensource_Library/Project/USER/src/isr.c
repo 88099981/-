@@ -44,6 +44,9 @@ void PIT_IRQHandler(void)
             left_motor=0;
             right_motor=0;
         }
+        else 
+            aicar_chasu();
+        
         if(adc_isr_enable==1&&pointer_page==MEAU_DEBUG_2)//必须是wireless同时开启adc
         {
             aicar_adc_get();
