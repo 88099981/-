@@ -285,6 +285,7 @@ void holder_r_turn()
 
 void servo_l_turn()
 {
+    break_flag=0;
     turn_sum=0;
     while(turn_sum<10000)
     {

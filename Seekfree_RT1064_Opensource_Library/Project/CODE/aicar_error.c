@@ -126,21 +126,22 @@ void aicar_mix_error()
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
     }
 
-    if(Round_Status==7)
+    if(Round_Status==9)
     {
         ad_left=ad_value1*0.7;  //图像扭不过电感，所以给电感加些偏差
         ad_right=ad_value6*0.3;
 
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
     }
-    else if(Round_Status==8)
+    else if(Round_Status==10)
     {
-        ad_left=ad_value1*0.7;  //图像扭不过电感，所以给电感加些偏差
-        ad_right=ad_value6*0.3;
+        ad_left=ad_value1*0.3;  //图像扭不过电感，所以给电感加些偏差
+        ad_right=ad_value6*0.7;
 
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
     }
 
+    /*
     if(Round_Status==11 && RoundOutCount>30)
     {
         ad_left=ad_value1*0.7;  //图像扭不过电感，所以给电感加些偏差
@@ -177,7 +178,7 @@ void aicar_mix_error()
             ad_error=0;
         }
     }
-
+    */
     /*
     if(Round_Status==11)
     {
