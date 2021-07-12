@@ -273,6 +273,20 @@ uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
 uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y) 
 {
     float Slope=0;   //斜率 其实是cot
+
+    if(p2_y==p1_y)
+    {
+        Slope=0;
+    }
+
+    Slope=(Target[p2_y]-Target[p1_y])/(p2_y-p1_y);
+
+    for(uint8 i=p1_y;i<=p2_y;i++)
+    {
+        Target[i]=Target[p1_y]+i*Slope;
+    }
+
+    /*
     if((Target[p1_y]-Target[p2_y]) != 0)  //垂直的时候就不用算了
     {
         Slope=(p1_y-p2_y)/(Target[p1_y]-Target[p2_y]);
@@ -282,6 +296,8 @@ uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y)
             Target[p1_y+i]=(uint8)(i*Slope+Target[p1_y]);
         }
     }
+    */
+   
     return 1;
 }
 
@@ -772,6 +788,7 @@ uint8 Judge(void)
 
 
     //------三岔检测 <head>---------//
+    /*
     if(Feature_Verify_Color(74,44,40,5,Black,90)) 
     {
         if(Feature_Verify_Color(29,20,130,5,White,90) && Feature_Verify_Color(0,44,20,5,White,90) && Feature_Verify_Color(167,44,20,5,White,90))
@@ -780,13 +797,24 @@ uint8 Judge(void)
 
             //bb_time=50;
 
-            /*
-                    openmv确认三岔转向
-            */
+
+                //openmv确认三岔转向
 
             //return 1;
             YRoadInCount=5;
             flag_Y_Road_IN=40;
+        }
+    }
+    */
+   if(!Round_Status && EdgeNum<IMG_Y*0.6)
+    {
+        if(Feature_Verify_Color(5,5,40,5,White,87) && Feature_Verify_Color(142,5,40,5,White,87))
+        {
+            flag_Y_Road=1;
+            flag_Y_Road_IN=40;
+            bb_time=5;
+
+
         }
     }
 
@@ -806,7 +834,7 @@ uint8 Judge(void)
         Round_Status=0;
     }
 
-    if(!flag_T_Road && (Round_Status<=5))
+    if(!flag_T_Road && (Round_Status<=5) && EdgeNum>=IMG_Y*0.6)
     {   
         if(Feature_Verify_Color(0,23,187,3,White,90))
         {
@@ -856,6 +884,12 @@ uint8 Judge(void)
         case 1:
             if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black,90))
             {
+                if(ad_value_all<Round_ad_limit)
+                {
+                    Round_Status=0;
+                    break;
+                }
+
                 Round_Status=3;
             }
             break;
@@ -863,6 +897,12 @@ uint8 Judge(void)
         case 2:
             if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black,90))
             {
+                if(ad_value_all<Round_ad_limit)
+                {
+                    Round_Status=0;
+                    break;
+                }
+
                 Round_Status=4;
             }
             break;
@@ -896,27 +936,26 @@ uint8 Judge(void)
             flag_Normal_Lose_R=1;
 
             break;
-
         case 5:
             if(Feature_Verify_Color(167,39,20,10,White,90))
             {
                 Round_Status=7;
-
-                flag_Normal_Lose_L=1;   //否则在大环内容易晃
             }
+
+            flag_Normal_Lose_L=1;   //否则在大环内容易晃
             break;
 
         case 6:
             if(Feature_Verify_Color(0,39,20,10,White,90))
             {
                 Round_Status=8;
-
-                flag_Normal_Lose_R=1;
             }
+            
+            flag_Normal_Lose_R=1;
             break;
 
         case 7:
-            if(ad_value_all>Round_ad_limit)
+            if(1)
             {
                 Round_Status=9;
 
@@ -925,7 +964,7 @@ uint8 Judge(void)
             break;
 
         case 8:
-            if(ad_value_all>Round_ad_limit)
+            if(1)
             {
                 Round_Status=10;
 
@@ -948,7 +987,7 @@ uint8 Judge(void)
             {
                 Round_Status=11;
 
-                RoundOutCount=40;
+                RoundOutCount=50;
                 flag_Normal_Lose_L=1;
             }
             break;
@@ -967,7 +1006,7 @@ uint8 Judge(void)
             if(!RoundOutCount)
             {
                 Round_Status=12;
-                RoundOutCount=40;
+                RoundOutCount=50;
                 flag_Normal_Lose_R=1;
             }
             break;
@@ -987,7 +1026,12 @@ uint8 Judge(void)
             break;
     }
 
-    if((flag_Y_Road || flag_Y_Road_IN) && flag_Y_Road<3)    //防止三岔误识别为环岛
+    if((flag_Y_Road || flag_Y_Road_IN) && Round_Status<3)    //防止三岔误识别为环岛
+    {
+        Round_Status=0;
+    }
+
+    if(RoundOutCount && Round_Status<=8)
     {
         Round_Status=0;
     }
@@ -1152,7 +1196,7 @@ switch(Round_Status)
         break;
 
     case 11:
-        if(RoundOutCount>30)
+        if(RoundOutCount>20)
         {
             Connect_pp(0,120,0,10,48);
             flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
@@ -1160,7 +1204,7 @@ switch(Round_Status)
         break;
 
     case 12:
-        if(RoundOutCount>30)
+        if(RoundOutCount>20)
         {
             Connect_pp(1,68,0,178,48);
             flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
@@ -1208,14 +1252,11 @@ switch(Round_Status)
 
     if(flag_Y_Road)
     {
-        if(Y_Road_Status && YRoadInCount)
-        {
-
-        }
-        else if(!Y_Road_Status && YRoadInCount)
-        {
-
-        }
+        //openart通信
+        //sancha_stop();
+        break_flag=1;
+        systick_delay_ms(1000);
+        break_flag=0;
     }
 
     if(flag_T_Road)
@@ -1296,21 +1337,9 @@ void Set_Mid(void)
 {
     for(uint8 i=0;i<=EdgeNum;i++)   //计算中点
     {
-        if((edge[i].Lx * edge[i].Rx) != 0)  //对于未丢边的情况
-        {
-            mid[i]=(edge[i].Lx+edge[i].Rx)/2;
-        }
 
-        else if(edge[i].Lx==0 && edge[i].Rx!=0)  //
-        {
-            mid[i]=(edge[i].Lx+edge[i].Rx)/2;
-        }
+        mid[i]=(edge[i].Lx+edge[i].Rx)/2;
 
-        else if(edge[i].Rx==0 && edge[i].Lx!=0)  //
-        {
-            mid[i]=(edge[i].Lx+edge[i].Rx)/2;
-        }
-        
         if(i>=5)    //待中线稳定后，对超过容差的相邻中线进行判断
         {
             if(mid[i]-mid[i-1]>=20 || mid[i]-mid[i-1]<=-20)
