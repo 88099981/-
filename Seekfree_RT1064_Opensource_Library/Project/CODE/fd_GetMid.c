@@ -2,6 +2,7 @@
 
 //data
 uint8 img[IMG_Y][IMG_X];
+uint8 pix_img[IMG_Y/3][IMG_X/3];
 EDGE edge[EDGE_MAX];    //边界结构体数组 边界数值为0的时候为丢边
 ANGLE angle[EDGE_MAX];  //边沿角度数组
 uint8 EdgeNum;    //边沿数
@@ -242,10 +243,13 @@ uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
     {
         Slope=0;
     }
+    else
+    {
+        Slope=(p2_x-p1_x)/(p2_y-p1_y);
+    }
 
     if(l_or_r)
     {
-        Slope=(p2_x-p1_x)/(p2_y-p1_y);
 
         for(uint8 i=p1_y;i<=p2_y;i++)
         {
@@ -256,7 +260,6 @@ uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
     }
     else
     {
-        Slope=(p2_x-p1_x)/(p2_y-p1_y);
 
         for(uint8 i=p1_y;i<=p2_y;i++)
         {
@@ -278,8 +281,10 @@ uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y)
     {
         Slope=0;
     }
-
-    Slope=(Target[p2_y]-Target[p1_y])/(p2_y-p1_y);
+    else
+    {
+        Slope=(Target[p2_y]-Target[p1_y])/(p2_y-p1_y);
+    }
 
     for(uint8 i=p1_y;i<=p2_y;i++)
     {
@@ -297,7 +302,7 @@ uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y)
         }
     }
     */
-   
+
     return 1;
 }
 
@@ -489,6 +494,67 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
 
 
 
+uint8 zoomin(float weight,uint8 PIX_DeBUG)
+{
+    uint16 pixsum=0;
+    uint16 pixsum2=0;
+
+    for(uint8 i=1,m=0;i<IMG_X-1;i+=3,m++)
+    {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+        for(uint8 j=1,n=0;j<IMG_Y-1;j+=3,n++)
+        {
+            pixsum=img[j][i]*weight;
+            pixsum2+=img[j-1][i]*(1-weight);
+            pixsum2+=img[j+1][i]*(1-weight);
+            pixsum2+=img[j-1][i-1]*(1-weight);
+            pixsum2+=img[j-1][i+1]*(1-weight);
+            pixsum2+=img[j+1][i-1]*(1-weight);
+            pixsum2+=img[j+1][i+1]*(1-weight);
+            pixsum2+=img[j][i-1]*(1-weight);
+            pixsum2+=img[j][i+1]*(1-weight);
+
+            pixsum2/=8;
+            pixsum+=pixsum2;
+
+            if(pixsum>0xff)
+            {
+                pixsum=0xff;
+            }
+            else
+            {
+                 pixsum=0x00;
+            }
+
+            //  在处理之前启用该段会导致原图数据被破坏
+            if(PIX_DeBUG)
+            {
+                img[j][i]=pixsum;
+                img[j-1][i]=pixsum;
+                img[j+1][i]=pixsum;
+                img[j-1][i-1]=pixsum;
+                img[j-1][i+1]=pixsum;
+                img[j+1][i-1]=pixsum;
+                img[j+1][i+1]=pixsum;
+                img[j][i-1]=pixsum;
+                img[j][i+1]=pixsum;
+            }
+            img[j][i]=pixsum;
+            img[j-1][i]=pixsum;
+            img[j+1][i]=pixsum;
+            img[j-1][i-1]=pixsum;
+            img[j-1][i+1]=pixsum;
+            img[j+1][i-1]=pixsum;
+            img[j+1][i+1]=pixsum;
+            img[j][i-1]=pixsum;
+            img[j][i+1]=pixsum;
+
+
+            pix_img[n][m]=pixsum;
+        }
+    }
+
+    return 1;
+}
 //******************************* Base Function *********************************/
 
 
@@ -681,6 +747,15 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
     rate=(rate/(dx*dy-(dx-2*thickness)*(dy-2*thickness)))*100;
 		
 		return((uint8)rate);
+}
+
+
+
+
+
+uint8 Find_AprilTag(uint8 T_y,uint8 ShowPOS)
+{
+    return 0;
 }
 
 
@@ -937,7 +1012,7 @@ uint8 Judge(void)
 
             break;
         case 5:
-            if(Feature_Verify_Color(167,39,20,10,White,90))
+            if(ad_value_all>Round_ad_limit) //右上角白块
             {
                 Round_Status=7;
             }
@@ -946,7 +1021,7 @@ uint8 Judge(void)
             break;
 
         case 6:
-            if(Feature_Verify_Color(0,39,20,10,White,90))
+            if(ad_value_all>Round_ad_limit)   //左上角白块
             {
                 Round_Status=8;
             }
@@ -983,7 +1058,7 @@ uint8 Judge(void)
             }
             */
 
-            if(!RoundOutCount)
+            if(!RoundOutCount && Feature_Verify_Color(84,30,20,19,White,80))
             {
                 Round_Status=11;
 
@@ -1003,7 +1078,7 @@ uint8 Judge(void)
             break;
             */
 
-            if(!RoundOutCount)
+            if(!RoundOutCount && Feature_Verify_Color(84,30,20,19,White,80))
             {
                 Round_Status=12;
                 RoundOutCount=50;
@@ -1172,11 +1247,13 @@ switch(Round_Status)
         break;
 
     case 5:
-
+        Connect_pp(0,120,0,10,48);
+        flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 6:
-        
+        Connect_pp(1,68,0,178,48);
+        flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 7:
@@ -1190,25 +1267,22 @@ switch(Round_Status)
         break;
 
     case 9:
+        Connect_pp(0,120,0,10,48);
+        flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 10:
+        Connect_pp(1,68,0,178,48);
+        flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 11:
-        if(RoundOutCount>20)
-        {
-            Connect_pp(0,120,0,10,48);
-            flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
-        }
+        flag_Normal_Lose_L=1;
         break;
 
     case 12:
-        if(RoundOutCount>20)
-        {
-            Connect_pp(1,68,0,178,48);
-            flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
-        }
+        flag_Normal_Lose_R=1;
+        break;
 }
 
 /*
@@ -1254,9 +1328,7 @@ switch(Round_Status)
     {
         //openart通信
         //sancha_stop();
-        break_flag=1;
-        systick_delay_ms(1000);
-        break_flag=0;
+        sancha_stop();
     }
 
     if(flag_T_Road)
@@ -1350,12 +1422,12 @@ void Set_Mid(void)
         
     }
 
-    
+    /*
     for(uint8 i=1;i<(EdgeNum/MID_RESOLUTION)-1;i++)   //中线拟合成直线
     {
         Mid_Connect(mid,(i+1)*MID_RESOLUTION,i*MID_RESOLUTION);
     }
-    
+    */
 
 }
 
@@ -1392,11 +1464,11 @@ void Search(void)
 
     init();
     Y_Change();
+    zoomin(0.7,0);
 
     //-------------------扫线部分 <head>--------------//
     Hor_Search_Base(MidStart,0);   //第一遍先确定扫描基准中线
     MidStart=(edge[0].Lx+edge[0].Rx)/2;
-
     Ver_Search(MidStart);   //垂直扫线 更新扫线最大高度 EdgeNum
 
     for(uint8 i=0;i<=EdgeNum;i++)   //水平扫线循环
@@ -1404,9 +1476,7 @@ void Search(void)
         Hor_Search(MidStart,i);
                                 //TODO 缺一个对丢边格数的判断来对 flag_LoseEdge_all_X置位
     }
-
     //If_Straight();  //确定直边
-
     
     //-------------------扫线部分 <bottom>-------------//
 
@@ -1424,6 +1494,7 @@ void Search(void)
 
 
     //-------------------绘画部分 <head>---------------//
+    zoomin(0.7,1);
     Print_Mid();
     //-------------------绘画部分 <bottom>-------------//
 
