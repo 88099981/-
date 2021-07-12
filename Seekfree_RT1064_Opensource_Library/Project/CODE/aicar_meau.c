@@ -40,7 +40,7 @@ void show_page(uint8 page)
     case MEAU_PARA_0_2:para_huandao();break;
     case MEAU_PARA_0_3:para_huandao();break;
     case MEAU_PARA_0_4:para_huandao();break;    
-    case MEAU_GOGOGO:print_gogogo();break;
+    case MEAU_GOGOGO:gogogo_choose();break;
     case MEAU_OURTEAM:print_ourteam();break;
     case MEAU_DEBUG_0:debug_camera();break;
     case MEAU_DEBUG_1:debug_adc();break;
@@ -52,9 +52,13 @@ void show_page(uint8 page)
     case MEAU_DEBUG_7:debug_20602();break;
     case MEAU_DEBUG_8:debug_apriltag();break;
     case MEAU_DEBUG_9:debug_number();break;
-    case MEAU_GOGOGO_0:gogogo_mix();break;
-    case MEAU_GOGOGO_1:gogogo_adc();break;
-    case MEAU_GOGOGO_2:gogogo_camera();break;
+    case MEAU_GOGOGO_0:gogogo_choose();break;
+    case MEAU_GOGOGO_1:gogogo_choose();break;
+    case MEAU_GOGOGO_2:gogogo_choose();break;
+    case MEAU_GOGOGO_3:gogogo_choose();break;
+    case MEAU_GOGOGO_4:gogogo_choose();break;
+    case MEAU_GOGOGO_5:gogogo_choose();break;
+    case MEAU_GOGOGO_6:gogogo_run();break;
     case MEAU_NON:break;//可删去
     }
 }
@@ -438,6 +442,12 @@ void gogogo_camera()
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
+    
+    if(meau_garage_mode==GARAGE_LEFT)//车库标志位，左1右2
+        aicar_left_garage_out();
+    else if(meau_garage_mode==GARAGE_RIGHT)
+        aicar_right_garage_out();
+    
     while(key4_flag!=1)
     {
         aicar_key_get();//按键检测
@@ -508,6 +518,12 @@ void gogogo_adc()
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
+    
+    if(meau_garage_mode==GARAGE_LEFT)//车库标志位，左1右2
+        aicar_left_garage_out();
+    else if(meau_garage_mode==GARAGE_RIGHT)
+        aicar_right_garage_out();
+    
     while(key4_flag!=1)
     {
         aicar_key_get();//按键检测
@@ -571,8 +587,12 @@ void gogogo_mix()
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
-    aim_speed_set=SPEED_SET;
-    aicar_right_garage_out();//后面要改成菜单
+    
+    if(meau_garage_mode==GARAGE_LEFT)//车库标志位，左1右2
+        aicar_left_garage_out();
+    else if(meau_garage_mode==GARAGE_RIGHT)
+        aicar_right_garage_out();
+
     
     while(key4_flag!=1)
     {
@@ -609,7 +629,7 @@ void gogogo_mix()
             binary_img();
             Search();
         }        
-        aicar_huandao();
+        //aicar_huandao();//环岛由摄像头给出
         if(flag_Cross==1)
             aicar_adc_error();
         else
@@ -630,9 +650,12 @@ void gogogo_mix()
         lcd_showuint8(10*10,6,RoundInCount);
         lcd_showstr(0,7,"RoundOUT:");
         lcd_showuint8(10*10,7,RoundOutCount);
-        Y_Change();
-        lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
-
+        if(sw2_status==1)
+        {
+            Y_Change();
+            lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
+        }                  
+        
         if(flag_Y_Road)
         {
             lcd_showstr(0,8,"Y_Road");
@@ -696,4 +719,54 @@ void para_huandao()
     lcd_showuint8(10*8,2,hd_in_delay);
     lcd_showuint8(10*8,3,hd_out_delay);
     lcd_showuint8(10*8,4,hd_turn);    
+}
+
+void gogogo_choose()
+{
+    lcd_showstr(0,0,"run_mode:");
+    lcd_showstr(0,1,"garage:");
+    lcd_showstr(0,2,"magic");
+    lcd_showstr(0,3,"apriltag");
+    lcd_showstr(0,4,"servo");
+    lcd_showstr(0,5,"ani_or_fru");  
+    lcd_showstr(0,6,"GOGOGO!");
+    switch(meau_run_mode)
+    {
+    case GOGOGO_ADC: 
+        lcd_showstr(10*8,0,"ADC  ");break;
+    case GOGOGO_MIX:
+        lcd_showstr(10*8,0,"MIX  ");break;
+    case GOGOGO_CAM:
+        lcd_showstr(10*8,0,"CAM  ");break;
+    }
+    switch(meau_garage_mode)
+    {
+    case GARAGE_LEFT: 
+        lcd_showstr(10*8,1,"L  ");break;
+    case GARAGE_RIGHT:
+        lcd_showstr(10*8,1,"R  ");break;
+    case GARAGE_NON:
+        lcd_showstr(10*8,1,"NON");break;
+    }
+    if(magic_mode==1)
+    {
+        lcd_showstr(10*8,2,"ON");
+    }
+    else if(magic_mode==0)
+    {           
+        lcd_showstr(10*8,2,"OFF");
+    }
+}
+
+void gogogo_run()
+{
+    switch(meau_run_mode)
+    {
+    case GOGOGO_ADC: 
+        gogogo_adc();break;
+    case GOGOGO_MIX:
+        gogogo_mix();break;
+    case GOGOGO_CAM:
+        gogogo_camera();break;
+    }
 }

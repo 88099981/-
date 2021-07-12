@@ -162,7 +162,7 @@ void print_main()
 {
     lcd_showstr(0,0,"debug       ");
     lcd_showstr(0,1,"para        ");
-    lcd_showstr(0,2,"gogogo      ");
+    lcd_showstr(0,2,"run         ");
     lcd_showstr(0,3,"team        ");
 }
 
