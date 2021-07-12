@@ -486,8 +486,11 @@ void gogogo_camera()
         lcd_showuint8(10*10,6,RoundInCount);
         lcd_showstr(0,7,"RoundOUT:");
         lcd_showuint8(10*10,7,RoundOutCount);
-        Y_Change();
-        lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
+        if(sw2_status==1)
+        {
+            Y_Change();
+            lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
+        } 
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");
@@ -555,8 +558,11 @@ void gogogo_adc()
         lcd_showuint8(10*10,6,RoundInCount);
         lcd_showstr(0,7,"RoundOUT:");
         lcd_showuint8(10*10,7,RoundOutCount);
-        Y_Change();
-        lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
+        if(sw2_status==1)
+        {
+            Y_Change();
+            lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
+        } 
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");
@@ -596,19 +602,6 @@ void gogogo_mix()
     
     while(key4_flag!=1)
     {
-        if(Round_Status)
-        {
-            aim_speed=80;
-        }
-        else if(flag_Straight)
-        {
-            aim_speed=aim_speed_set;
-        }
-        else
-        {
-            aim_speed=aim_speed_set;
-        }
-
         aicar_key_get();//按键检测
         aicar_switch_get();//拨码开关
         aicar_adc_get();//停车用
@@ -658,7 +651,9 @@ void gogogo_mix()
         
         if(flag_Y_Road)
         {
+            bb_time=50;            
             lcd_showstr(0,8,"Y_Road");
+            sancha_stop();
         }
         else if(Round_Status)
         {
