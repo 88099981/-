@@ -35,7 +35,7 @@ uint8 flag_Straight_R=0;  //ÓÒÖ±µÀ                                         ¡¾µ¥Ö
 uint8 flag_Straight=0;
 uint8 flag_T_Road=0;   //TĞÎÂ·£¨·ºÖ¸×î¶¥ÉÏ¼¸ĞĞÈ«ºÚ£¬ÒÔÏÂ³öÏÖ´óÃæ»ıÁ½²à¶ª±ßµÄ×´¿ö
 uint8 flag_Y_Road=0;   //Èı²í
-uint8 flag_Y_Road_IN=0; //Èı²íÖĞ
+uint16 flag_Y_Road_IN=0; //Èı²íÖĞ
 uint8 Y_Road_Status=1;  //Èı²í×ó    //ATTENTION ÓÉopenartÉèÖÃ 0ÓÒ1×ó
 uint8 flag_Cross=0;    //Ê®×Ö                 ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 Round_Status=0; //0É¶ÊÂÃ»ÓĞ 1µÚÒ»´Î¿´µ½»·¿Ú 3¿´µ½ºÚÇøÇÒµç¸Ğ´óÓÚãĞÖµ 5µÚ¶ş´Î¿´µ½»·¿Ú 7»·ÄÚ 9³ö»· (Í¬ÀíÓÒÎªÅ¼)
@@ -253,7 +253,7 @@ uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
 
         for(uint8 i=p1_y;i<=p2_y;i++)
         {
-            edge[i].Lx=p1_x+i*Slope;
+            edge[i].Lx=(int16)(p1_x+i*Slope);
         }
 
         return 1;
@@ -263,7 +263,7 @@ uint8 Connect_pp(uint8 l_or_r,uint8 p1_x,uint8 p1_y,uint8 p2_x,uint8 p2_y)
 
         for(uint8 i=p1_y;i<=p2_y;i++)
         {
-            edge[i].Rx=p1_x+i*Slope;
+            edge[i].Rx=(int16)(p1_x+i*Slope);
         }
 
         return 1;
@@ -288,7 +288,7 @@ uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y)
 
     for(uint8 i=p1_y;i<=p2_y;i++)
     {
-        Target[i]=Target[p1_y]+i*Slope;
+        Target[i]=Target[p1_y]+(int16)(i*Slope);
     }
 
     /*
@@ -503,15 +503,15 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
     {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
         for(uint8 j=1,n=0;j<IMG_Y-1;j+=3,n++)
         {
-            pixsum=img[j][i]*weight;
-            pixsum2+=img[j-1][i]*(1-weight);
-            pixsum2+=img[j+1][i]*(1-weight);
-            pixsum2+=img[j-1][i-1]*(1-weight);
-            pixsum2+=img[j-1][i+1]*(1-weight);
-            pixsum2+=img[j+1][i-1]*(1-weight);
-            pixsum2+=img[j+1][i+1]*(1-weight);
-            pixsum2+=img[j][i-1]*(1-weight);
-            pixsum2+=img[j][i+1]*(1-weight);
+            pixsum=(uint8)(img[j][i]*weight);
+            pixsum2+=(uint8)(img[j-1][i]*(1-weight));
+            pixsum2+=(uint8)(img[j+1][i]*(1-weight));
+            pixsum2+=(uint8)(img[j-1][i-1]*(1-weight));
+            pixsum2+=(uint8)(img[j-1][i+1]*(1-weight));
+            pixsum2+=(uint8)(img[j+1][i-1]*(1-weight));
+            pixsum2+=(uint8)(img[j+1][i+1]*(1-weight));
+            pixsum2+=(uint8)(img[j][i-1]*(1-weight));
+            pixsum2+=(uint8)(img[j][i+1]*(1-weight));
 
             pixsum2/=8;
             pixsum+=pixsum2;
@@ -538,16 +538,6 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
                 img[j][i-1]=pixsum;
                 img[j][i+1]=pixsum;
             }
-            img[j][i]=pixsum;
-            img[j-1][i]=pixsum;
-            img[j+1][i]=pixsum;
-            img[j-1][i-1]=pixsum;
-            img[j-1][i+1]=pixsum;
-            img[j+1][i-1]=pixsum;
-            img[j+1][i+1]=pixsum;
-            img[j][i-1]=pixsum;
-            img[j][i+1]=pixsum;
-
 
             pix_img[n][m]=pixsum;
         }
@@ -671,7 +661,7 @@ uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature)
 uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color,float expect_rate)    
 {
     uint16 rate=0;
-    uint16 unexpect_rate=((100-expect_rate)/100)*(dx*dy);
+    uint16 unexpect_rate=(uint16)(((100-expect_rate)/100)*(dx*dy));
 
     if(T_y+dy>=IMG_Y || T_x+dx>=IMG_X)  //·¶Î§¼ì²é
     {
@@ -811,11 +801,10 @@ uint8 If_Garage(void)
 uint8 Judge(void)
 {
     //-------×´Ì¬ÕûÀí <head>--------//
-
+    
     if(flag_Y_Road_IN)
     {
         flag_Y_Road_IN--;
-        flag_Y_Road=0;
     }
 
     if(YRoadInCount)
@@ -863,8 +852,8 @@ uint8 Judge(void)
 
 
     //------Èı²í¼ì²â <head>---------//
-    /*
-    if(Feature_Verify_Color(74,44,40,5,Black,90)) 
+    
+    if(!YRoadInCount && !flag_Y_Road_IN && Feature_Verify_Color(74,44,40,5,Black,90)) 
     {
         if(Feature_Verify_Color(29,20,130,5,White,90) && Feature_Verify_Color(0,44,20,5,White,90) && Feature_Verify_Color(167,44,20,5,White,90))
         {
@@ -876,12 +865,12 @@ uint8 Judge(void)
                 //openmvÈ·ÈÏÈı²í×ªÏò
 
             //return 1;
-            YRoadInCount=5;
+            YRoadInCount=30;
             flag_Y_Road_IN=40;
         }
     }
-    */
-   if(!Round_Status && EdgeNum<IMG_Y*0.6)
+    
+   if(!YRoadInCount && !flag_Y_Road_IN && !Round_Status && EdgeNum<IMG_Y*0.6)
     {
         if(Feature_Verify_Color(5,5,40,5,White,87) && Feature_Verify_Color(142,5,40,5,White,87))
         {
@@ -893,7 +882,7 @@ uint8 Judge(void)
         }
     }
 
-    if(ad_value_all<=300)
+    if(ad_value_all<=400)
     {
         flag_Y_Road_IN=40;
     }
@@ -1327,8 +1316,8 @@ switch(Round_Status)
     if(flag_Y_Road)
     {
         //openartÍ¨ĞÅ
-        //sancha_stop();
         sancha_stop();
+        YRoadInCount=30;
     }
 
     if(flag_T_Road)

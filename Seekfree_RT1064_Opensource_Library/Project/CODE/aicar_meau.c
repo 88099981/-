@@ -650,10 +650,8 @@ void gogogo_mix()
         }                  
         
         if(flag_Y_Road)
-        {
-            bb_time=50;            
+        {            
             lcd_showstr(0,8,"Y_Road");
-            sancha_stop();
         }
         else if(Round_Status)
         {

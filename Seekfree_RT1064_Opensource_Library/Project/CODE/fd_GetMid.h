@@ -75,7 +75,7 @@ extern uint8 YRoadInCount;
 extern uint8 flag_Straight;
 extern uint8 flag_T_Road;
 extern uint8 flag_Y_Road;
-extern uint8 flag_Y_Road_IN;
+extern uint16 flag_Y_Road_IN;
 extern uint8 Y_Road_Status;
 extern uint8 flag_Cross;
 extern uint8 flag_Normal_Lose_L;
