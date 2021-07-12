@@ -592,21 +592,35 @@ void gogogo_mix()
         aicar_left_garage_out();
     else if(meau_garage_mode==GARAGE_RIGHT)
         aicar_right_garage_out();
+
     
     while(key4_flag!=1)
     {
+        if(Round_Status)
+        {
+            aim_speed=80;
+        }
+        else if(flag_Straight)
+        {
+            aim_speed=aim_speed_set;
+        }
+        else
+        {
+            aim_speed=aim_speed_set;
+        }
+
         aicar_key_get();//按键检测
         aicar_switch_get();//拨码开关
         aicar_adc_get();//停车用
         if(key1_flag)
         {
             key1_flag=0;
-            aim_speed+=10;
+            aim_speed_set+=10;
         }
         else if(key2_flag)
         {
             key2_flag=0;
-            aim_speed-=10;
+            aim_speed_set-=10;
         }     
         if(mt9v03x_csi_finish_flag)
         {      
@@ -657,6 +671,10 @@ void gogogo_mix()
         else if(flag_Cross)
         {
             lcd_showstr(0,8,"Cross");
+        }
+        else if(flag_T_Road)
+        {
+            lcd_showstr(0,8,"T_Road");
         }
         else
         {

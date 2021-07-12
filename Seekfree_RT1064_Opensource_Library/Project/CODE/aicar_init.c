@@ -36,6 +36,7 @@ uint16 stop_cnt=0;//停车复位计数器
 uint16 use_time=0;//计时数据
 uint16 bb_time=0;//bb
 int16 left_motor=0,right_motor=0;
+int16 aim_speed_set=0;//设定的目标速度
 int16 aim_speed=0;//pid用,最大值不是50000，别胡改
 int16 encoder1=0,encoder2=0;
 uint32 servo_duty=0;

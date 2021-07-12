@@ -101,14 +101,14 @@ void aicar_chasu_printf()
 
 void aicar_huandao_printf()
 {
-    lcd_showstr(0,0,"zyh_flag:");
-    lcd_showuint8(10*8,0,zuo_yuanhuan_flag);
-    lcd_showstr(0,1,"yyh_flag:");
-    lcd_showuint8(10*8,1,you_yuanhuan_flag);
-    lcd_showstr(0,2,"ARM_L:");
-    lcd_showuint8(10*8,2,flag_Round_ARM_L);
-    lcd_showstr(0,3,"ARM_R:");
-    lcd_showuint8(10*8,3,flag_Round_ARM_R);
+    lcd_showstr(0,0,"RoundStatus:");
+    lcd_showuint8(10*8,0,Round_Status);
+    lcd_showstr(0,1,"NA:");
+    //lcd_showuint8(10*8,1,you_yuanhuan_flag);
+    //lcd_showstr(0,2,"ARM_L:");
+    //lcd_showuint8(10*8,2,flag_Round_ARM_L);
+    //lcd_showstr(0,3,"ARM_R:");
+    //lcd_showuint8(10*8,3,flag_Round_ARM_R);
     lcd_showstr(0,4,"ad_value1:");
     lcd_showuint16(10*8,4,ad_value1);
     lcd_showstr(0,5,"ad_value2:");
