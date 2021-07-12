@@ -17,7 +17,7 @@
 #include "SEEKFREE_18TFT.h"
 
 vuint8 meau_run_mode=GOGOGO_MIX;//选择跑车模式
-vuint8 meau_garage_mode=GARAGE_RIGHT;//选择出库模式
+vuint8 meau_garage_mode=GARAGE_NON;//选择出库模式
 uint8 pointer_page=0;
 uint8 pointer_arrow=0;
 

@@ -743,8 +743,58 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
 
 
 
-uint8 Find_AprilTag(uint8 T_y,uint8 ShowPOS)
+uint8 Find_AprilTag(uint8 T_y)
 {
+    uint8 A_x=0;
+    uint8 A_y=T_y;
+    uint8 WofR=0;
+    uint8 WofUP=0;
+    uint8 WofDOWN=0;
+
+    for(uint8 i=0;i<PIX_IMG_X/3-1;i++)
+    {
+        if(pix_img[A_y][i]==White && pix_img[A_y][i+1]==Black)
+        {
+            A_x=i+2;
+            break;
+        }
+    }
+
+    for(uint8 i=A_x;i<A_x+8;i++)    //从基准点向右扫8个
+    {
+        if(i>=PIX_IMG_X)
+        {
+            break;
+        }
+
+        if(pix_img[A_y][i]==White)
+        {
+            WofR++;
+        }
+    }
+
+    for(uint8 j=A_y;j<A_y+8;j++)
+    {
+        if(pix_img[j][A_x]==White)
+        {
+            WofUP++;
+        }
+    }
+
+    for(uint8 j=A_y;j>0;j--)
+    {
+        if(pix_img[j][A_x]==White)
+        {
+            WofDOWN++;
+        }
+    }
+
+    if(WofR>=2 && WofUP>=3 && WofDOWN>=1)
+    {
+        flag_AprilTag=1;
+        bb_time=10;
+    }
+    
     return 0;
 }
 
@@ -1114,12 +1164,16 @@ uint8 Judge(void)
 
 
     //------AprilTag检测 <head>---------//
+    /*
     if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black,20))
     {
         //bb_time=40;
 
         return 1;
     }
+    */
+    Find_AprilTag(6);
+    
     //------AprilTag检测 <bottom>---------//
 
 

@@ -10,6 +10,8 @@
 #define Gray  (0x80)
 #define IMG_X 188 //图像横轴大小
 #define IMG_Y 50 //图像纵轴大小
+#define PIX_IMG_X IMG_X/3
+#define PIX_IMG_Y IMG_Y/3
 #define Y_LIMIT 4   //纵轴搜索边界
 #define X_LIMIT 4   //横轴搜索边界
 #define EDGE_MAX IMG_Y//边界数组大小
@@ -50,7 +52,7 @@ uint8 Uni_Ver_Search(uint8 MidStart);
 uint8 Feature_Verify(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 *feature);    //特征比较函数，将特征数组和图像对应位置进行比较，返回相似度(0~100)]
 uint8 Feature_Verify_Color(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 color,float expect_rate);
 uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,uint8 white_or_black);
-uint8 Find_AprilTag(uint8 T_y,uint8 ShowPOS);
+uint8 Find_AprilTag(uint8 T_y);
 uint8 If_Garage(void);  //车库查找  优先级大于环岛、十字/T字
 uint8 Judge(void);   //状态判断
 uint8 Width_Cali(uint8);    //赛道宽度计算

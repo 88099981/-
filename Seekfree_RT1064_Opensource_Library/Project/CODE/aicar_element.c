@@ -164,7 +164,7 @@ void aicar_right_garage_in()
     turn_sum=0;
     while(turn_sum>-20000)
     {
-        servo_duty=3650;
+        servo_duty=3450;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         //lcd_showstr(0,3,"turn_sum:");
@@ -189,7 +189,7 @@ void aicar_left_garage_in()
     turn_sum=0;
     while(turn_sum<20000)
     {
-        servo_duty=4050;
+        servo_duty=4250;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
@@ -207,7 +207,7 @@ void aicar_left_garage_in()
 
 void holder_l_turn()
 {
-    holder_duty=5450;
+    holder_duty=5250;
     pwm_duty(S_MOTOR2_PIN,holder_duty);
     uart_send = 0x0A;
     uart_putchar(USART_1,uart_send);
@@ -246,7 +246,7 @@ void holder_l_turn()
 
 void holder_r_turn()
 {
-    holder_duty=2250;
+    holder_duty=2450;
     pwm_duty(S_MOTOR2_PIN,holder_duty);
     uart_send = 0x0A;
     uart_putchar(USART_1,uart_send);
@@ -289,7 +289,7 @@ void servo_l_turn()
     turn_sum=0;
     while(turn_sum<10000)
     {
-        servo_duty=4050;
+        servo_duty=4250;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
@@ -311,7 +311,7 @@ void servo_r_turn()
     turn_sum=0;
     while(turn_sum>-10000)
     {
-        servo_duty=3650;
+        servo_duty=3450;
         get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
@@ -374,7 +374,10 @@ void sancha_stop()
     lcd_clear(BLACK);
     while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<10000)
     {
+        break_flag=0;
         use_time = systick_getval_ms();//µÈ´ý
+        servo_duty=3850;
+        aim_speed=10;
         lcd_showstr(0,1,"temp1:");    
         lcd_showuint8(10*8,1,temp_buff[0]);
         lcd_showstr(0,2,"temp2:");
@@ -388,6 +391,7 @@ void sancha_stop()
         lcd_showstr(0,6,"temp6:");
         lcd_showuint8(10*8,6,temp_buff[5]);
     }
+    break_flag=1;
     lcd_clear(BLACK);
     bb_time=12;
     if(magic_mode)

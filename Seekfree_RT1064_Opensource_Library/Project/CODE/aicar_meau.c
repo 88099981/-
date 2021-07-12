@@ -608,12 +608,12 @@ void gogogo_mix()
         if(key1_flag)
         {
             key1_flag=0;
-            aim_speed_set+=10;
+            aim_speed+=10;
         }
         else if(key2_flag)
         {
             key2_flag=0;
-            aim_speed_set-=10;
+            aim_speed-=10;
         }     
         if(mt9v03x_csi_finish_flag)
         {      
