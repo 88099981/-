@@ -16,8 +16,11 @@
 #include "aicar_flash.h"
 #include "SEEKFREE_18TFT.h"
 
+vuint8 meau_run_mode=GOGOGO_MIX;//选择跑车模式
+vuint8 meau_garage_mode=GARAGE_RIGHT;//选择出库模式
 uint8 pointer_page=0;
 uint8 pointer_arrow=0;
+
 
 void aicar_meau_init()
 {
@@ -104,8 +107,51 @@ void up_status()
         hd_turn+=1;break;    
     case MEAU_GOGOGO:
         pointer_arrow-=1;
-        if(pointer_arrow>2)
-            pointer_arrow=2;break; 
+        if(pointer_arrow>6)
+            pointer_arrow=6;break; 
+    case MEAU_GOGOGO_0:
+        if(meau_run_mode==GOGOGO_MIX)
+        {
+            lcd_showstr(10*8,0,"   ");
+            meau_run_mode=GOGOGO_ADC;
+        }
+        else if(meau_run_mode==GOGOGO_CAM)
+        {
+            lcd_showstr(10*8,0,"   ");
+            meau_run_mode=GOGOGO_MIX;
+        }
+        else if(meau_run_mode==GOGOGO_ADC)
+        {
+            lcd_showstr(10*8,0,"   ");
+            meau_run_mode=GOGOGO_CAM;
+        }break; 
+    case MEAU_GOGOGO_1:
+        if(meau_garage_mode==GARAGE_LEFT)
+        {
+            lcd_showstr(10*8,1,"     ");
+            meau_garage_mode=GARAGE_RIGHT;
+        }
+        else if(meau_garage_mode==GARAGE_RIGHT)
+        {
+            lcd_showstr(10*8,1,"     ");
+            meau_garage_mode=GARAGE_NON;
+        }
+        else if(meau_garage_mode==GARAGE_NON)
+        {
+            lcd_showstr(10*8,1,"     ");
+            meau_garage_mode=GARAGE_LEFT;
+        }break; 
+    case MEAU_GOGOGO_2:
+        if(magic_mode==0)
+        {
+            lcd_showstr(10*8,2,"     ");
+            magic_mode=1;
+        }
+        else if(magic_mode==1)
+        {
+            lcd_showstr(10*8,2,"     ");
+            magic_mode=0;
+        }break;
     case MEAU_OURTEAM:
         pointer_arrow-=1;
         if(pointer_arrow>2)
@@ -145,8 +191,54 @@ void down_status()
         hd_turn-=1;break;          
     case MEAU_GOGOGO:
         pointer_arrow+=1;
-        if(pointer_arrow>2)
+        if(pointer_arrow>6)
             pointer_arrow=0;break; 
+    case MEAU_GOGOGO_0:
+        if(meau_run_mode==GOGOGO_MIX)
+        {
+            meau_run_mode=GOGOGO_CAM;
+            lcd_showstr(10*8,0,"   ");            
+        }
+        else if(meau_run_mode==GOGOGO_CAM)
+        {
+            meau_run_mode=GOGOGO_ADC;
+            lcd_showstr(10*8,0,"   ");            
+        }
+        else if(meau_run_mode==GOGOGO_ADC)
+        {
+            meau_run_mode=GOGOGO_MIX;
+            lcd_showstr(10*8,0,"     ");                      
+        }break; 
+    case MEAU_GOGOGO_1:
+        if(meau_garage_mode==GARAGE_LEFT)
+        {
+            meau_garage_mode=GARAGE_NON;
+            lcd_showstr(10*8,1,"     ");           
+        }
+        else if(meau_garage_mode==GARAGE_RIGHT)
+        {
+            meau_garage_mode=GARAGE_LEFT;
+            lcd_showstr(10*8,1,"     ");           
+        }
+        else if(meau_garage_mode==GARAGE_NON)
+        {
+            meau_garage_mode=GARAGE_RIGHT;
+            lcd_showstr(10*8,1,"     ");
+            
+        }break; 
+    case MEAU_GOGOGO_2:
+        if(magic_mode==0)
+        {
+            magic_mode=1;
+            lcd_showstr(10*8,2,"     ");           
+            lcd_showstr(10*8,2,"ON");
+        }
+        else if(magic_mode==1)
+        {
+            magic_mode=0;            
+            lcd_showstr(10*8,2,"     ");
+            lcd_showstr(10*8,2,"OFF");
+        }break;
     case MEAU_OURTEAM:
         pointer_arrow+=1;
         if(pointer_arrow>2)
@@ -211,9 +303,13 @@ void go_status()
     case MEAU_GOGOGO:       
         switch (pointer_arrow)
         {
-        case 0:pointer_page=MEAU_GOGOGO_0;break;
-        case 1:pointer_page=MEAU_GOGOGO_1;break;
-        case 2:pointer_page=MEAU_GOGOGO_2;break;
+        case 0:pointer_page=MEAU_GOGOGO_0;break;//模式选择
+        case 1:pointer_page=MEAU_GOGOGO_1;break;//左右出库
+        case 2:pointer_page=MEAU_GOGOGO_2;break;//magic_mode
+        case 3:pointer_page=MEAU_GOGOGO_3;break;//magic_mode apriltag
+        case 4:pointer_page=MEAU_GOGOGO_4;break;//magic_mode number
+        case 5:pointer_page=MEAU_GOGOGO_5;break;//magic_mode animal_fruit
+        case 6:pointer_page=MEAU_GOGOGO_6;break;//GOGOGO!
         }       
         pointer_arrow=MEAU_NON;
         lcd_clear(BLACK);break;
@@ -249,10 +345,28 @@ void back_status()
         pointer_arrow=3;break;    
     case MEAU_PARA_0_4:
         pointer_page=MEAU_PARA_0;
-        pointer_arrow=3;break;         
+        pointer_arrow=4;break;         
     case MEAU_GOGOGO:
         pointer_page=MEAU_MAIN;
         pointer_arrow=2;break;
+    case MEAU_GOGOGO_0:
+        pointer_page=MEAU_GOGOGO;
+        pointer_arrow=0;break; 
+    case MEAU_GOGOGO_1:
+        pointer_page=MEAU_GOGOGO;
+        pointer_arrow=1;break; 
+    case MEAU_GOGOGO_2:
+        pointer_page=MEAU_GOGOGO;
+        pointer_arrow=2;break; 
+    case MEAU_GOGOGO_3:
+        pointer_page=MEAU_GOGOGO;
+        pointer_arrow=3;break; 
+    case MEAU_GOGOGO_4:
+        pointer_page=MEAU_GOGOGO;
+        pointer_arrow=4;break; 
+    case MEAU_GOGOGO_5:
+        pointer_page=MEAU_GOGOGO;
+        pointer_arrow=5;break; 
     case MEAU_OURTEAM:
         pointer_page=MEAU_MAIN;
         pointer_arrow=3;break;        

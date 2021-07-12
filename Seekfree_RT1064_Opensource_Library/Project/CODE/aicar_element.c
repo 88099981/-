@@ -371,6 +371,7 @@ void sancha_stop()
     uart_flag=E_START;
     use_time=0;
     systick_start();
+    lcd_clear(BLACK);
     while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<10000)
     {
         use_time = systick_getval_ms();//µÈ´ý
@@ -408,6 +409,7 @@ void find_apriltag()
     uart_flag=E_START;
     use_time=0;
     systick_start();
+    lcd_clear(BLACK);
     while((temp_buff[1]!=0x01&&temp_buff[1]!=0x02)&&use_time<3000)
     {
         use_time = systick_getval_ms();//µÈ´ý
