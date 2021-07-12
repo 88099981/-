@@ -31,6 +31,7 @@ vuint8 you_yuanhuan_flag=0;//右圆环标志位
 vuint8 break_flag=0;//停车标志位
 vuint8 adc_isr_enable=0;//配合debug使用的电感跑车标志位
 vuint8 magic_mode=0;//自选模式
+vuint8 meau_garage_flag=0;//出库方向标志位
 uint16 stop_cnt=0;//停车复位计数器
 uint16 use_time=0;//计时数据
 uint16 bb_time=0;//bb

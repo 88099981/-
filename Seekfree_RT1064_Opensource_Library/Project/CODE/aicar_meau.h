@@ -28,14 +28,33 @@ typedef enum
     MEAU_PARA_0_3,//chuhuan_delay
     MEAU_PARA_0_4,//ruhuan_turn
     MEAU_GOGOGO,
-    MEAU_GOGOGO_0,//mix
-    MEAU_GOGOGO_1,//ad
-    MEAU_GOGOGO_2,//cam
+    MEAU_GOGOGO_0,//模式选择
+    MEAU_GOGOGO_1,//左右出库
+    MEAU_GOGOGO_2,//magic
+    MEAU_GOGOGO_3,//apriltag
+    MEAU_GOGOGO_4,//number
+    MEAU_GOGOGO_5,//animal_fruit
+    MEAU_GOGOGO_6,//GOGOGO!
     MEAU_OURTEAM,
     MEAU_NON,//不显示
     
 }MEAU_NUM;
 
+typedef enum
+{
+    GOGOGO_ADC,//电感模式
+    GOGOGO_CAM,//摄像头模式
+    GOGOGO_MIX,//混合模式
+    GOGOGO_MAGIC,//神奇模式
+    GOGOGO_NON//不显示
+}RUN_MODE;
+
+typedef enum
+{
+    GARAGE_LEFT,//左出库
+    GARAGE_RIGHT,//右出库
+    GARAGE_NON,//不出库
+}GARAGE_MODE;
 void aicar_meau();
 void show_page(uint8);
 void show_arrow(uint8);
@@ -52,6 +71,8 @@ void debug_number();
 void gogogo_camera();
 void gogogo_adc();
 void gogogo_mix();
+void gogogo_choose();
+void gogogo_run();
 void para_huandao();
 
 #endif
