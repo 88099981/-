@@ -515,7 +515,7 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
             pixsum2/=8;
             pixsum+=pixsum2;
 
-            if(pixsum>0xdf)
+            if(pixsum>0xff)
             {
                 pixsum=0xff;
             }
@@ -747,7 +747,7 @@ void Copy_pix_img(void)
 
 
 
-//设置赛道连通域生成点 返回u16类型，高八位为横坐标x，低八位为纵坐标y
+//设置赛道连通域生成点
 uint8 SetSeed_Lane(uint8 MidStart,uint8 EdgeNum)
 {
     uint8 Seed_x=MidStart/3;
@@ -780,7 +780,6 @@ uint8 SetSeed_Lane(uint8 MidStart,uint8 EdgeNum)
 uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color)
 {
     uint8 Contu_T_L=0;  //扫到T-B跳变点前的赛道连通域属色块个数
-    //uint8 Contu_B_R=0;
     uint8 Jump_L=0;
     uint8 Jump_R=0;
     uint8 SeedFound=0;
@@ -812,7 +811,7 @@ uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color)
     if(SeedFound)
         return((uint8)((Jump_R+Jump_L)*0.5));
     else
-        return 0;
+        return 31;
 
 }
 
@@ -1399,12 +1398,12 @@ switch(Round_Status)
         break;
 
     case 5:
-        Connect_pp(0,120,0,10,48);
+        //Connect_pp(0,120,0,10,48);
         flag_Normal_Lose_L=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
     case 6:
-        Connect_pp(1,68,0,178,48);
+        //Connect_pp(1,68,0,178,48);
         flag_Normal_Lose_R=1;   //ATTENTION 另外此处修改了电感偏差，参见aicar_error.c
         break;
 
