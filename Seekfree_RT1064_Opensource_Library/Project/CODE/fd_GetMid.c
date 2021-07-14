@@ -1,10 +1,15 @@
 #include "fd_GetMid.h"
 
 //data
+uint8 temp1; //µ÷ÊÔÊ±Ê¹ÓÃµÄÈ«¾Ö±äÁ¿
+uint8 temp2; //µ÷ÊÔÊ±Ê¹ÓÃµÄÈ«¾Ö±äÁ¿
 uint8 img[IMG_Y][IMG_X];
-uint8 pix_img[IMG_Y/3][IMG_X/3];
+uint8 pix_img[PIX_IMG_Y][PIX_IMG_X];
+uint8 copy_pix_img[PIX_IMG_Y][PIX_IMG_X];
 EDGE edge[EDGE_MAX];    //±ß½ç½á¹¹ÌåÊı×é ±ß½çÊıÖµÎª0µÄÊ±ºòÎª¶ª±ß
 ANGLE angle[EDGE_MAX];  //±ßÑØ½Ç¶ÈÊı×é
+DIRECTION Direction_4[]={{-1,0},{1,0},{0,1},{0,-1}};    //4Á¬Í¨ÓòÆ«ÒÆÖµ
+DIRECTION Direction_8[]={{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0}};    //8Á¬Í¨ÓòÆ«ÒÆÖµ
 uint8 EdgeNum;    //±ßÑØÊı
 uint8 EdgeLosePos[EDGE_MAX];  //¶ª±ßÎ»ÖÃ (YÖá           ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 uint8 EdgeLoseNum;   //¶ª±ßÊı                           ¡¾µ¥Ö¡³õÊ¼»¯¡¿
@@ -17,11 +22,11 @@ uint16 RoundInCount=0; //Èë»·¼ÆÊı
 uint8 RoundOutCount=0;
 uint8 YRoadInCount=0;
 uint8 CrossInCount=0;
+uint16 SumInCD=0;   //Á¬Í¨ÓòÄÚµã¸öÊı(ÏñËØ»¯ºó)
+SUMINCD sumincd={0,0};
+
 
 //flag
-//------------------------¹¤×÷×´Ì¬±êÖ¾,ÓÉÉ¨Ïßº¯Êıµ÷ÓÃ------------------------//
-uint8 flag_MidStart_in_Black=0;   //Hor_Search º¯ÊıÖĞ¸ø¶¨ÆğÊ¼µãÔÚºÚÇøÄÚ    ¡¾µ¥Ö¡³õÊ¼»¯¡¿
-uint8 flag_Ver_Search_Finish=0;   //´¹Ö±É¨ÃèÍê³É                          ¡¾µ¥Ö¡³õÊ¼»¯¡¿
 
 //-------------------»ù´¡±êÖ¾,Ô­ÔòÉÏ½öÓÉÉ¨Ïßº¯Êı¼°×´Ì¬»úµ÷ÓÃ------------------//
 uint8 flag_LoseEdge_part_L=0; //×ó²¿·Ö¶ª±ß     ¡¾µ¥Ö¡³õÊ¼»¯¡¿
@@ -55,6 +60,8 @@ uint8 flag_Indct_Help_Me;   //ÇóÖúµç¸ĞÑ­¼£  µ÷ÓÃÍê¼ÇµÃ¸´Î»               ¡¾µ¥Ö¡³
 void init(void)
 {
     //****µ¥Ö¡±êÖ¾Î»³õÊ¼»¯****
+    temp1=0;
+    temp2=0;
     flag_LoseEdge_part_L=0;
     flag_LoseEdge_part_R=0;
     flag_LoseEdge_all_L=0;
@@ -62,16 +69,17 @@ void init(void)
     flag_Y_Road=0;
     flag_T_Road=0;
     flag_Cross=0;
-    flag_MidStart_in_Black=0;
-    flag_Ver_Search_Finish=0;
     flag_Indct_Help_Me=0;
     flag_Straight_L=0;
     flag_Straight_R=0;
+
     flag_Normal_Lose_L=0;
     flag_Normal_Lose_R=0;
     flag_AprilTag_ARM=0;
     flag_AprilTag=0;
     flag_Straight=0;
+    sumincd.AprilTag=0;
+    sumincd.lane=0;
     //************************
 
     for(uint8 i=0;i<EDGE_MAX;i++)
@@ -310,7 +318,6 @@ uint8 Mid_Connect(int16 Target[],uint8 p1_y,uint8 p2_y)
 //Ë®Æ½É¨Ïß£¨×îµ×²ã£© //ATTENTION yÎªÏà¶ÔÏŞÖÆµ×¿òµÄ¸ß¶È yÎªÄÚ²¿µİ¹é(¿ÉÄÜ)Ê¹ÓÃµÄ²ÎÊı£¬Íâ²¿µ÷ÓÃÇĞÎğ¸³Öµ
 uint8 Hor_Search_Base(uint8 MidStart,uint8 y)
 {
-    flag_MidStart_in_Black=0;   //±êÖ¾Î»ÖÃÁã
 
     if(MidStart>IMG_X-X_LIMIT || MidStart<X_LIMIT || y>IMG_Y-2*Y_LIMIT )  //·¶Î§ÑéÖ¤
     {
@@ -416,8 +423,6 @@ uint8 Hor_Search_Base(uint8 MidStart,uint8 y)
 //Ë®Æ½É¨Ïß£¨µ¥ĞĞ£© //ATTENTION yÎªÏà¶ÔÏŞÖÆµ×¿òµÄ¸ß¶È
 uint8 Hor_Search(uint8 MidStart,uint8 y)
 {
-    flag_MidStart_in_Black=0;   //±êÖ¾Î»ÖÃÁã
-
     if(MidStart>IMG_X-X_LIMIT || MidStart<X_LIMIT || y>IMG_Y-2*Y_LIMIT )  //·¶Î§ÑéÖ¤
     {
         return 0;
@@ -425,7 +430,6 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
 
     if(img[y+Y_LIMIT][MidStart]==Black) //Èç¹û¸ø¶¨µÄÖĞµãÔÚºÚÇøÄÚ
     {
-        flag_MidStart_in_Black=1;
         return 0;
     }
 
@@ -442,7 +446,6 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
             flag_LoseEdge_part_L++;
         }
     }
-
     for(uint8 i=MidStart;i<=IMG_X-X_LIMIT;i++)   //ÏòÓÒËÑË÷
     {
         if(img[y+Y_LIMIT][i]==Black)
@@ -456,12 +459,12 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
             flag_LoseEdge_part_R++;
         }
     }
-
+    /*
     if(edge[y].Rx-edge[y].Lx<=4)    //¿ÉÄÜÊÇ°ßÂíÏß
     {
         EdgeNum=y;  //ÏŞÖÆ×î´ó¸ß¶È£¬±ÜÃâ¶ÔÖĞÏß¼°Æ«²î²úÉúÓ°Ïì
     }
-
+    */
     if(y>3) // ´ı±ßÑØÎÈ¶¨ºó
     {
         if(edge[y].Lx-edge[y-2].Lx>=10 || edge[y].Lx-edge[y-2].Lx<=-10) //ATTENTION EdgeLosePos¿ÉÄÜ»á´¢´æÏàÍ¬µÄ¸ß¶È£¨Ë«²à¶ª±ßÊ±£©
@@ -476,7 +479,6 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
             EdgeLosePos[EdgeLoseNum++]=y;    //´¢´æ¶ª±ßĞÅÏ¢
         }
     }
-
     if(y)   //²»´¦Àíµ×±ß
     {
         if(edge[y].Lx==0)
@@ -489,7 +491,7 @@ uint8 Hor_Search(uint8 MidStart,uint8 y)
         }
     }
 
-    return ((edge[y].Rx-edge[y].Lx)/2);
+    return 0;
 }
 
 
@@ -503,20 +505,17 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
     {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
         for(uint8 j=1,n=0;j<IMG_Y-1;j+=3,n++)
         {
-            pixsum=(uint8)(img[j][i]*weight);
-            pixsum2+=(uint8)(img[j-1][i]*(1-weight));
-            pixsum2+=(uint8)(img[j+1][i]*(1-weight));
-            pixsum2+=(uint8)(img[j-1][i-1]*(1-weight));
-            pixsum2+=(uint8)(img[j-1][i+1]*(1-weight));
-            pixsum2+=(uint8)(img[j+1][i-1]*(1-weight));
-            pixsum2+=(uint8)(img[j+1][i+1]*(1-weight));
-            pixsum2+=(uint8)(img[j][i-1]*(1-weight));
-            pixsum2+=(uint8)(img[j][i+1]*(1-weight));
+            pixsum=img[j][i]*weight;
+
+            for(uint8 k=0;k<8;k++)
+            {
+                pixsum2+=(uint8)(img[j+Direction_8[k].offset_y][i+Direction_8[k].offset_x]*(1-weight));
+            }
 
             pixsum2/=8;
             pixsum+=pixsum2;
 
-            if(pixsum>0xff)
+            if(pixsum>0xdf)
             {
                 pixsum=0xff;
             }
@@ -529,14 +528,11 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
             if(PIX_DeBUG)
             {
                 img[j][i]=pixsum;
-                img[j-1][i]=pixsum;
-                img[j+1][i]=pixsum;
-                img[j-1][i-1]=pixsum;
-                img[j-1][i+1]=pixsum;
-                img[j+1][i-1]=pixsum;
-                img[j+1][i+1]=pixsum;
-                img[j][i-1]=pixsum;
-                img[j][i+1]=pixsum;
+
+                for(uint8 k=0;k<8;k++)
+                {
+                    img[j+Direction_8[k].offset_y][i+Direction_8[k].offset_x]=(uint8)pixsum;
+                }
             }
 
             pix_img[n][m]=pixsum;
@@ -554,14 +550,12 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
 uint8 Ver_Search(uint8 MidStart)
 {
     EdgeNum=0;
-    flag_Ver_Search_Finish=0;
 
     for(uint8 i=Y_LIMIT;i<=IMG_Y-Y_LIMIT;i++)
     {
         EdgeNum=i;  //Éè¶¨´¹Ïß¸ß¶È £¨É¨Ïß×î´ó¸ß¶È£© EdgeNum ĞŞÕıÎªÊı×é³¤¶È ´ÓY_LIMIT¿ªÊ¼
         if(img[i][MidStart]==Black)
         {
-            flag_Ver_Search_Finish=1;
             break;
         }
     }
@@ -582,7 +576,6 @@ uint8 Uni_Ver_Search(uint8 MidStart)
         IN_EdgeNum=i;  //Éè¶¨´¹Ïß¸ß¶È £¨É¨Ïß×î´ó¸ß¶È£© EdgeNum ĞŞÕıÎªÊı×é³¤¶È ´ÓY_LIMIT¿ªÊ¼
         if(img[i][MidStart]==Black)
         {
-            flag_Ver_Search_Finish=1;
             break;
         }
     }
@@ -741,61 +734,106 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
 
 
 
-
-
-uint8 Find_AprilTag(uint8 T_y)
+//¸´ÖÆÏñËØÊı×é
+void Copy_pix_img(void)
 {
-    uint8 A_x=0;
-    uint8 A_y=T_y;
-    uint8 WofR=0;
-    uint8 WofUP=0;
-    uint8 WofDOWN=0;
+	for(uint8 i=0;i<PIX_IMG_Y;i++)  //¿ìËÙ¿½±´Ò»·İĞÂµÄÏñËØ»¯Í¼Ïñ£¬ÒÔÃâ²éÕÒÁ¬Í¨ÓòÊ±²úÉúÎÛÈ¾
+	{
+            memmove(&copy_pix_img[i][0],&pix_img[i][0],PIX_IMG_X);
+	}
+}
 
-    for(uint8 i=0;i<PIX_IMG_X/3-1;i++)
+
+
+
+
+//ÉèÖÃÈüµÀÁ¬Í¨ÓòÉú³Éµã ·µ»Øu16ÀàĞÍ£¬¸ß°ËÎ»Îªºá×ø±êx£¬µÍ°ËÎ»Îª×İ×ø±êy
+uint8 SetSeed_Lane(uint8 MidStart,uint8 EdgeNum)
+{
+    uint8 Seed_x=MidStart/3;
+    uint8 Seed_y=EdgeNum/4;
+
+    if(copy_pix_img[Seed_y][Seed_x]==White)
     {
-        if(pix_img[A_y][i]==White && pix_img[A_y][i+1]==Black)
+        uint8 SumWhite=0;
+        for(uint8 i=0;i<8;i++)
         {
-            A_x=i+2;
-            break;
+            if(copy_pix_img[Seed_y+Direction_8[i].offset_y][Seed_x+Direction_8[i].offset_x]==White)
+            {
+                SumWhite++;
+            }
         }
-    }
-
-    for(uint8 i=A_x;i<A_x+8;i++)    //´Ó»ù×¼µãÏòÓÒÉ¨8¸ö
-    {
-        if(i>=PIX_IMG_X)
+        
+        if(SumWhite>=5)
         {
-            break;
+            return 1;
         }
-
-        if(pix_img[A_y][i]==White)
-        {
-            WofR++;
-        }
-    }
-
-    for(uint8 j=A_y;j<A_y+8;j++)
-    {
-        if(pix_img[j][A_x]==White)
-        {
-            WofUP++;
-        }
-    }
-
-    for(uint8 j=A_y;j>0;j--)
-    {
-        if(pix_img[j][A_x]==White)
-        {
-            WofDOWN++;
-        }
-    }
-
-    if(WofR>=2 && WofUP>=3 && WofDOWN>=1)
-    {
-        flag_AprilTag=1;
-        bb_time=10;
     }
     
     return 0;
+}
+
+
+
+
+//ÉèÖÃAprilTagÊ¶±ğÖÖ×Óµã T_yÎªÊ¶±ğ¸ß¶È£¬T_colorÎªÈüµÀÁ¬Í¨ÓòµÄ±êÖ¾É«
+uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color)
+{
+    uint8 Contu_T_L=0;  //É¨µ½T-BÌø±äµãÇ°µÄÈüµÀÁ¬Í¨ÓòÊôÉ«¿é¸öÊı
+    //uint8 Contu_B_R=0;
+    uint8 Jump_L=0;
+    uint8 Jump_R=0;
+    uint8 SeedFound=0;
+
+    for(uint8 i=1;i<PIX_IMG_X;i++)  //´Ó×óµ½ÓÒÉ¨µ½µÚÒ»¸öT-BÌø±äµã
+    {
+        if(copy_pix_img[T_y][i-1]==T_color && copy_pix_img[T_y][i]==T_color)
+        {
+            Contu_T_L++;
+        }
+
+        if(Contu_T_L>=2 && (copy_pix_img[T_y][i-1]==T_color && copy_pix_img[T_y][i]==Black))
+        {
+            Jump_L=i;
+            break;
+        }
+    }
+
+    for(uint8 i=Jump_L+1;i<PIX_IMG_X;i++)
+    {
+        if(copy_pix_img[T_y][i-1]==Black && copy_pix_img[T_y][i]==T_color)
+        {
+            Jump_R=i;
+            SeedFound=1;
+            break;
+        }
+    }
+
+    if(SeedFound)
+        return((uint8)((Jump_R+Jump_L)*0.5));
+    else
+        return 0;
+
+}
+
+
+
+
+
+void FloodSeedFill(uint8 x,uint8 y,uint8 Old_Color,uint8 New_Color)
+{
+    if((x>0 && x<PIX_IMG_X) && (y>0 && y<PIX_IMG_Y))  //¼ìÑé·¶Î§
+    {
+        if(copy_pix_img[y][x]==Old_Color)
+        {
+            copy_pix_img[y][x]=New_Color;
+            SumInCD++;
+            for(uint8 i=0;i<4;i++)  //4Á¬Í¨Óò
+            {
+                FloodSeedFill(x+Direction_4[i].offset_x,y+Direction_4[i].offset_y,Old_Color,New_Color); //¿Óµùµİ¹é
+            }
+        }
+    }
 }
 
 
@@ -902,7 +940,63 @@ uint8 Judge(void)
 
 
     //------Èı²í¼ì²â <head>---------//
-    
+    //if(!YRoadInCount && !flag_Y_Road_IN && !Round_Status)
+    if(!Round_Status)
+    {
+        uint8 SumMark_Lane_Head=0;  //Í¼Ïñ×î¶¥ĞĞµÄÈüµÀ±ê¼Ç¸öÊı  //ÕâÑù¹æ±ÜÁË¼±Íä¡¢TÂ·
+        uint8 SumJumpMark_Lane_2_Black=0;   //´ÓÈüµÀÁ¬Í¨Óò±ê¼Çµ½ºÚ¿éµÄÌø±äµãµÄ¸öÊı
+        uint8 SumJumpBlack_2_Mark_Lane=0;   //´ÓÈüµÀÁ¬Í¨Óò±ê¼Çµ½ºÚ¿éµÄÌø±äµãµÄ¸öÊı
+
+        for(uint8 i=0;i<PIX_IMG_X;i++)
+        {
+            if(copy_pix_img[PIX_IMG_Y-1][i]==Mark_Lane)
+            {
+                SumMark_Lane_Head++;
+            }
+        }
+
+        if(SumMark_Lane_Head)
+        {
+            for(uint8 j=PIX_IMG_Y-4;j<PIX_IMG_Y;j++)
+            {
+                uint8 JumpP1=0; //ÕÒµ½µÚÒ»ÖÖÌø±äµã±êÖ¾ ÒÔ¹æ¶¨Ìø±äµãµÄË³Ğò Ã¿ĞĞ³õÊ¼»¯
+
+                for(uint8 i=1;i<PIX_IMG_X;i++)
+                {
+                    if(copy_pix_img[j][i-1]==Mark_Lane && copy_pix_img[j][i]==Black)    //Ìø±äµã
+                    {
+                        SumJumpMark_Lane_2_Black++;
+                        JumpP1=1;
+                    }
+
+                    if(JumpP1 && copy_pix_img[j][i-1]==Black && copy_pix_img[j][i]==Mark_Lane)    //Ìø±äµã
+                    {
+                        SumJumpBlack_2_Mark_Lane++;
+                    }
+                }
+            }
+        }
+
+        //temp=SumMark_Lane_Head;
+        temp1=SumJumpMark_Lane_2_Black;
+        temp2=SumJumpBlack_2_Mark_Lane;
+
+        if(SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //É¨ÁË4ĞĞ£¬Ã¿ĞĞÃ¿ÀàÆğÂë1¸öÌø±äµã Ìõ¼şÒÑ·Å¿í
+        {
+            flag_Y_Road=1;
+            bb_time=50;
+            //openmvÈ·ÈÏÈı²í×ªÏò
+            YRoadInCount=30;
+            flag_Y_Road_IN=40;
+        }
+    }
+
+    if(ad_value_all<=400)
+    {
+        flag_Y_Road_IN=40;
+    }
+
+    /*
     if(!YRoadInCount && !flag_Y_Road_IN && Feature_Verify_Color(74,44,40,5,Black,90)) 
     {
         if(Feature_Verify_Color(29,20,130,5,White,90) && Feature_Verify_Color(0,44,20,5,White,90) && Feature_Verify_Color(167,44,20,5,White,90))
@@ -931,18 +1025,14 @@ uint8 Judge(void)
 
         }
     }
-
-    if(ad_value_all<=400)
-    {
-        flag_Y_Road_IN=40;
-    }
+    */
     //-------Èı²í¼ì²â <bottom>--------//
 
 
 
 
 
-    //-------Ë«²à¶ª±ß <head>--------//
+    //-------Ê®×Ö¼ì²â <head>--------//
     if(CrossInCount && Round_Status<=4)
     {
         Round_Status=0;
@@ -965,7 +1055,7 @@ uint8 Judge(void)
         }
         */
     }
-    //-------Ë«²à¶ª±ß <bottom>--------//
+    //-------Ê®×Ö¼ì²â <bottom>--------//
 
 
 
@@ -1051,7 +1141,7 @@ uint8 Judge(void)
 
             break;
         case 5:
-            if(ad_value_all>Round_ad_limit) //ÓÒÉÏ½Ç°×¿é
+            if(ad_value_all>Round_ad_limit-50)
             {
                 Round_Status=7;
             }
@@ -1060,7 +1150,7 @@ uint8 Judge(void)
             break;
 
         case 6:
-            if(ad_value_all>Round_ad_limit)   //×óÉÏ½Ç°×¿é
+            if(ad_value_all>Round_ad_limit-50)
             {
                 Round_Status=8;
             }
@@ -1164,16 +1254,35 @@ uint8 Judge(void)
 
 
     //------AprilTag¼ì²â <head>---------//
-    /*
-    if(Feature_Verify_Box(MidStart-30,10,60,20,2,1)>=80 && Feature_Verify_Color(MidStart-28,5,56,13,Black,20))
+    if(!Round_Status && !flag_Y_Road)   //¸ü¸ÄÒÔÅÅ³ı»¥³âÔªËØ Àı£ºif(!Round_Status)
     {
-        //bb_time=40;
-
-        return 1;
+        if(sumincd.AprilTag>6 && sumincd.AprilTag<80)   //Ä¿Ç°½ö¸ù¾İÁ¬Í¨ÓòÄÚÏñËØ¸öÊıÅĞ¶Ï£¬ÒòÎªÉ¨Ïß¸ß¶ÈÊÇ¹Ì¶¨µÄ
+        {
+            flag_AprilTag=1;
+            bb_time=20;
+        }
+    }
+    /*
+    uint8 AprilTag_Height_Limit=0;
+    for(uint8 i=0;i<PIX_IMG_X;i++)  //ÔÚÍ¼Ïñ¸ß¶ÈÎªÊ®µÄÎ»ÖÃË®Æ½É¨Ãè£¬±ÜÃâÁ¬Í¨ÓòĞ¹Â¶
+    {
+        if(copy_pix_img[10][i]==Mark_AprilTag)
+        {
+            AprilTag_Height_Limit++;
+        }
     }
     */
-    Find_AprilTag(6);
-    
+    /*
+    Copy_pix_img(); //ÏÈ¸´ÖÆÍ¼Ïñ
+    FloodSeedFill(SetSeed_AprilTag(6),6,Black,Gray);    //Éè¶¨ÖÖ×Ó²¢²âÊÔÁ¬Í¨Óò
+
+    if(SumInCD>=6 && SumInCD<=90)
+    {
+        flag_AprilTag=1;
+
+        bb_time=20;
+    }
+    */
     //------AprilTag¼ì²â <bottom>---------//
 
 
@@ -1370,7 +1479,8 @@ switch(Round_Status)
     if(flag_Y_Road)
     {
         //openartÍ¨ĞÅ
-        sancha_stop();
+        bb_time=10;
+        //sancha_stop();
         YRoadInCount=30;
     }
 
@@ -1409,12 +1519,12 @@ switch(Round_Status)
 
         if(Height_L>Height_R)
         {
-            Connect_pp(0,120,0,0,40);
+            Connect_pp(0,120,0,20,49);
             flag_Normal_Lose_L=1;
         }
         else if(Height_L<Height_R)
         {
-            Connect_pp(1,68,0,187,40);
+            Connect_pp(1,68,0,168,49);
             flag_Normal_Lose_R=1;
         }
     }
@@ -1507,7 +1617,8 @@ void Search(void)
 
     init();
     Y_Change();
-    zoomin(0.7,0);
+    zoomin(0.5,0);
+    Copy_pix_img();
 
     //-------------------É¨Ïß²¿·Ö <head>--------------//
     Hor_Search_Base(MidStart,0);   //µÚÒ»±éÏÈÈ·¶¨É¨Ãè»ù×¼ÖĞÏß
@@ -1520,8 +1631,21 @@ void Search(void)
                                 //TODO È±Ò»¸ö¶Ô¶ª±ß¸ñÊıµÄÅĞ¶ÏÀ´¶Ô flag_LoseEdge_all_XÖÃÎ»
     }
     //If_Straight();  //È·¶¨Ö±±ß
-    
     //-------------------É¨Ïß²¿·Ö <bottom>-------------//
+    
+
+    //-------------------Á¬Í¨ÓòÉèÖÃ²¿·Ö <head>---------------//
+    if(SetSeed_Lane(MidStart,EdgeNum))
+    {
+        FloodSeedFill(MidStart/3,EdgeNum/4,White,Mark_Lane);
+        sumincd.lane=SumInCD;
+        SumInCD=0;
+        FloodSeedFill(SetSeed_AprilTag(5,Mark_Lane),5,Black,Mark_AprilTag);
+        sumincd.AprilTag=SumInCD;
+        SumInCD=0;
+    }
+
+    //-------------------Á¬Í¨ÓòÉèÖÃ²¿·Ö <bottom>-------------//
 
 
     //-------------------ÅĞ¶Ï²¿·Ö <head>---------------//
@@ -1537,7 +1661,6 @@ void Search(void)
 
 
     //-------------------»æ»­²¿·Ö <head>---------------//
-    zoomin(0.7,1);
     Print_Mid();
     //-------------------»æ»­²¿·Ö <bottom>-------------//
 
