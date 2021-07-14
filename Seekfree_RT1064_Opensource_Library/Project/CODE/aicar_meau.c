@@ -647,44 +647,61 @@ void gogogo_mix()
 
         lcd_showstr(0,3,"aim_speed:");
         lcd_showint16(10*8,3,aim_speed);
-        lcd_showstr(0,4,"chasu:");
-        lcd_showuint8(10*8,4,sw1_status);
-        lcd_showstr(0,5,"RoundStatus:");
-        lcd_showuint8(10*10,5,Round_Status);
-        lcd_showstr(0,6,"RoundIN:");
-        lcd_showuint8(10*10,6,RoundInCount);
-        lcd_showstr(0,7,"RoundOUT:");
-        lcd_showuint8(10*10,7,RoundOutCount);
+        lcd_showstr(0,4,"RoundStatus:");
+        lcd_showuint8(10*10,4,Round_Status);
+        lcd_showstr(0,5,"RoundIN:");
+        lcd_showuint8(10*10,5,RoundInCount);
+        lcd_showstr(0,6,"RoundOUT:");
+        lcd_showuint8(10*10,6,RoundOutCount);
         if(sw2_status==1)
         {
             Y_Change();
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
-        }                  
-        
-        if(flag_Y_Road)
-        {            
-            lcd_showstr(0,8,"Y_Road");
-        }
-        else if(Round_Status)
-        {
-            lcd_showstr(0,8,"Round");
-        }
-        else if(flag_Garage_L || flag_Garage_R)
-        {
-            lcd_showstr(0,8,"Garage");
-        }
-        else if(flag_Cross)
-        {
-            lcd_showstr(0,8,"Cross");
-        }
-        else if(flag_T_Road)
-        {
-            lcd_showstr(0,8,"T_Road");
         }
         else
         {
-            lcd_showstr(0,8,"Normal");
+            uint8 temp;
+            for (uint8 i = 0; i < PIX_IMG_Y / 2; i++)
+            {
+                for (uint8 j = 0; j < PIX_IMG_X; j++)
+                {
+                    temp = copy_pix_img[i][j];
+                    copy_pix_img[i][j] = copy_pix_img[PIX_IMG_Y - i - 1][j];
+                    copy_pix_img[PIX_IMG_Y - i - 1][j] = temp;
+                }
+            }
+
+            lcd_displayimage032_zoom(*copy_pix_img,PIX_IMG_X,PIX_IMG_Y, 128, 50);
         }
+        
+        if(flag_Y_Road)
+        {            
+            lcd_showstr(0,7,"Y_Road");
+        }
+        else if(Round_Status)
+        {
+            lcd_showstr(0,7,"Round");
+        }
+        else if(flag_Garage_L || flag_Garage_R)
+        {
+            lcd_showstr(0,7,"Garage");
+        }
+        else if(flag_Cross)
+        {
+            lcd_showstr(0,7,"Cross");
+        }
+        else if(flag_AprilTag)
+        {
+            lcd_showstr(0,7,"A_Tag");
+        }
+        else
+        {
+            lcd_showstr(0,7,"Normal");
+        }
+
+        lcd_showstr(0,8,"Y_SUM:");
+        lcd_showuint8(10*6,8,temp1);
+        lcd_showuint8(10*10,8,temp2);
 
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
