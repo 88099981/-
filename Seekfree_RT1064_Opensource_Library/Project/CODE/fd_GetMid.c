@@ -939,8 +939,7 @@ uint8 Judge(void)
 
 
     //------三岔检测 <head>---------//
-    //if(!YRoadInCount && !flag_Y_Road_IN && !Round_Status)
-    if(!Round_Status)
+    if(!YRoadInCount && !flag_Y_Road_IN && !Round_Status)
     {
         uint8 SumMark_Lane_Head=0;  //图像最顶行的赛道标记个数  //这样规避了急弯、T路
         uint8 SumJumpMark_Lane_2_Black=0;   //从赛道连通域标记到黑块的跳变点的个数
@@ -980,10 +979,9 @@ uint8 Judge(void)
         temp1=SumJumpMark_Lane_2_Black;
         temp2=SumJumpBlack_2_Mark_Lane;
 
-        if(SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //扫了4行，每行每类起码1个跳变点 条件已放宽
+        if(EdgeNum<=(uint8)(IMG_Y*0.6) && SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //扫了4行，每行每类起码1个跳变点 条件已放宽
         {
             flag_Y_Road=1;
-            bb_time=50;
             //openmv确认三岔转向
             YRoadInCount=30;
             flag_Y_Road_IN=40;
@@ -1479,8 +1477,11 @@ switch(Round_Status)
     {
         //openart通信
         bb_time=10;
-        //sancha_stop();
+        sancha_stop();
         YRoadInCount=30;
+        
+        Connect_pp(1,40,0,70,48);
+        Connect_pp(0,148,0,118,48);
     }
 
     if(flag_T_Road)

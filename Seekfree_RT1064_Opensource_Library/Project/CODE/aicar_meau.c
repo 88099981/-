@@ -702,6 +702,9 @@ void gogogo_mix()
         lcd_showstr(0,8,"Y_SUM:");
         lcd_showuint8(10*6,8,temp1);
         lcd_showuint8(10*10,8,temp2);
+//        lcd_showstr(0,9,"tag_num:");
+//        lcd_showuint8(10*6,8,temp1);
+//        lcd_showuint8(10*10,8,temp2);
 
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
