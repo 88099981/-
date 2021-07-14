@@ -505,11 +505,11 @@ uint8 zoomin(float weight,uint8 PIX_DeBUG)
     {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
         for(uint8 j=1,n=0;j<IMG_Y-1;j+=3,n++)
         {
-            pixsum=img[j][i]*weight;
+            pixsum=(uint16)(img[j][i]*weight);
 
             for(uint8 k=0;k<8;k++)
             {
-                pixsum2+=(uint8)(img[j+Direction_8[k].offset_y][i+Direction_8[k].offset_x]*(1-weight));
+                pixsum2+=(uint16)(img[j+Direction_8[k].offset_y][i+Direction_8[k].offset_x]*(1-weight));
             }
 
             pixsum2/=8;
