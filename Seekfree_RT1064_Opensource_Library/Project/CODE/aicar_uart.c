@@ -26,6 +26,7 @@ lpuart_handle_t     example_g_lpuartHandle;
 //vuint8 show_flag=0;                        //数据显示标志位
 vuint8 test_getdata=0;
 uint8 uart_num = 0;
+uint8 apriltag_delay = 0;
 //函数
 //-------------------------------------------------------------------------------------------------------------------
 //  @brief      获取从机数据

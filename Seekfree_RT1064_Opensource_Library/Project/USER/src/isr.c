@@ -33,8 +33,8 @@ void PIT_IRQHandler(void)
     if(PIT_FLAG_GET(PIT_CH0))
     {
         PIT_FLAG_CLEAR(PIT_CH0);
-        encoder2 = qtimer_quad_get(QTIMER_1,QTIMER1_TIMER0_C0 );
-        encoder1 = -qtimer_quad_get(QTIMER_1,QTIMER1_TIMER2_C2 );
+        encoder1 = qtimer_quad_get(QTIMER_1,QTIMER1_TIMER0_C0 )/2;
+        encoder2 = qtimer_quad_get(QTIMER_1,QTIMER1_TIMER2_C2 );
         qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER0_C0 );
         qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER2_C2 );
         
@@ -51,7 +51,7 @@ void PIT_IRQHandler(void)
         {
             aicar_adc_get();
             aicar_adc_error();
-        }
+        }       
         aicar_servo_control(servo_duty);
         aicar_motor_pid(left_motor,right_motor);
         

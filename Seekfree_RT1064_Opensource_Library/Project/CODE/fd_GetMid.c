@@ -1409,12 +1409,12 @@ switch(Round_Status)
 
         if(Height_L>Height_R)
         {
-            Connect_pp(0,120,0,20,49);
+            Connect_pp(0,120,0,0,40);
             flag_Normal_Lose_L=1;
         }
         else if(Height_L<Height_R)
         {
-            Connect_pp(1,68,0,168,49);
+            Connect_pp(1,68,0,187,40);
             flag_Normal_Lose_R=1;
         }
     }

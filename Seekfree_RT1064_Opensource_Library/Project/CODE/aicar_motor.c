@@ -43,8 +43,10 @@ void aicar_motor_init()
 
 void aicar_motor_control(int32 motor1, int32 motor2)//1左2右,控制方法和hcar一样
 { 
-    motor1=-motor1;
-    motor2=-motor2;
+    int32 motor_temp=0;
+    motor_temp=motor2;
+    motor2=motor1;
+    motor1=motor_temp;
     if (motor1 >= 0)
     {
         gpio_set(DIR_1, 0);

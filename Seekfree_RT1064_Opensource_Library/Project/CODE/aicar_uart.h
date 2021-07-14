@@ -15,6 +15,7 @@ extern vuint8  uart_flag;                      //接收数据标志位
 
 extern vuint8 show_flag;                        //数据显示标志位
 extern vuint8 test_getdata;
+extern uint8 apriltag_delay;
 //函数
 void get_slave_data(uint8 data);
 void data_analysis(uint8 *line);

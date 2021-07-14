@@ -34,7 +34,7 @@ void PIT_IRQHandler(void)
     {
         PIT_FLAG_CLEAR(PIT_CH0);
         
-        encoder2 = qtimer_quad_get(QTIMER_1,QTIMER1_TIMER0_C0 );
+        encoder2 = -qtimer_quad_get(QTIMER_1,QTIMER1_TIMER0_C0 );
         encoder1 = -qtimer_quad_get(QTIMER_1,QTIMER1_TIMER2_C2 );
         qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER0_C0 );
         qtimer_quad_clear(QTIMER_1,QTIMER1_TIMER2_C2 );

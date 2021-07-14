@@ -425,6 +425,8 @@ void debug_apriltag()
 {
     find_apriltag();
     lcd_clear(BLACK);
+    aim_speed=0;
+    servo_duty=3850;
     pointer_page=MEAU_DEBUG;
     pointer_arrow=8;
 }
@@ -433,6 +435,8 @@ void debug_number()
 {
     sancha_stop();
     lcd_clear(BLACK);
+    aim_speed=0;
+    servo_duty=3850;
     pointer_page=MEAU_DEBUG;
     pointer_arrow=9;
 }
@@ -615,6 +619,14 @@ void gogogo_mix()
             key2_flag=0;
             aim_speed-=10;
         }     
+//开始判断apriltag        
+        if(apriltag_delay!=0)   apriltag_delay--;
+        if(apriltag_delay==0&&(temp_buff[1]==0x01||temp_buff[1]==0x02))//看到apriltag
+        {
+            find_apriltag();
+            apriltag_delay=50;
+        }
+//读取摄像头
         if(mt9v03x_csi_finish_flag)
         {      
             mt9v03x_csi_finish_flag = 0;

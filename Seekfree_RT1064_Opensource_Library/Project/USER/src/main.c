@@ -35,7 +35,3 @@ int main(void)
     aicar_gogogo();
 }
 
-  
-
-
-

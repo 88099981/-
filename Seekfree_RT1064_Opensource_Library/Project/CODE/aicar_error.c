@@ -140,7 +140,11 @@ void aicar_mix_error()
 
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
     }
-
+    if(flag_T_Road)
+    {
+        camera_error*=1.3;
+        ad_error*=0.7; 
+    }
     /*
     if(Round_Status==11 && RoundOutCount>30)
     {
