@@ -450,8 +450,11 @@ void sancha_stop()
 
 void find_apriltag()
 {
-    break_flag=1;
+    aim_speed=-5;
     servo_duty=3850;
+    systick_delay_ms(300);
+    break_flag=1;
+
     lcd_clear(BLACK);
     lcd_showstr(0,0,"apriltag_mode");    
     data_analysis(temp_buff);
