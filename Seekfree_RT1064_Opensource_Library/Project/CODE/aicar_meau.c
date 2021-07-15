@@ -674,9 +674,13 @@ void gogogo_mix()
             lcd_displayimage032_zoom(*copy_pix_img,PIX_IMG_X,PIX_IMG_Y, 128, 50);
         }
         
-        if(flag_Y_Road)
+        if(Y_Road_Status==1)
         {            
-            lcd_showstr(0,7,"Y_Road");
+            lcd_showstr(0,7,"Y_Road1");
+        }
+        else if(Y_Road_Status==2)
+        {
+            lcd_showstr(0,7,"Y_Road2");
         }
         else if(Round_Status)
         {
@@ -699,9 +703,11 @@ void gogogo_mix()
             lcd_showstr(0,7,"Normal");
         }
 
-        lcd_showstr(0,8,"Y_SUM:");
+        lcd_showstr(0,8,"Y_1:");
         lcd_showuint8(10*6,8,temp1);
         lcd_showuint8(10*10,8,temp2);
+        lcd_showstr(0,9,"Y_SUM:");
+        lcd_showuint16(10*5,9,sumincd.YRoad);
 //        lcd_showstr(0,9,"tag_num:");
 //        lcd_showuint8(10*6,8,temp1);
 //        lcd_showuint8(10*10,8,temp2);
