@@ -658,21 +658,21 @@ void gogogo_mix()
             Y_Change();
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
         }
-        else
-        {
-            uint8 temp;
-            for (uint8 i = 0; i < PIX_IMG_Y / 2; i++)
-            {
-                for (uint8 j = 0; j < PIX_IMG_X; j++)
-                {
-                    temp = copy_pix_img[i][j];
-                    copy_pix_img[i][j] = copy_pix_img[PIX_IMG_Y - i - 1][j];
-                    copy_pix_img[PIX_IMG_Y - i - 1][j] = temp;
-                }
-            }
-
-            lcd_displayimage032_zoom(*copy_pix_img,PIX_IMG_X,PIX_IMG_Y, 128, 50);
-        }
+//        else
+//        {
+//            uint8 temp;
+//            for (uint8 i = 0; i < PIX_IMG_Y / 2; i++)
+//            {
+//                for (uint8 j = 0; j < PIX_IMG_X; j++)
+//                {
+//                    temp = copy_pix_img[i][j];
+//                    copy_pix_img[i][j] = copy_pix_img[PIX_IMG_Y - i - 1][j];
+//                    copy_pix_img[PIX_IMG_Y - i - 1][j] = temp;
+//                }
+//            }
+//
+//            lcd_displayimage032_zoom(*copy_pix_img,PIX_IMG_X,PIX_IMG_Y, 128, 50);
+//        }
         
         if(flag_Y_Road)
         {            

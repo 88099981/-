@@ -346,7 +346,7 @@ void wait_animal()
 {
     use_time=0;
     systick_start();
-    while(use_time<3000)
+    while(use_time<2500)
     {
         lcd_showstr(0,0,"wait animal");
         lcd_showstr(0,1,"TIME:");    
@@ -414,7 +414,7 @@ void sancha_stop()
         use_time=0;
         systick_start();
         lcd_clear(BLACK);
-        while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<10000)
+        while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<3000)
         {
             break_flag=0;
             use_time = systick_getval_ms();//µÈ´ý

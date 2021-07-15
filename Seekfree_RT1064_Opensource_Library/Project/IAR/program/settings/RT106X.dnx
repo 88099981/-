@@ -28,7 +28,7 @@
         <EnableCache>1</EnableCache>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>719113984</Checksum>
+        <Checksum>3023834950</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -44,8 +44,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>993407791</CpuClock>
-        <SwoClock>706772256</SwoClock>
+        <CpuClock>696008061</CpuClock>
+        <SwoClock>560889384</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>
@@ -167,6 +167,15 @@
         <EventLSU>0</EventLSU>
         <EventSLEEP>0</EventSLEEP>
     </SWOTraceWindow>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
@@ -182,7 +191,7 @@
         <Bp8>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.126.5" 0 0 1 "" 0 "" 0</Bp8>
         <Bp9>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.237.22" 0 0 1 "" 0 "" 0</Bp9>
         <Bp10>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.257.5" 0 0 1 "" 0 "" 0</Bp10>
-        <Bp11>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.0.1" 0 0 1 "" 0 "" 0</Bp11>
+        <Bp11>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.465.1" 0 0 1 "" 0 "" 0</Bp11>
         <Bp12>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.296.5" 0 0 1 "" 0 "" 0</Bp12>
         <Bp13>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_meau.c}.597.5" 0 0 1 "" 0 "" 0</Bp13>
         <Bp14>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\fd_GetMid.c}.902.13" 0 0 1 "" 0 "" 0</Bp14>
@@ -190,15 +199,6 @@
         <Bp16>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.368.11" 0 0 1 "" 0 "" 0</Bp16>
         <Count>17</Count>
     </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </LogFile>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

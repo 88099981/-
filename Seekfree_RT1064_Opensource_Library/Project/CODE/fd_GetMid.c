@@ -1084,14 +1084,16 @@ uint8 Judge(void)
 
 
     //-------十字检测 <head>--------//
+    
     if(CrossInCount && Round_Status<=4)
     {
         Round_Status=0;
     }
-
+    
     if(!flag_T_Road && (Round_Status<=5) && EdgeNum>=IMG_Y*0.6)
     {   
-        if(Feature_Verify_Color(0,23,187,3,White,90))
+        //if(Feature_Verify_Color(0,23,187,3,White,90))
+        if(img[49][94])
         {
             flag_Cross=1;
             CrossInCount=10;
@@ -1192,29 +1194,33 @@ uint8 Judge(void)
 
             break;
         case 5:
-            if(Feature_Verify_Mark(49,10,12,5,Mark_AprilTag,85))
+            if(Feature_Verify_Mark(49,10,8,3,Mark_Lane,30))
             {
                 Round_Status=7;
+                /*
                 yuanhuan_status56++;
                 if(yuanhuan_status56>=3)
                 {
                     Round_Status=7;
                     yuanhuan_status56=0;
                 }
+                */
             }
 
             flag_Normal_Lose_L=1;   //否则在大环内容易晃
             break;
 
         case 6:
-            if(Feature_Verify_Mark(0,10,12,5,Mark_AprilTag,85))
+            if(Feature_Verify_Mark(10,10,8,3,Mark_Lane,30))
             {
+                /*
                 yuanhuan_status56++;
                 if(yuanhuan_status56>=3)
                 {
                     Round_Status=8;
                     yuanhuan_status56=0;
                 }
+                */
                 Round_Status=8;
             }
             
@@ -1333,6 +1339,8 @@ uint8 Judge(void)
         {
             flag_AprilTag=1;
             AprilTagInCount=50;
+            aim_speed=-5;
+            systick_delay_ms(1500);
             break_flag=1;
             //find_apriltag();
             bb_time=20;
