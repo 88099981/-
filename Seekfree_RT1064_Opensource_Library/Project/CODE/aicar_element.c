@@ -17,6 +17,8 @@ vuint8 ruhuan=0,chuhuan=0;
 vuint8 chuhuan_delay=0;
 vuint8 ruhuan_delay=0;
 vuint8 ruhuan_turn=20;//打角时间
+vuint8 sancha_already_l=0;
+vuint8 sancha_already_r=0;
 
 uint8 hd_in=HD_IN,hd_out=HD_OUT;
 uint8 hd_in_delay=HD_IN_DELAY,hd_out_delay=HD_OUT_DELAY;
@@ -312,6 +314,7 @@ void servo_l_turn()
     lcd_clear(BLACK);
     servo_duty=3850;
     aim_speed=SPEED_SET;
+    sancha_already_l=1;    
 }
 
 void servo_r_turn()
@@ -335,6 +338,7 @@ void servo_r_turn()
     uart_putchar(USART_1,uart_send);
     lcd_clear(BLACK);
     aim_speed=SPEED_SET;
+    sancha_already_r=1;
 }
 
 
@@ -393,44 +397,55 @@ void shot_fruit()
 
 void sancha_stop()
 {
-    uart_send = 0xB0;
-    uart_putchar(USART_1,uart_send);
-    break_flag=1;
-    uart_flag=E_START;
-    use_time=0;
-    systick_start();
-    lcd_clear(BLACK);
-    while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<10000)
+    if(sancha_already_l)
     {
-        break_flag=0;
-        use_time = systick_getval_ms();//等待
-        servo_duty=3850;
-        aim_speed=5;
-        lcd_showstr(0,1,"temp1:");    
-        lcd_showuint8(10*8,1,temp_buff[0]);
-        lcd_showstr(0,2,"temp2:");
-        lcd_showuint8(10*8,2,temp_buff[1]);
-        lcd_showstr(0,3,"temp3:");
-        lcd_showuint8(10*8,3,temp_buff[2]);
-        lcd_showstr(0,4,"temp4:");
-        lcd_showuint8(10*8,4,temp_buff[3]);
-        lcd_showstr(0,5,"temp5:");
-        lcd_showuint8(10*8,5,temp_buff[4]);
-        lcd_showstr(0,6,"temp6:");
-        lcd_showuint8(10*8,6,temp_buff[5]);
+        servo_r_turn();
     }
-    break_flag=1;
-    lcd_clear(BLACK);
-    bb_time=12;
-    if(magic_mode)
+    else if(sancha_already_r)
     {
-        switch (magic_data[1]){
-        case SERVO_LEFT: servo_l_turn();break;
-        case SERVO_RIGHT: servo_r_turn();break;
+        servo_l_turn();
+    }
+    else
+    {
+        uart_send = 0xB0;
+        uart_putchar(USART_1,uart_send);
+        break_flag=1;
+        uart_flag=E_START;
+        use_time=0;
+        systick_start();
+        lcd_clear(BLACK);
+        while((temp_buff[2]!=0x03&&temp_buff[2]!=0x04)&&use_time<10000)
+        {
+            break_flag=0;
+            use_time = systick_getval_ms();//等待
+            servo_duty=3850;
+            aim_speed=5;
+            lcd_showstr(0,1,"temp1:");    
+            lcd_showuint8(10*8,1,temp_buff[0]);
+            lcd_showstr(0,2,"temp2:");
+            lcd_showuint8(10*8,2,temp_buff[1]);
+            lcd_showstr(0,3,"temp3:");
+            lcd_showuint8(10*8,3,temp_buff[2]);
+            lcd_showstr(0,4,"temp4:");
+            lcd_showuint8(10*8,4,temp_buff[3]);
+            lcd_showstr(0,5,"temp5:");
+            lcd_showuint8(10*8,5,temp_buff[4]);
+            lcd_showstr(0,6,"temp6:");
+            lcd_showuint8(10*8,6,temp_buff[5]);
         }
-    }
-    else if(temp_buff[2]==0x03||temp_buff[2]==0x04)    data_analysis(temp_buff);
-    else servo_l_turn();
+        break_flag=1;
+        lcd_clear(BLACK);
+        bb_time=12;
+        if(magic_mode)
+        {
+            switch (magic_data[1]){
+            case SERVO_LEFT: servo_l_turn();break;
+            case SERVO_RIGHT: servo_r_turn();break;
+            }
+        }
+        else if(temp_buff[2]==0x03||temp_buff[2]==0x04)    data_analysis(temp_buff);
+        else servo_l_turn();
+        }
 }
 
 void find_apriltag()
