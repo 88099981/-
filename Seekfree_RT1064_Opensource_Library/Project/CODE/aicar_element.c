@@ -17,8 +17,8 @@ vuint8 ruhuan=0,chuhuan=0;
 vuint8 chuhuan_delay=0;
 vuint8 ruhuan_delay=0;
 vuint8 ruhuan_turn=20;//打角时间
-vuint8 sancha_already_l=0;
-vuint8 sancha_already_r=0;
+vuint8 sancha_already=0;//选方向，1左2右
+
 
 uint8 hd_in=HD_IN,hd_out=HD_OUT;
 uint8 hd_in_delay=HD_IN_DELAY,hd_out_delay=HD_OUT_DELAY;
@@ -314,7 +314,7 @@ void servo_l_turn()
     lcd_clear(BLACK);
     servo_duty=3850;
     aim_speed=SPEED_SET;
-    sancha_already_l=1;    
+    sancha_already=1;    
 }
 
 void servo_r_turn()
@@ -338,7 +338,7 @@ void servo_r_turn()
     uart_putchar(USART_1,uart_send);
     lcd_clear(BLACK);
     aim_speed=SPEED_SET;
-    sancha_already_r=1;
+    sancha_already=2;
 }
 
 
@@ -397,11 +397,11 @@ void shot_fruit()
 
 void sancha_stop()
 {
-    if(sancha_already_l)
+    if(sancha_already==1)
     {
         servo_r_turn();
     }
-    else if(sancha_already_r)
+    else if(sancha_already==2)
     {
         servo_l_turn();
     }
@@ -460,5 +460,5 @@ void find_apriltag()
 void sort_animalorfruit()
 {
     if(temp_buff[3] == 0x05)    wait_animal();
-    else if(temp_buff[3] == 0x06)   shot_fruit();
+    else if(temp_buff[3] == 0x06)   wait_animal();//shot_fruit();射水果不稳定
 }

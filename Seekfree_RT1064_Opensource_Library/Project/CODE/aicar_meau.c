@@ -525,17 +525,18 @@ void gogogo_adc()
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
-    
+
     if(meau_garage_mode==GARAGE_LEFT)//车库标志位，左1右2
         aicar_left_garage_out();
     else if(meau_garage_mode==GARAGE_RIGHT)
         aicar_right_garage_out();
-    
+
+
     while(key4_flag!=1)
     {
         aicar_key_get();//按键检测
         aicar_switch_get();//拨码开关
-        aicar_adc_get();
+        aicar_adc_get();//停车用
         if(key1_flag)
         {
             key1_flag=0;
@@ -545,28 +546,95 @@ void gogogo_adc()
         {
             key2_flag=0;
             aim_speed-=10;
-        }     
+        }
+//开始判断apriltag
+        if(apriltag_delay!=0)   apriltag_delay--;
+        if(apriltag_delay==0&&(temp_buff[1]==0x01||temp_buff[1]==0x02))//看到apriltag
+        {
+            find_apriltag();
+            apriltag_delay=50;
+        }
+//读取摄像头
+        if(mt9v03x_csi_finish_flag)
+        {
+            mt9v03x_csi_finish_flag = 0;
+            mv_image_to_img2();//copy
+            binary_img();
+            Search();
+        }
+        //aicar_huandao();//环岛由摄像头给出
         aicar_adc_error();
-        
-        if(sw1_status==1)
-            aicar_chasu();
-        else
-            aicar_n_chasu();
+
+        aicar_chasu();
+
         lcd_showstr(0,3,"aim_speed:");
         lcd_showint16(10*8,3,aim_speed);
-        lcd_showstr(0,4,"chasu:");
-        lcd_showuint8(10*8,4,sw1_status);
-        lcd_showstr(0,5,"RoundStatus:");
-        lcd_showuint8(10*10,5,Round_Status);
-        lcd_showstr(0,6,"RoundIN:");
-        lcd_showuint8(10*10,6,RoundInCount);
-        lcd_showstr(0,7,"RoundOUT:");
-        lcd_showuint8(10*10,7,RoundOutCount);
+        lcd_showstr(0,4,"RoundStatus:");
+        lcd_showuint8(10*10,4,Round_Status);
+        lcd_showstr(0,5,"RoundIN:");
+        lcd_showuint8(10*10,5,RoundInCount);
+        lcd_showstr(0,6,"RoundOUT:");
+        lcd_showuint8(10*10,6,RoundOutCount);
         if(sw2_status==1)
         {
             Y_Change();
             lcd_displayimage032_zoom(img[0], MT9V03X_CSI_W, MT9V03X_CSI_H, 128, 50);
-        } 
+            if(Y_Road_Status==1)
+            {
+                lcd_showstr(0,7,"Y_Road1");
+            }
+            else if(Y_Road_Status==2)
+            {
+                lcd_showstr(0,7,"Y_Road2");
+            }
+            else if(Round_Status)
+            {
+                lcd_showstr(0,7,"Round");
+            }
+            else if(flag_Garage_L || flag_Garage_R)
+            {
+                lcd_showstr(0,7,"Garage");
+            }
+            else if(flag_Cross)
+            {
+                lcd_showstr(0,7,"Cross");
+            }
+            else if(flag_AprilTag)
+            {
+                lcd_showstr(0,7,"A_Tag");
+            }
+            else
+            {
+                lcd_showstr(0,7,"Normal");
+            }
+
+            lcd_showstr(0,8,"Y_1:");
+            lcd_showuint8(10*6,8,temp1);
+            lcd_showuint8(10*10,8,temp2);
+            lcd_showstr(0,9,"Y_SUM:");
+            lcd_showuint16(10*5,9,sumincd.YRoad);
+            }
+//        else
+//        {
+//            uint8 temp;
+//            for (uint8 i = 0; i < PIX_IMG_Y / 2; i++)
+//            {
+//                for (uint8 j = 0; j < PIX_IMG_X; j++)
+//                {
+//                    temp = copy_pix_img[i][j];
+//                    copy_pix_img[i][j] = copy_pix_img[PIX_IMG_Y - i - 1][j];
+//                    copy_pix_img[PIX_IMG_Y - i - 1][j] = temp;
+//                }
+//            }
+//
+//            lcd_displayimage032_zoom(*copy_pix_img,PIX_IMG_X,PIX_IMG_Y, 128, 50);
+//        }
+
+
+//        lcd_showstr(0,9,"tag_num:");
+//        lcd_showuint8(10*6,8,temp1);
+//        lcd_showuint8(10*10,8,temp2);
+
 //        lcd_showstr(0,2,"bk_flag:");
 //        lcd_showuint8(12*8,2,break_flag);
 //        lcd_showstr(0,4,"kp_ad:");
@@ -582,13 +650,31 @@ void gogogo_adc()
         {
             lcd_clear(BLACK);
             pointer_page=MEAU_GOGOGO;
-            pointer_arrow=1;
+            pointer_arrow=0;
         }
     }
-    break_flag=1;
-    key4_flag=0;
-    aim_speed=0;
-    servo_duty=3850;
+    //        lcd_showstr(0,2,"bk_flag:");
+    //        lcd_showuint8(12*8,2,break_flag);
+    //        lcd_showstr(0,4,"kp_ad:");
+    //        lcd_showfloat(12*8,4,kp_ad,3,2);
+    //        lcd_showstr(0,5,"kd_ad:");
+    //        lcd_showfloat(12*8,5,kd_ad,3,2);
+    //        lcd_showstr(0,6,"left:");
+    //        lcd_showint16(12*8,6,left_motor);
+    //        lcd_showstr(0,7,"right:");
+    //        lcd_showint16(12*8,7,right_motor);
+            //aicar_chasu_printf();
+    if (key4_flag)
+    {
+        lcd_clear(BLACK);
+        pointer_page = MEAU_GOGOGO;
+        pointer_arrow = 1;
+    }
+    
+    break_flag = 1;
+    key4_flag = 0;
+    aim_speed = 0;
+    servo_duty = 3850;
 }
 
 
