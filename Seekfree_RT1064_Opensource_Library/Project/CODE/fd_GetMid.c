@@ -1192,8 +1192,9 @@ uint8 Judge(void)
 
             break;
         case 5:
-            if(ad_value_all>Round_ad_limit-70)
+            if(Feature_Verify_Mark(49,10,12,5,Mark_AprilTag,85))
             {
+                Round_Status=7;
                 yuanhuan_status56++;
                 if(yuanhuan_status56>=3)
                 {
@@ -1206,14 +1207,15 @@ uint8 Judge(void)
             break;
 
         case 6:
-            if(ad_value_all>Round_ad_limit-70)
+            if(Feature_Verify_Mark(0,10,12,5,Mark_AprilTag,85))
             {
                 yuanhuan_status56++;
                 if(yuanhuan_status56>=3)
                 {
-                    Round_Status=7;
+                    Round_Status=8;
                     yuanhuan_status56=0;
                 }
+                Round_Status=8;
             }
             
             flag_Normal_Lose_R=1;
