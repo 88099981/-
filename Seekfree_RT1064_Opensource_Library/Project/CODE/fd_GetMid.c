@@ -79,7 +79,6 @@ void init(void)
 
     flag_Normal_Lose_L=0;
     flag_Normal_Lose_R=0;
-    flag_AprilTag_ARM=0;
     flag_AprilTag=0;
     flag_Straight=0;
     sumincd.AprilTag=0;
