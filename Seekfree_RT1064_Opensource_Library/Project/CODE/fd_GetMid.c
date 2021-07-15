@@ -1079,6 +1079,15 @@ uint8 Judge_MOD1(void)
             aim_speed=-5;
             systick_delay_ms(1500);
             break_flag=1;
+            systick_delay_ms(2000);
+            if(apriltag_delay!=0)   apriltag_delay--;
+            if(apriltag_delay==0&&(temp_buff[1]==0x01||temp_buff[1]==0x02))//¿´µ½apriltag
+            {
+                find_apriltag();
+                apriltag_delay=50;
+            }
+            aim_speed=SPEED_SET;
+            break_flag=0;
             //find_apriltag();
             bb_time=20;
         }
