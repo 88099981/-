@@ -129,11 +129,6 @@ uint8 get_ostu_thres()
 		i=bisection_right;
 	}
 
-	 if(i<180)	//оч╥Ы
-	 {
-		 i=180;
-	 }
-
 	return i;
 }
 
