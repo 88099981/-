@@ -111,34 +111,50 @@ void aicar_mix_error()
     ad_right=ad_value4*0.7+ad_value5*0.3;
     ad_error=(ad_left-ad_right)*100/(ad_left+ad_right);
 
-    if(Round_Status==3 || Round_Status==5)
-    {
-        ad_left=ad_value1*0.6;  //图像扭不过电感，所以给电感加些偏差
-        ad_right=ad_value6*0.4;
-
-        ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
-    }
-    else if(Round_Status==4 || Round_Status==6)
-    {
-        ad_left=ad_value1*0.4;  //图像扭不过电感，所以给电感加些偏差
-        ad_right=ad_value6*0.6;
-
-        ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
-    }
-
-    if(Round_Status==9)
+    if( Round_Status==3)
     {
         ad_left=ad_value1*0.7;  //图像扭不过电感，所以给电感加些偏差
         ad_right=ad_value6*0.3;
 
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
     }
-    else if(Round_Status==10)
+    else if( Round_Status==4)
     {
         ad_left=ad_value1*0.3;  //图像扭不过电感，所以给电感加些偏差
         ad_right=ad_value6*0.7;
 
         ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
+    }
+    if( Round_Status==5)
+    {
+        ad_left=ad_value3*0.5;  //图像扭不过电感，所以给电感加些偏差
+        ad_right=ad_value4*0.5;
+
+        ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
+    }
+    else if( Round_Status==6)
+    {
+        ad_left=ad_value3*0.5;  //图像扭不过电感，所以给电感加些偏差
+        ad_right=ad_value4*0.5;
+
+        ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
+    }
+
+    if(Round_Status==9)
+    {
+        ad_left=ad_value3*0.7;  //图像扭不过电感，所以给电感加些偏差
+        ad_right=ad_value4*0.3;
+
+        ad_error=(ad_left-ad_right)*200/(ad_left+ad_right); 
+        camera_error=0;
+    }
+    else if(Round_Status==10)
+    {
+        ad_left=ad_value3*0.3;  //图像扭不过电感，所以给电感加些偏差
+        ad_right=ad_value4*0.7;
+
+        ad_error=(ad_left-ad_right)*200/(ad_left+ad_right);
+        camera_error=0;
     }
     if(flag_T_Road)
     {

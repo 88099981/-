@@ -1,6 +1,7 @@
 #include "fd_GetMid.h"
 
 //data
+uint8 yuanhuan_status56;//状态78计数变量
 uint8 temp1; //调试时使用的全局变量
 uint8 temp2; //调试时使用的全局变量
 uint8 img[IMG_Y][IMG_X];
@@ -22,6 +23,7 @@ uint16 RoundInCount=0; //入环计数
 uint8 RoundOutCount=0;
 uint8 YRoadInCount=0;
 uint8 CrossInCount=0;
+uint8 AprilTagInCount=0;
 uint16 SumInCD=0;   //连通域内点个数(像素化后)
 SUMINCD sumincd={0,0};
 
@@ -913,6 +915,11 @@ uint8 Judge(void)
     {
         CrossInCount--;
     }
+    
+    if(AprilTagInCount)
+    {
+        AprilTagInCount--;
+    }
 
     //-------状态整理 <bottom>--------//
 
@@ -1040,7 +1047,7 @@ uint8 Judge(void)
         if(Feature_Verify_Color(0,23,187,3,White,90))
         {
             flag_Cross=1;
-            CrossInCount=15;
+            CrossInCount=10;
             return 1;
         }
         /*
@@ -1085,11 +1092,11 @@ uint8 Judge(void)
         case 1:
             if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black,90))
             {
-                if(ad_value_all<Round_ad_limit)
-                {
-                    Round_Status=0;
-                    break;
-                }
+//                if(ad_value_all<Round_ad_limit)
+//                {
+//                    Round_Status=0;
+//                    break;
+//                }
 
                 Round_Status=3;
             }
@@ -1098,11 +1105,11 @@ uint8 Judge(void)
         case 2:
             if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black,90))
             {
-                if(ad_value_all<Round_ad_limit)
-                {
-                    Round_Status=0;
-                    break;
-                }
+//                if(ad_value_all<Round_ad_limit)
+//                {
+//                    Round_Status=0;
+//                    break;
+//                }
 
                 Round_Status=4;
             }
@@ -1138,18 +1145,28 @@ uint8 Judge(void)
 
             break;
         case 5:
-            if(ad_value_all>Round_ad_limit-50)
+            if(ad_value_all>Round_ad_limit-70)
             {
-                Round_Status=7;
+                yuanhuan_status56++;
+                if(yuanhuan_status56>=3)
+                {
+                    Round_Status=7;
+                    yuanhuan_status56=0;
+                }
             }
 
             flag_Normal_Lose_L=1;   //否则在大环内容易晃
             break;
 
         case 6:
-            if(ad_value_all>Round_ad_limit-50)
+            if(ad_value_all>Round_ad_limit-70)
             {
-                Round_Status=8;
+                yuanhuan_status56++;
+                if(yuanhuan_status56>=3)
+                {
+                    Round_Status=7;
+                    yuanhuan_status56=0;
+                }
             }
             
             flag_Normal_Lose_R=1;
@@ -1251,11 +1268,14 @@ uint8 Judge(void)
 
 
     //------AprilTag检测 <head>---------//
-    if(!Round_Status && !flag_Y_Road)   //更改以排除互斥元素 例：if(!Round_Status)
+    if(!AprilTagInCount && !Round_Status && !flag_Y_Road)   //更改以排除互斥元素 例：if(!Round_Status)
     {
         if(sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
         {
             flag_AprilTag=1;
+            AprilTagInCount=50;
+            break_flag=1;
+            //find_apriltag();
             bb_time=20;
         }
     }

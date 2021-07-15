@@ -351,6 +351,8 @@ void wait_animal()
     }
     uart_send = 0x0C;
     uart_putchar(USART_1,uart_send);
+    temp_buff[1]=0x00;
+    temp_buff[3]=0x00;
     aicar_holder_control(3850);
     aim_speed=SPEED_SET;
     break_flag=0;
@@ -381,6 +383,8 @@ void shot_fruit()
     pwm_duty(S_MOTOR3_PIN,0);
     uart_send = 0x0D;
     uart_putchar(USART_1,uart_send);
+    temp_buff[1]=0x00;
+    temp_buff[3]=0x00;
     aicar_holder_control(3850);
     aim_speed=SPEED_SET;
     break_flag=0;
