@@ -6,13 +6,16 @@
 uint8 yuanhuan_status56;//状态78计数变量
 uint8 temp1; //调试时使用的全局变量
 uint8 temp2; //调试时使用的全局变量
+//-------------------模式变量------------------//
+SEARCH_STRATEGY Search_Strategy=MOD1;  //default MOD1
+//-------------------图像数据------------------//
 uint8 img[IMG_Y][IMG_X];
 uint8 pix_img[PIX_IMG_Y][PIX_IMG_X];
 uint8 copy_pix_img[PIX_IMG_Y][PIX_IMG_X];
 //-------------------计算变量------------------//
 const DIRECTION Direction_4[]={{-1,0},{1,0},{0,1},{0,-1}};                                //4连通域偏移值
 const DIRECTION Direction_8[]={{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0}};    //8连通域偏移值
-//-------------------图像数据------------------//
+//-------------------边沿数据------------------//
 EDGE edge[EDGE_MAX];      //边界结构体数组 边界数值为0的时候为丢边
 ANGLE angle[EDGE_MAX];    //边沿角度数组
 int16 mid[EDGE_MAX];      //中线数组
@@ -22,6 +25,7 @@ uint8 MidStart=IMG_X/2;   //底边搜索起始点横坐标
 uint16 Round_ad_limit=600;  //入环ad阈值
 uint16 Croess_ad_limit=120;
 uint16 YRoad_ad_limit=30;
+uint16 YRoad_SumInCD_Limit=200;   //Y—Road第二阶段中顶部黑区连通域面积
 uint8 Garage_Rule=2;    //圈数 预设为2圈
 //-------------------计数变量------------------//
 uint16 RoundInCount=0; //入环计数
@@ -1027,7 +1031,7 @@ uint8 Judge_MOD1(void)
 
             int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
 
-            if(SumInCD_YRoad[1]>=200)
+            if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
             {
                 Y_Road_Status=2;
             }
@@ -1221,7 +1225,7 @@ uint8 Judge_MOD2(void)
 
             int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
 
-            if(SumInCD_YRoad[1]>=200)
+            if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
             {
                 Y_Road_Status=2;
             }
@@ -1279,7 +1283,7 @@ uint8 Judge_MOD2(void)
 
 
 
-    //------环岛检测 <head>---------//
+    //------环岛检测 MOD2 <head>---------//
 
     switch(Round_Status)
     {
@@ -1358,57 +1362,6 @@ uint8 Judge_MOD2(void)
 
             flag_Normal_Lose_R=1;
 
-            break;
-        case 5:
-            if(Feature_Verify_Mark(49,10,8,3,Mark_Lane,30))
-            {
-                Round_Status=7;
-                /*
-                yuanhuan_status56++;
-                if(yuanhuan_status56>=3)
-                {
-                    Round_Status=7;
-                    yuanhuan_status56=0;
-                }
-                */
-            }
-
-            flag_Normal_Lose_L=1;   //否则在大环内容易晃
-            break;
-
-        case 6:
-            if(Feature_Verify_Mark(10,10,8,3,Mark_Lane,30))
-            {
-                /*
-                yuanhuan_status56++;
-                if(yuanhuan_status56>=3)
-                {
-                    Round_Status=8;
-                    yuanhuan_status56=0;
-                }
-                */
-                Round_Status=8;
-            }
-            
-            flag_Normal_Lose_R=1;
-            break;
-
-        case 7:
-            if(1)
-            {
-                Round_Status=9;
-
-                flag_Normal_Lose_L=1;
-            }
-            break;
-
-        case 8:
-            if(1)
-            {
-                Round_Status=10;
-
-                flag_Normal_Lose_R=1;
-            }
             break;
 
         case 9:
@@ -1673,7 +1626,7 @@ uint8 Judge_MOD3(void)
 
             int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
 
-            if(SumInCD_YRoad[1]>=200)
+            if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
             {
                 Y_Road_Status=2;
             }
@@ -1718,21 +1671,13 @@ uint8 Judge_MOD3(void)
             CrossInCount=10;
             return 1;
         }
-        /*
-        else if(ad_value1>=120 && ad_value6>=120)
-        {
-            flag_Cross=1;
-            CrossInCount=15;
-            return 1;
-        }
-        */
     }
     //-------十字检测 <bottom>--------//
 
 
 
 
-    //------环岛检测 <head>---------//
+    //------环岛检测 MOD3 <head>---------//
 
     switch(Round_Status)
     {
@@ -1760,11 +1705,7 @@ uint8 Judge_MOD3(void)
         case 1:
             if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black,90))
             {
-//                if(ad_value_all<Round_ad_limit)
-//                {
-//                    Round_Status=0;
-//                    break;
-//                }
+
 
                 Round_Status=3;
             }
@@ -1773,11 +1714,7 @@ uint8 Judge_MOD3(void)
         case 2:
             if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black,90))
             {
-//                if(ad_value_all<Round_ad_limit)
-//                {
-//                    Round_Status=0;
-//                    break;
-//                }
+
 
                 Round_Status=4;
             }
@@ -1816,14 +1753,6 @@ uint8 Judge_MOD3(void)
             if(Feature_Verify_Mark(49,10,8,3,Mark_Lane,30))
             {
                 Round_Status=7;
-                /*
-                yuanhuan_status56++;
-                if(yuanhuan_status56>=3)
-                {
-                    Round_Status=7;
-                    yuanhuan_status56=0;
-                }
-                */
             }
 
             flag_Normal_Lose_L=1;   //否则在大环内容易晃
@@ -1832,14 +1761,6 @@ uint8 Judge_MOD3(void)
         case 6:
             if(Feature_Verify_Mark(10,10,8,3,Mark_Lane,30))
             {
-                /*
-                yuanhuan_status56++;
-                if(yuanhuan_status56>=3)
-                {
-                    Round_Status=8;
-                    yuanhuan_status56=0;
-                }
-                */
                 Round_Status=8;
             }
             
@@ -1865,15 +1786,6 @@ uint8 Judge_MOD3(void)
             break;
 
         case 9:
-            /*
-            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
-            {
-                Round_Status=10;
-
-                RoundOutCount=40;
-                flag_Normal_Lose_L=1;
-            }
-            */
 
             if(!RoundOutCount && Feature_Verify_Color(84,30,20,19,White,80))
             {
@@ -1885,15 +1797,6 @@ uint8 Judge_MOD3(void)
             break;
 
         case 10:
-            /*
-            if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
-            {
-                Round_Status=11;
-                RoundOutCount=40;
-                flag_Normal_Lose_R=1;
-            }
-            break;
-            */
 
             if(!RoundOutCount && Feature_Verify_Color(84,30,20,19,White,80))
             {
@@ -2351,7 +2254,7 @@ void Search(void)
 
 
     //-------------------判断部分 <head>---------------//
-    switch(1)
+    switch(Search_Strategy)
     {
         case 1:
             Judge_MOD1();

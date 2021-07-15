@@ -52,6 +52,13 @@ typedef struct
     uint16 YRoad;
 }SUMINCD;
 
+typedef enum
+{
+    MOD1=1,
+    MOD2=2,
+    MOD3=3,
+}SEARCH_STRATEGY;
+
 //function
 void init(void);    //各种变量初始化函数
 void Y_Change(void);    //改成一般的直角坐标系形式，要不然贼不爽
@@ -85,6 +92,7 @@ void Print_Mid(void);   //绘画中线
 void Search(void);  //主函数
 
 //data
+extern SEARCH_STRATEGY Search_Strategy;
 extern uint8 temp1;
 extern uint8 temp2;
 extern uint8 img[IMG_Y][IMG_X];
