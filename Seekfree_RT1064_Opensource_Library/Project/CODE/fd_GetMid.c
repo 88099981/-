@@ -76,10 +76,8 @@ void init(void)
     flag_Indct_Help_Me=0;
     flag_Straight_L=0;
     flag_Straight_R=0;
-
     flag_Normal_Lose_L=0;
     flag_Normal_Lose_R=0;
-    flag_AprilTag_ARM=0;
     flag_AprilTag=0;
     flag_Straight=0;
     sumincd.AprilTag=0;
@@ -846,7 +844,9 @@ uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color)
         }
     }
 
-    if(SeedFound)
+    if(Jump_L)
+
+    if(SeedFound && Jump_L*Jump_R!=0)
         return((uint8)((Jump_R+Jump_L)*0.5));
     else
         return 31;
@@ -1317,7 +1317,17 @@ uint8 Judge(void)
     //------AprilTag检测 <head>---------//
     if(!AprilTagInCount && !Round_Status && !flag_Y_Road)   //更改以排除互斥元素 例：if(!Round_Status)
     {
-        if(sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
+        uint8 AprilTag_Mark_Base=0;
+
+        for(uint8 i=0;i<=PIX_IMG_X;i--)
+        {
+            if(copy_pix_img[0][i]==Mark_AprilTag)
+            {
+                AprilTag_Mark_Base++;
+            }
+        }
+
+    if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
         {
             flag_AprilTag=1;
             AprilTagInCount=50;

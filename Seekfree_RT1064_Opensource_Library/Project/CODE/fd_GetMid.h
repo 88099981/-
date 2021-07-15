@@ -107,7 +107,6 @@ extern uint8 flag_Normal_Lose_L;
 extern uint8 flag_Normal_Lose_R;
 extern uint8 flag_Garage_L;
 extern uint8 flag_Garage_R;
-extern uint8 flag_AprilTag_ARM;
 extern uint8 flag_AprilTag;
 
 //----¹ÊÕÏ/¸¨Öú±êÖ¾----//
