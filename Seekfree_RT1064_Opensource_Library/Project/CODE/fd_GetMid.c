@@ -848,8 +848,8 @@ uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color)
 
     if(SeedFound && Jump_L*Jump_R!=0)
         return((uint8)((Jump_R+Jump_L)*0.5));
-    else
-        return 31;
+    
+    return 31;
 
 }
 
@@ -1319,9 +1319,9 @@ uint8 Judge(void)
     {
         uint8 AprilTag_Mark_Base=0;
 
-        for(uint8 i=0;i<=PIX_IMG_X;i--)
+        for(uint8 i=0;i<PIX_IMG_X;i++)
         {
-            if(copy_pix_img[0][i]==Mark_AprilTag)
+            if(copy_pix_img[1][i]==Mark_AprilTag)
             {
                 AprilTag_Mark_Base++;
             }
