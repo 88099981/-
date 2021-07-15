@@ -17,6 +17,7 @@ uint8 EdgeLoseNum;   //丢边数                           【单帧初始化】
 int16 mid[EDGE_MAX];    //TODO 确定中线数组所需大小      【单帧初始化】
 uint8 MidStart=IMG_X/2;   //底边搜索起始点横坐标
 uint16 Round_ad_limit=600;  //入环ad阈值
+uint8 Garage_Rule=2;    //圈数 预设为2圈
 uint16 Croess_ad_limit=120;
 uint32 RunningCount=0;
 uint16 RoundInCount=0; //入环计数
@@ -24,6 +25,7 @@ uint8 RoundOutCount=0;
 uint8 YRoadInCount=0;
 uint8 CrossInCount=0;
 uint8 AprilTagInCount=0;
+uint8 GarageInCount=0;
 uint16 SumInCD=0;   //连通域内点个数(像素化后)
 SUMINCD sumincd={0,0};
 
@@ -48,9 +50,9 @@ uint8 flag_Cross=0;    //十字                 【单帧初始化】
 uint8 Round_Status=0; //0啥事没有 1第一次看到环口 3看到黑区且电感大于阈值 5第二次看到环口 7环内 9出环 (同理右为偶)
 uint8 flag_Normal_Lose_L=0;   //一般丢左边                 【单帧初始化】
 uint8 flag_Normal_Lose_R=0;   //一般丢右边                 【单帧初始化】
+uint8 flag_Garage_ARM=0;
 uint8 flag_Garage_L=0;        //车库在左侧
 uint8 flag_Garage_R=0;        //车库在右侧
-uint8 flag_AprilTag_ARM=0;    //AprilTag预位 置位后进入AprilTag判断函数（判断存在 【单帧初始化】
 uint8 flag_AprilTag=0;        //AprilTag存在                                     【单帧初始化】
 
 //--------------------------------故障/辅助标志------------------------------//
@@ -735,6 +737,40 @@ uint8 Feature_Verify_Box(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 thickness,u
 }
 
 
+//特征比较函数(Mark) 用于按照不同连通域的标记进行比较   //ATTENTION 该函数比较的是copy_pix_img
+uint8 Feature_Verify_Mark(uint8 T_x,uint8 T_y,uint8 dx,uint8 dy,uint8 Mark,float expect_rate)
+{
+    uint16 rate=0;
+    uint16 unexpect_rate=(uint16)(((100-expect_rate)/100)*(dx*dy));
+
+    if(T_y+dy>=PIX_IMG_Y || T_x+dx>=PIX_IMG_X)  //范围检查
+    {
+        return(101);
+    }
+
+    for(uint8 i=0;i<dy;i++)
+    {
+        for(uint8 j=0;j<dx;j++)
+        {
+            if(copy_pix_img[T_y+i][T_x+j]!=Mark)    //与特征数组/图像比较
+            {
+                rate++;
+
+                if(rate-unexpect_rate>0)  //快速模板匹配，不符特征个数超限时即退出
+                {
+                    return 0;
+                }
+                //img[T_y+i][T_x+j]=Gray;
+            }
+        }
+    }
+
+   return 1;    //运行到此处时说明已符合要求
+}
+
+
+
+
 
 //复制像素数组
 void Copy_pix_img(void)
@@ -921,6 +957,11 @@ uint8 Judge(void)
         AprilTagInCount--;
     }
 
+    if(GarageInCount)
+    {
+        GarageInCount--;
+    }
+
     //-------状态整理 <bottom>--------//
 
 
@@ -936,8 +977,14 @@ uint8 Judge(void)
 
 
     //------车库检测 <head>---------//
-    if(If_Garage())
+    if(!GarageInCount && If_Garage())
     {
+        if(flag_Garage_ARM<Garage_Rule-1)
+        {
+            flag_Garage_ARM++;
+            flag_Garage_L=0;
+            flag_Garage_R=0;
+        }
         return 1;
     }
     //------车库检测 <bottom>---------//
