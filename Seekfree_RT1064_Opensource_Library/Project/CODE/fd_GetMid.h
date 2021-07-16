@@ -19,7 +19,7 @@
 #define X_LIMIT 4   //横轴搜索边界
 #define EDGE_MAX IMG_Y//边界数组大小
 #define MID_RESOLUTION 20   //中线解析度 越小越接近原始数据
-#define CUR_RESOLUTION 10   //角度解析度 就是向量FA、FB中A_y-B_y的差值，过大会比较粗糙，过小会过于敏感，容易误判
+#define CUR_RESOLUTION 10   //角度解析度 借用于删去边沿数据中上下两部分
 
 #define ROUND_ARM_COUNT_TIMES 20
 
@@ -80,9 +80,7 @@ uint8 SetSeed_Lane(uint8 MidStart,uint8 EdgeNum);
 uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color);
 void FloodSeedFill(uint8 x,uint8 y,uint8 Old_Color,uint8 New_Color);
 uint8 If_Garage(void);  //车库查找  优先级大于环岛、十字/T字
-uint8 Judge_MOD1(void);   //状态判断
-uint8 Judge_MOD2(void);
-uint8 Judge_MOD3(void);
+uint8 Judge_MOD3(void); //状态判断
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
 uint8 If_Lose_Edge(void);    //丢边补全
