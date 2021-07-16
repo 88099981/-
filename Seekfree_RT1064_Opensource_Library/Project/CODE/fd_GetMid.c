@@ -98,8 +98,8 @@ void init(void)
     {
         edge[i].Lx=0;
         edge[i].Rx=IMG_X-1;
-        angle[i].L=180;
-        angle[i].R=180;
+        angle[i].L=-1;  //默认为π
+        angle[i].R=-1;
         mid[i]=0;
     }
 }
@@ -177,10 +177,8 @@ float Get_Angle(uint8 p1_y,uint8 p2_y,uint8 Target_y,uint8 l_or_r)
     cos=(FA_x*FB_x + FA_y*FB_y); //分子
     cos/=Cp_sqrt(FA_x*FA_x + FA_y*FA_y)*Cp_sqrt(FB_x*FB_x + FB_y*FB_y); //分母
 
-    return (acos(cos)*57.295); //转换成角度制输出 别忘记 <math.h>
+    return (cos);
 }
-
-
 
 
 void Del_Edge_Data(uint8 p1_y,uint8 p2_y)
@@ -589,27 +587,26 @@ uint8 Uni_Ver_Search(uint8 MidStart)
 
 void If_Straight(void)
 {
-    uint8 SearchTimesMax = EdgeNum - CUR_RESOLUTION; //最大搜索次数
 
-    flag_Straight_L = 1; //先假设为直道
-    flag_Straight_R = 1;
+    flag_Straight_L = 0; //先假设为直道
+    flag_Straight_R = 0;
 
-    for (uint8 i = 0; i < SearchTimesMax; i++) //ATTENTION 此种方法无法计算到最底下和最顶端CUR_RESOLUTION/2个边沿的角度
+    for (uint8 i = 0; i < EdgeNum; i++)
     {
-        angle[i].L = Get_Angle(i, i + CUR_RESOLUTION, i + CUR_RESOLUTION / 2, 1);
-        angle[i].R = Get_Angle(i, i + CUR_RESOLUTION, i + CUR_RESOLUTION / 2, 0);
+        angle[i].L = Get_Angle(0,EdgeNum-1, i, 1);
+        angle[i].R = Get_Angle(0,EdgeNum-1, i, 0);
     }
 
-    for (uint8 i = 0; i < SearchTimesMax; i++)
+    for (uint8 i = 0; i < EdgeNum; i++)
     {
-        if (angle[i].L <= 160) //以160度为界 180是标准直线
+        if (angle[i].L < -0.86) //以160度为界 180是标准直线
         {
-            flag_Straight_L = 0;
+            flag_Straight_L = 1;
         }
 
-        if (angle[i].R <= 160)
+        if (angle[i].R < -0.86)
         {
-            flag_Straight_R = 0;
+            flag_Straight_R = 1;
         }
     }
 }
@@ -972,7 +969,7 @@ uint8 Judge_MOD1(void)
 
 
     //------三岔检测 <head>---------//
-    if(sancha_wait_in<=0&&!sancha_wait_banma)
+    if(sancha_wait_in<=0 && !sancha_wait_banma)
     {
         switch(Y_Road_Status)
         {
@@ -1229,10 +1226,13 @@ uint8 Judge_MOD2(void)
                     //YRoadInCount=30;
                     //flag_Y_Road_IN=40;
                 }
-            }
 
-            SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-            SumInCD_YRoad[1]=sumincd.YRoad;
+                If_Straight();  //判断边沿是否直
+                if(flag_Straight_L || flag_Straight_R)
+                {
+                    Y_Road_Status=0;
+                }
+            }
             break;
 
         case 1:
@@ -1243,7 +1243,8 @@ uint8 Judge_MOD2(void)
 
             if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
             {
-                Y_Road_Status=2;
+                Y_Road_Status=2;    //入三岔
+                YRoadInCount=60;    //启用屏蔽
             }
             else if(YRoad_Diff<-20)
             {
@@ -1253,12 +1254,7 @@ uint8 Judge_MOD2(void)
             break;
 
         case 2:
-            if(flag_Y_Road_IN || YRoadInCount)
-            {
-                Y_Road_Status=0;
-            }
             break;
-
     }
 
     if(ad_value_all<=YRoad_ad_limit)
@@ -1295,223 +1291,6 @@ uint8 Judge_MOD2(void)
         */
     }
     //-------十字检测 <bottom>--------//
-
-
-
-
-    //------环岛检测 MOD2 <head>---------//
-
-    switch(Round_Status)
-    {
-        case 0:
-            if(flag_Y_Road || Feature_Verify_Color(83,9,20,40,Black,10))
-            {
-                break;
-            }
-        
-            if(!RoundOutCount && Feature_Verify_Color(10,10,50,8,White,90) && !Feature_Verify_Color(127,10,50,3,White,90))
-            {
-                Round_Status=1;
-
-                flag_Normal_Lose_L=1; //避免打偏
-            }
-            else if(!RoundOutCount && Feature_Verify_Color(127,10,50,8,White,90) && !Feature_Verify_Color(10,10,50,3,White,90))
-            {
-                Round_Status=2;
-
-                flag_Normal_Lose_R=1;
-            }
-        
-            break;
-
-        case 1:
-            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(0,10,20,10,Black,90))
-            {
-//                if(ad_value_all<Round_ad_limit)
-//                {
-//                    Round_Status=0;
-//                    break;
-//                }
-
-                Round_Status=3;
-            }
-            break;
-
-        case 2:
-            if(ad_value_all>Round_ad_limit && Feature_Verify_Color(167,10,20,10,Black,90))
-            {
-//                if(ad_value_all<Round_ad_limit)
-//                {
-//                    Round_Status=0;
-//                    break;
-//                }
-
-                Round_Status=4;
-            }
-            break;
-
-        case 3:
-            if(!RoundInCount && Feature_Verify_Color(0,10,50,10,White,90))
-            {
-                RoundInCount=25;
-            }
-
-            if(RoundInCount==1)
-            {
-                Round_Status=5;
-            }
-
-            flag_Normal_Lose_L=1;
-
-            break;
-
-        case 4:
-            if(!RoundInCount && Feature_Verify_Color(137,10,50,10,White,90))
-            {
-                RoundInCount=25;
-            }
-
-            if(RoundInCount==1)
-            {
-                Round_Status=6;
-            }
-
-            flag_Normal_Lose_R=1;
-
-            break;
-
-        case 9:
-            /*
-            if(!RoundOutCount && Feature_Verify_Color(0,10,50,10,White)>=90)
-            {
-                Round_Status=10;
-
-                RoundOutCount=40;
-                flag_Normal_Lose_L=1;
-            }
-            */
-
-            if(!RoundOutCount && Feature_Verify_Color(84,30,20,19,White,80))
-            {
-                Round_Status=11;
-
-                RoundOutCount=50;
-                flag_Normal_Lose_L=1;
-            }
-            break;
-
-        case 10:
-            /*
-            if(!RoundOutCount && Feature_Verify_Color(137,10,50,10,White)>=90)
-            {
-                Round_Status=11;
-                RoundOutCount=40;
-                flag_Normal_Lose_R=1;
-            }
-            break;
-            */
-
-            if(!RoundOutCount && Feature_Verify_Color(84,30,20,19,White,80))
-            {
-                Round_Status=12;
-                RoundOutCount=50;
-                flag_Normal_Lose_R=1;
-            }
-            break;
-
-        case 11:
-            if(RoundOutCount==1)
-            {
-                Round_Status=0;
-            }
-            break;
-
-        case 12:
-            if(RoundOutCount==1)
-            {
-                Round_Status=0;
-            }
-            break;
-    }
-
-    if((flag_Y_Road || flag_Y_Road_IN) && Round_Status<3)    //防止三岔误识别为环岛
-    {
-        Round_Status=0;
-    }
-
-    if(RoundOutCount && Round_Status<=8)
-    {
-        Round_Status=0;
-    }
-    //------环岛检测 <bottom>---------//
-
-
-
-
-    //------直路检测 <head>---------//
-    if((!Round_Status || flag_Y_Road || flag_Y_Road_IN) && Feature_Verify_Color(84,40,20,8,White,90))
-    {
-        flag_Straight=1;
-    }
-    //------T路检测 <bottom>---------//
-
-
-
-    //------AprilTag检测 <head>---------//
-    if(!AprilTagInCount && !Round_Status && !flag_Y_Road)   //更改以排除互斥元素 例：if(!Round_Status)
-    {
-        uint8 AprilTag_Mark_Base=0;
-
-        for(uint8 i=0;i<PIX_IMG_X;i++)
-        {
-            if(copy_pix_img[1][i]==Mark_AprilTag)
-            {
-                AprilTag_Mark_Base++;
-            }
-        }
-
-    if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
-        {
-            flag_AprilTag=1;
-            AprilTagInCount=50;
-            aim_speed=-5;
-            systick_delay_ms(1500);
-            break_flag=1;
-            systick_delay_ms(2000);
-            if(apriltag_delay!=0)   apriltag_delay--;
-            if(apriltag_delay==0&&(temp_buff[1]==0x01||temp_buff[1]==0x02))//看到apriltag
-            {
-                find_apriltag();
-                apriltag_delay=50;
-            }
-            aim_speed=SPEED_SET;
-            break_flag=0;
-            //find_apriltag();
-            bb_time=20;
-        }
-    }
-
-    //------AprilTag检测 <bottom>---------//
-
-
-
-
-    //-------单侧丢边 <head>--------//
-    if(flag_LoseEdge_part_L!=0 && flag_LoseEdge_part_R==0) //单左丢边
-    {
-        flag_Normal_Lose_L=1;   //普通单左丢边
-        return 1;
-    }
-    else if(flag_LoseEdge_part_L==0 && flag_LoseEdge_part_R!=0) //单右丢边
-    {
-        flag_Normal_Lose_R=1;   //普通单右丢边
-        return 1;
-    }
-
-    //-------单侧丢边 <bottom>--------//
-
-
-    return 0;
 }
 
 
@@ -1995,16 +1774,19 @@ switch(Y_Road_Status)
         Connect_pp(0,148,0,118,48);
 
         break;
+    
     case 2:
         Connect_pp(1,40,0,70,48);   //拉直
         Connect_pp(0,148,0,118,48);
+        Y_Road_Status=0;
 
         bb_time=10;
         sancha_stop();
-        YRoadInCount=30;
         sancha_wait_banma=1;
+
         break;
 }
+
 
 switch(Round_Status)
 {

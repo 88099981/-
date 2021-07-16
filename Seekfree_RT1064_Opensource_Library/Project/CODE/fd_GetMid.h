@@ -19,7 +19,7 @@
 #define X_LIMIT 4   //横轴搜索边界
 #define EDGE_MAX IMG_Y//边界数组大小
 #define MID_RESOLUTION 20   //中线解析度 越小越接近原始数据
-#define CUR_RESOLUTION 10   //角度解析度 就是向量FA、FB中A_y-B_y的差值，过大会比较粗糙，过小会过于敏感，容易误判
+#define CUR_RESOLUTION 10   //角度解析度 借用于删去边沿数据中上下两部分
 
 #define ROUND_ARM_COUNT_TIMES 20
 

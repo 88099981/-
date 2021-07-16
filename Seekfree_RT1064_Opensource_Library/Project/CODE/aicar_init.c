@@ -62,7 +62,7 @@ void aicar_init()
     aicar_motor_init();//motor
     flash_init();   //初始化flash
     aicar_flash_read();//读取flash
-    icm20602_init_spi();//20602    
+    //icm20602_init_spi();//20602    
     aicar_uart_init();
     aicar_holder_init();//云台
     aicar_laser_init();//激光器
