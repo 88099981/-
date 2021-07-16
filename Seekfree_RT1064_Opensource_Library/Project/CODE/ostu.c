@@ -128,13 +128,12 @@ uint8 get_ostu_thres()
 	{
 		i=bisection_right;
 	}
-
+        
 	return i;
 }
 
 void binary_img()
 {
-	//uint8 in_ostu_thres=205;
 	uint8 in_ostu_thres=get_ostu_thres();
 	uint8 i,j;
 	for(i=0;i<IMG_H;i++)

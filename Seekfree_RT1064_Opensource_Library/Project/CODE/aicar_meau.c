@@ -523,7 +523,7 @@ void gogogo_camera()
 
 void gogogo_adc()
 {
-    Search_Strategy=MOD1;
+    Search_Strategy=MOD3;
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;

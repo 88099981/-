@@ -7,7 +7,7 @@ uint8 yuanhuan_status56;//状态78计数变量
 uint8 temp1; //调试时使用的全局变量
 uint8 temp2; //调试时使用的全局变量
 //-------------------模式变量------------------//
-SEARCH_STRATEGY Search_Strategy=MOD1;  //default MOD1
+SEARCH_STRATEGY Search_Strategy=MOD3;  //default MOD3
 //-------------------图像数据------------------//
 uint8 img[IMG_Y][IMG_X];
 uint8 pix_img[PIX_IMG_Y][PIX_IMG_X];
@@ -890,13 +890,13 @@ uint8 If_Garage(void)
         }
         #endif
 
-        if(Feature_Verify_Color(0,0,20,10,White,90))
+        if(Feature_Verify_Color(10,0,20,10,White,90))
         {
             flag_Garage_L=1;
             flag_Garage_R=0;    //因为没有每帧初始化，所以为了避免误置造成矛盾，故对两个标志位均置高
             return 1;
         }
-        else if(Feature_Verify_Color(167,0,20,10,White,90))
+        else if(Feature_Verify_Color(157,0,20,10,White,90))
         {
             flag_Garage_L=0;
             flag_Garage_R=1;
@@ -916,7 +916,7 @@ uint8 If_Garage(void)
 
 
 //状态判断
-uint8 Judge_MOD1(void)
+uint8 Judge_MOD3(void)
 {
     //-------状态整理 <head>--------//
     
@@ -929,6 +929,21 @@ uint8 Judge_MOD1(void)
     {
         YRoadInCount--;
     }
+
+    if(RoundInCount)
+    {
+        RoundInCount--;
+    }
+
+    if(RoundOutCount)
+    {
+        RoundOutCount--;
+    }
+
+    if(CrossInCount)
+    {
+        CrossInCount--;
+    }
     
     if(AprilTagInCount)
     {
@@ -940,11 +955,17 @@ uint8 Judge_MOD1(void)
         GarageInCount--;
     }
 
-    Round_Status=0; //使用该模式不需要识别此元素
-    flag_Cross=0;
-
     //-------状态整理 <bottom>--------//
 
+
+
+
+    //------T路检测 <head>---------//
+    if(Round_Status==0 && Feature_Verify_Color(0,44,187,5,Black,90))
+    {
+        flag_T_Road=1;
+    }
+    //------T路检测 <bottom>---------//
 
 
 
@@ -1022,239 +1043,38 @@ uint8 Judge_MOD1(void)
                         //YRoadInCount=30;
                         //flag_Y_Road_IN=40;
                     }
+
+                    //If_Straight();  //判断边沿是否直
+                    //if(flag_Straight_L || flag_Straight_R || GarageInCount)
+                    if(GarageInCount)
+                    {
+                        Y_Road_Status=0;
+                    }
                 }
-
-                SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-                SumInCD_YRoad[1]=sumincd.YRoad;
                 break;
-
+            
             case 1:
                 SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
                 SumInCD_YRoad[1]=sumincd.YRoad;
 
                 int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
 
-                if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
+                if(YRoad_Diff<-20 || YRoad_Diff>60)     //TODO 控制YRoad_Diff渐变
                 {
-                    Y_Road_Status=2;
+                    Y_Road_Status=0; 
                 }
-                else if(YRoad_Diff<-20)
+                else if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
                 {
-                    Y_Road_Status=0;
+                    Y_Road_Status=2;    //入三岔
+                    YRoadInCount=60;    //启用屏蔽
                 }
+
 
                 break;
 
             case 2:
-                if(flag_Y_Road_IN || YRoadInCount)
-                {
-                    Y_Road_Status=0;
-                }
                 break;
-
         }
-
-        if(ad_value_all<=YRoad_ad_limit)
-        {
-            flag_Y_Road_IN=40;
-        }
-    }
-    //-------三岔检测 <bottom>--------//
-
-
-
-    //------AprilTag检测 <head>---------//
-    if(!AprilTagInCount && !Round_Status && !flag_Y_Road )   //apriltag_wait_banma
-    {
-        uint8 AprilTag_Mark_Base=0;
-
-        for(uint8 i=0;i<PIX_IMG_X;i++)
-        {
-            if(copy_pix_img[1][i]==Mark_AprilTag)
-            {
-                AprilTag_Mark_Base++;
-            }
-        }
-
-        if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
-        {
-            flag_AprilTag=1;
-            AprilTagInCount=50;
-            aim_speed=-5;
-            systick_delay_ms(1500);
-            break_flag=1;
-            systick_delay_ms(2000);
-            if(apriltag_delay!=0)   apriltag_delay--;
-            if(apriltag_delay==0&&(temp_buff[1]==0x01||temp_buff[1]==0x02))//看到apriltag
-            {
-                find_apriltag();
-                apriltag_delay=50;
-            }
-            aim_speed=SPEED_SET;
-            break_flag=0;
-            //find_apriltag();
-            bb_time=20;
-        }
-    }
-    //------AprilTag检测 <bottom>---------//
-
-    return 0;
-}
-
-
-
-
-
-uint8 Judge_MOD2(void)
-{
-    //-------状态整理 <head>--------//
-    
-    if(flag_Y_Road_IN)
-    {
-        flag_Y_Road_IN--;
-    }
-
-    if(YRoadInCount)
-    {
-        YRoadInCount--;
-    }
-
-    if(RoundInCount)
-    {
-        RoundInCount--;
-    }
-
-    if(RoundOutCount)
-    {
-        RoundOutCount--;
-    }
-
-    if(CrossInCount)
-    {
-        CrossInCount--;
-    }
-    
-    if(AprilTagInCount)
-    {
-        AprilTagInCount--;
-    }
-
-    if(GarageInCount)
-    {
-        GarageInCount--;
-    }
-
-    //-------状态整理 <bottom>--------//
-
-
-
-
-    //------T路检测 <head>---------//
-    if(Round_Status==0 && Feature_Verify_Color(0,44,187,5,Black,90))
-    {
-        flag_T_Road=1;
-    }
-    //------T路检测 <bottom>---------//
-
-
-
-    //------车库检测 <head>---------//
-    if(!GarageInCount && If_Garage())
-    {
-        if(flag_Garage_ARM<Garage_Rule-1)
-        {
-            flag_Garage_ARM++;
-            flag_Garage_L=0;
-            flag_Garage_R=0;
-        }
-        return 1;
-    }
-    //------车库检测 <bottom>---------//
-
-
-
-
-    //------三岔检测 <head>---------//
-    switch(Y_Road_Status)
-    {
-        case 0:
-            if(!YRoadInCount && !flag_Y_Road_IN)
-            {
-                uint8 SumMark_Lane_Head=0;  //图像最顶行的赛道标记个数  //这样规避了急弯、T路
-                uint8 SumJumpMark_Lane_2_Black=0;   //从赛道连通域标记到黑块的跳变点的个数
-                uint8 SumJumpBlack_2_Mark_Lane=0;   //从赛道连通域标记到黑块的跳变点的个数
-
-                for(uint8 i=0;i<PIX_IMG_X;i++)
-                {
-                    if(copy_pix_img[PIX_IMG_Y-1][i]==Mark_Lane)
-                    {
-                        SumMark_Lane_Head++;
-                    }
-                }
-
-                if(SumMark_Lane_Head)
-                {
-                    for(uint8 j=PIX_IMG_Y-4;j<PIX_IMG_Y;j++)
-                    {
-                        uint8 JumpP1=0; //找到第一种跳变点标志 以规定跳变点的顺序 每行初始化
-
-                        for(uint8 i=1;i<PIX_IMG_X;i++)
-                        {
-                            if(copy_pix_img[j][i-1]==Mark_Lane && copy_pix_img[j][i]==Black)    //跳变点
-                            {
-                                SumJumpMark_Lane_2_Black++;
-                                JumpP1=1;
-                            }
-
-                            if(JumpP1 && copy_pix_img[j][i-1]==Black && copy_pix_img[j][i]==Mark_Lane)    //跳变点
-                            {
-                                SumJumpBlack_2_Mark_Lane++;
-                            }
-                        }
-                    }
-                }
-
-                //temp=SumMark_Lane_Head;
-                temp1=SumJumpMark_Lane_2_Black;
-                temp2=SumJumpBlack_2_Mark_Lane;
-
-                if(SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //扫了4行，每行每类起码1个跳变点 条件已放宽
-                {
-                    Y_Road_Status=1;
-                    //flag_Y_Road=1;
-                    //openmv确认三岔转向
-                    //YRoadInCount=30;
-                    //flag_Y_Road_IN=40;
-                }
-
-                If_Straight();  //判断边沿是否直
-                if(flag_Straight_L || flag_Straight_R)
-                {
-                    Y_Road_Status=0;
-                }
-            }
-            break;
-
-        case 1:
-            SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-            SumInCD_YRoad[1]=sumincd.YRoad;
-
-            int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
-
-            if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
-            {
-                Y_Road_Status=2;    //入三岔
-                YRoadInCount=60;    //启用屏蔽
-            }
-            else if(YRoad_Diff<-20)
-            {
-                Y_Road_Status=0;
-            }
-
-            break;
-
-        case 2:
-            break;
     }
 
     if(ad_value_all<=YRoad_ad_limit)
@@ -1262,202 +1082,6 @@ uint8 Judge_MOD2(void)
         flag_Y_Road_IN=40;
     }
     //-------三岔检测 <bottom>--------//
-
-
-
-
-    //-------十字检测 <head>--------//
-    
-    if(CrossInCount && Round_Status<=4)
-    {
-        Round_Status=0;
-    }
-    
-    if(!flag_T_Road && (Round_Status<=5) && EdgeNum>=IMG_Y*0.6)
-    {   
-        if(Feature_Verify_Color(0,23,187,3,White,90))
-        {
-            flag_Cross=1;
-            CrossInCount=10;
-            return 1;
-        }
-        /*
-        else if(ad_value1>=120 && ad_value6>=120)
-        {
-            flag_Cross=1;
-            CrossInCount=15;
-            return 1;
-        }
-        */
-    }
-    //-------十字检测 <bottom>--------//
-}
-
-
-
-
-
-uint8 Judge_MOD3(void)
-{
-    //-------状态整理 <head>--------//
-    
-    if(flag_Y_Road_IN)
-    {
-        flag_Y_Road_IN--;
-    }
-
-    if(YRoadInCount)
-    {
-        YRoadInCount--;
-    }
-
-    if(RoundInCount)
-    {
-        RoundInCount--;
-    }
-
-    if(RoundOutCount)
-    {
-        RoundOutCount--;
-    }
-
-    if(CrossInCount)
-    {
-        CrossInCount--;
-    }
-    
-    if(AprilTagInCount)
-    {
-        AprilTagInCount--;
-    }
-
-    if(GarageInCount)
-    {
-        GarageInCount--;
-    }
-
-    //-------状态整理 <bottom>--------//
-
-
-
-
-    //------T路检测 <head>---------//
-    if(Round_Status==0 && Feature_Verify_Color(0,44,187,5,Black,90))
-    {
-        flag_T_Road=1;
-    }
-    //------T路检测 <bottom>---------//
-
-
-
-    //------车库检测 <head>---------//
-    if(!GarageInCount && If_Garage())
-    {
-        GarageInCount=50;
-        bb_time=100;
-        if(flag_Garage_ARM<Garage_Rule-1)
-        {
-            flag_Garage_ARM++;
-            flag_Garage_L=0;
-            flag_Garage_R=0;
-        }
-        return 1;
-    }
-    //------车库检测 <bottom>---------//
-
-
-
-
-    //------三岔检测 <head>---------//
-    switch(Y_Road_Status)
-    {
-        case 0:
-            if(!YRoadInCount && !flag_Y_Road_IN)
-            {
-                uint8 SumMark_Lane_Head=0;  //图像最顶行的赛道标记个数  //这样规避了急弯、T路
-                uint8 SumJumpMark_Lane_2_Black=0;   //从赛道连通域标记到黑块的跳变点的个数
-                uint8 SumJumpBlack_2_Mark_Lane=0;   //从赛道连通域标记到黑块的跳变点的个数
-
-                for(uint8 i=0;i<PIX_IMG_X;i++)
-                {
-                    if(copy_pix_img[PIX_IMG_Y-1][i]==Mark_Lane)
-                    {
-                        SumMark_Lane_Head++;
-                    }
-                }
-
-                if(SumMark_Lane_Head)
-                {
-                    for(uint8 j=PIX_IMG_Y-4;j<PIX_IMG_Y;j++)
-                    {
-                        uint8 JumpP1=0; //找到第一种跳变点标志 以规定跳变点的顺序 每行初始化
-
-                        for(uint8 i=1;i<PIX_IMG_X;i++)
-                        {
-                            if(copy_pix_img[j][i-1]==Mark_Lane && copy_pix_img[j][i]==Black)    //跳变点
-                            {
-                                SumJumpMark_Lane_2_Black++;
-                                JumpP1=1;
-                            }
-
-                            if(JumpP1 && copy_pix_img[j][i-1]==Black && copy_pix_img[j][i]==Mark_Lane)    //跳变点
-                            {
-                                SumJumpBlack_2_Mark_Lane++;
-                            }
-                        }
-                    }
-                }
-
-                //temp=SumMark_Lane_Head;
-                temp1=SumJumpMark_Lane_2_Black;
-                temp2=SumJumpBlack_2_Mark_Lane;
-
-                if(SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //扫了4行，每行每类起码1个跳变点 条件已放宽
-                {
-                    Y_Road_Status=1;
-                    //flag_Y_Road=1;
-                    //openmv确认三岔转向
-                    //YRoadInCount=30;
-                    //flag_Y_Road_IN=40;
-                }
-            }
-
-            SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-            SumInCD_YRoad[1]=sumincd.YRoad;
-            break;
-
-        case 1:
-            SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-            SumInCD_YRoad[1]=sumincd.YRoad;
-
-            int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
-
-            if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
-            {
-                Y_Road_Status=2;
-            }
-            else if(YRoad_Diff<-20)
-            {
-                Y_Road_Status=0;
-            }
-
-            break;
-
-        case 2:
-            if(flag_Y_Road_IN || YRoadInCount)
-            {
-                Y_Road_Status=0;
-            }
-            break;
-
-    }
-
-    if(ad_value_all<=YRoad_ad_limit)
-    {
-        flag_Y_Road_IN=40;
-    }
-    //-------三岔检测 <bottom>--------//
-
 
 
 
@@ -1639,14 +1263,6 @@ uint8 Judge_MOD3(void)
     //------环岛检测 <bottom>---------//
 
 
-
-
-    //------直路检测 <head>---------//
-    if((!Round_Status || flag_Y_Road || flag_Y_Road_IN) && Feature_Verify_Color(84,40,20,8,White,90))
-    {
-        flag_Straight=1;
-    }
-    //------T路检测 <bottom>---------//
 
 
 
@@ -2075,13 +1691,11 @@ void Search(void)
     //-------------------判断部分 <head>---------------//
     switch(Search_Strategy)
     {
-        case 1:
-            Judge_MOD1();
-            break;
-        case 2:
-            Judge_MOD2();
-            break;
         case 3:
+            Judge_MOD3();
+            break;
+
+        default:
             Judge_MOD3();
             break;
     }

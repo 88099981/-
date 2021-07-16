@@ -80,9 +80,7 @@ uint8 SetSeed_Lane(uint8 MidStart,uint8 EdgeNum);
 uint8 SetSeed_AprilTag(uint8 T_y,uint8 T_color);
 void FloodSeedFill(uint8 x,uint8 y,uint8 Old_Color,uint8 New_Color);
 uint8 If_Garage(void);  //车库查找  优先级大于环岛、十字/T字
-uint8 Judge_MOD1(void);   //状态判断
-uint8 Judge_MOD2(void);
-uint8 Judge_MOD3(void);
+uint8 Judge_MOD3(void); //状态判断
 uint8 Width_Cali(uint8);    //赛道宽度计算
 void Damn_Lose_Edge_all(void);  //双侧丢边
 uint8 If_Lose_Edge(void);    //丢边补全
