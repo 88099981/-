@@ -5,6 +5,8 @@
 extern uint8 meau_page;
 extern uint8 pointer_page;
 extern uint8 pointer_arrow;
+extern int16 sancha_wait_in;
+extern vuint8 sancha_wait_banma;
 
 typedef enum
 {

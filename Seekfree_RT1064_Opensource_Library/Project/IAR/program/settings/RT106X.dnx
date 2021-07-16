@@ -13,13 +13,13 @@
     </Stack>
     <PlDriver>
         <FirstRun>0</FirstRun>
-        <MemConfigValue>C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\arm\CONFIG\debugger\NXP\MIMXRT1064xxx6A.ddf</MemConfigValue>
+        <MemConfigValue>D:\iar\arm\CONFIG\debugger\NXP\MIMXRT1064xxx6A.ddf</MemConfigValue>
     </PlDriver>
     <Jet>
+        <JetConnSerialNo>SEEKFREE CMSIS-DAP V2:0</JetConnSerialNo>
+        <JetConnFoundProbes>SEEKFREE CMSIS-DAP V1:SF95630132813138:SEEKFREE CMSIS-DAP V2:0:</JetConnFoundProbes>
         <PrevWtdReset>Core</PrevWtdReset>
         <OnlineReset>System</OnlineReset>
-        <JetConnSerialNo>SEEKFREE CMSIS-DAP V2:0</JetConnSerialNo>
-        <JetConnFoundProbes>SEEKFREE CMSIS-DAP V1:SF1364358992-202:SEEKFREE CMSIS-DAP V2:0:</JetConnFoundProbes>
         <DisableInterrupts>0</DisableInterrupts>
         <LeaveRunning>1</LeaveRunning>
         <MultiCoreRunAll>0</MultiCoreRunAll>
@@ -28,7 +28,7 @@
         <EnableCache>1</EnableCache>
     </ArmDriver>
     <DebugChecksum>
-        <Checksum>457481561</Checksum>
+        <Checksum>334571797</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -44,8 +44,8 @@
     <SWOManager>
         <SamplingDivider>8192</SamplingDivider>
         <OverrideClock>0</OverrideClock>
-        <CpuClock>1600416118</CpuClock>
-        <SwoClock>825569891</SwoClock>
+        <CpuClock>696008061</CpuClock>
+        <SwoClock>560889384</SwoClock>
         <DataLogMode>0</DataLogMode>
         <ItmPortsEnabled>63</ItmPortsEnabled>
         <ItmTermIOPorts>1</ItmTermIOPorts>
@@ -183,17 +183,17 @@
         <Bp0>_ 0 "TDL_EMUL_TRACE_STOP" "flag_Round_ARM_L" 0 0 0 0 4294967295</Bp0>
         <Bp1>_ 0 "EMUL_DATA" "flag_Round_ARM_L" 0 0 0 0 4294967295</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.121.1" 0 0 1 "" 0 "" 0</Bp2>
-        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\fd_GetMid.c}.682.4" 0 0 1 "" 0 "" 0</Bp3>
+        <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\fd_GetMid.c}.686.4" 0 0 1 "" 0 "" 0</Bp3>
         <Bp4>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_error.c}.135.10" 0 0 1 "" 0 "" 0</Bp4>
         <Bp5>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.121.1" 0 0 1 "" 0 "" 0</Bp5>
         <Bp6>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.121.1" 0 0 1 "" 0 "" 0</Bp6>
-        <Bp7>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_meau.c}.555.9" 0 0 1 "" 0 "" 0</Bp7>
+        <Bp7>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_meau.c}.555.13" 0 0 1 "" 0 "" 0</Bp7>
         <Bp8>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.126.5" 0 0 1 "" 0 "" 0</Bp8>
         <Bp9>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.237.22" 0 0 1 "" 0 "" 0</Bp9>
         <Bp10>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.257.5" 0 0 1 "" 0 "" 0</Bp10>
         <Bp11>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.465.1" 0 0 1 "" 0 "" 0</Bp11>
         <Bp12>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.296.5" 0 0 1 "" 0 "" 0</Bp12>
-        <Bp13>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_meau.c}.597.5" 0 0 1 "" 0 "" 0</Bp13>
+        <Bp13>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_meau.c}.605.18" 0 0 1 "" 0 "" 0</Bp13>
         <Bp14>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\..\CODE\aicar_element.c}.368.11" 0 0 1 "" 0 "" 0</Bp14>
         <Count>15</Count>
     </Breakpoints2>

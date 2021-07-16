@@ -959,6 +959,8 @@ uint8 Judge_MOD1(void)
             flag_Garage_ARM++;
             flag_Garage_L=0;
             flag_Garage_R=0;
+            sancha_wait_banma=0;
+            //apriltag_wait_banma=0;
         }
         return 1;
     }
@@ -968,99 +970,102 @@ uint8 Judge_MOD1(void)
 
 
     //------三岔检测 <head>---------//
-    switch(Y_Road_Status)
+    if(sancha_wait_in<=0&&!sancha_wait_banma)
     {
-        case 0:
-            if(!YRoadInCount && !flag_Y_Road_IN)
-            {
-                uint8 SumMark_Lane_Head=0;  //图像最顶行的赛道标记个数  //这样规避了急弯、T路
-                uint8 SumJumpMark_Lane_2_Black=0;   //从赛道连通域标记到黑块的跳变点的个数
-                uint8 SumJumpBlack_2_Mark_Lane=0;   //从赛道连通域标记到黑块的跳变点的个数
-
-                for(uint8 i=0;i<PIX_IMG_X;i++)
+        switch(Y_Road_Status)
+        {
+            case 0:
+                if(!YRoadInCount && !flag_Y_Road_IN)
                 {
-                    if(copy_pix_img[PIX_IMG_Y-1][i]==Mark_Lane)
-                    {
-                        SumMark_Lane_Head++;
-                    }
-                }
+                    uint8 SumMark_Lane_Head=0;  //图像最顶行的赛道标记个数  //这样规避了急弯、T路
+                    uint8 SumJumpMark_Lane_2_Black=0;   //从赛道连通域标记到黑块的跳变点的个数
+                    uint8 SumJumpBlack_2_Mark_Lane=0;   //从赛道连通域标记到黑块的跳变点的个数
 
-                if(SumMark_Lane_Head)
-                {
-                    for(uint8 j=PIX_IMG_Y-4;j<PIX_IMG_Y;j++)
+                    for(uint8 i=0;i<PIX_IMG_X;i++)
                     {
-                        uint8 JumpP1=0; //找到第一种跳变点标志 以规定跳变点的顺序 每行初始化
-
-                        for(uint8 i=1;i<PIX_IMG_X;i++)
+                        if(copy_pix_img[PIX_IMG_Y-1][i]==Mark_Lane)
                         {
-                            if(copy_pix_img[j][i-1]==Mark_Lane && copy_pix_img[j][i]==Black)    //跳变点
-                            {
-                                SumJumpMark_Lane_2_Black++;
-                                JumpP1=1;
-                            }
+                            SumMark_Lane_Head++;
+                        }
+                    }
 
-                            if(JumpP1 && copy_pix_img[j][i-1]==Black && copy_pix_img[j][i]==Mark_Lane)    //跳变点
+                    if(SumMark_Lane_Head)
+                    {
+                        for(uint8 j=PIX_IMG_Y-4;j<PIX_IMG_Y;j++)
+                        {
+                            uint8 JumpP1=0; //找到第一种跳变点标志 以规定跳变点的顺序 每行初始化
+
+                            for(uint8 i=1;i<PIX_IMG_X;i++)
                             {
-                                SumJumpBlack_2_Mark_Lane++;
+                                if(copy_pix_img[j][i-1]==Mark_Lane && copy_pix_img[j][i]==Black)    //跳变点
+                                {
+                                    SumJumpMark_Lane_2_Black++;
+                                    JumpP1=1;
+                                }
+
+                                if(JumpP1 && copy_pix_img[j][i-1]==Black && copy_pix_img[j][i]==Mark_Lane)    //跳变点
+                                {
+                                    SumJumpBlack_2_Mark_Lane++;
+                                }
                             }
                         }
                     }
+
+                    //temp=SumMark_Lane_Head;
+                    temp1=SumJumpMark_Lane_2_Black;
+                    temp2=SumJumpBlack_2_Mark_Lane;
+
+                    if(SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //扫了4行，每行每类起码1个跳变点 条件已放宽
+                    {
+                        Y_Road_Status=1;
+                        //flag_Y_Road=1;
+                        //openmv确认三岔转向
+                        //YRoadInCount=30;
+                        //flag_Y_Road_IN=40;
+                    }
                 }
 
-                //temp=SumMark_Lane_Head;
-                temp1=SumJumpMark_Lane_2_Black;
-                temp2=SumJumpBlack_2_Mark_Lane;
+                SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
+                SumInCD_YRoad[1]=sumincd.YRoad;
+                break;
 
-                if(SumJumpMark_Lane_2_Black>=4 && SumJumpBlack_2_Mark_Lane>=4)   //扫了4行，每行每类起码1个跳变点 条件已放宽
+            case 1:
+                SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
+                SumInCD_YRoad[1]=sumincd.YRoad;
+
+                int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
+
+                if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
                 {
-                    Y_Road_Status=1;
-                    //flag_Y_Road=1;
-                    //openmv确认三岔转向
-                    //YRoadInCount=30;
-                    //flag_Y_Road_IN=40;
+                    Y_Road_Status=2;
                 }
-            }
+                else if(YRoad_Diff<-20)
+                {
+                    Y_Road_Status=0;
+                }
 
-            SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-            SumInCD_YRoad[1]=sumincd.YRoad;
-            break;
+                break;
 
-        case 1:
-            SumInCD_YRoad[0]=SumInCD_YRoad[1];  //历史数据前移
-            SumInCD_YRoad[1]=sumincd.YRoad;
+            case 2:
+                if(flag_Y_Road_IN || YRoadInCount)
+                {
+                    Y_Road_Status=0;
+                }
+                break;
 
-            int32 YRoad_Diff=SumInCD_YRoad[1]-SumInCD_YRoad[0];
+        }
 
-            if(SumInCD_YRoad[1]>=YRoad_SumInCD_Limit)
-            {
-                Y_Road_Status=2;
-            }
-            else if(YRoad_Diff<-20)
-            {
-                Y_Road_Status=0;
-            }
-
-            break;
-
-        case 2:
-            if(flag_Y_Road_IN || YRoadInCount)
-            {
-                Y_Road_Status=0;
-            }
-            break;
-
-    }
-
-    if(ad_value_all<=YRoad_ad_limit)
-    {
-        flag_Y_Road_IN=40;
+        if(ad_value_all<=YRoad_ad_limit)
+        {
+            flag_Y_Road_IN=40;
+        }
     }
     //-------三岔检测 <bottom>--------//
 
 
 
     //------AprilTag检测 <head>---------//
-    if(!AprilTagInCount && !Round_Status && !flag_Y_Road)   //更改以排除互斥元素 例：if(!Round_Status)
+    if(!AprilTagInCount && !Round_Status && !flag_Y_Road )   //apriltag_wait_banma
     {
         uint8 AprilTag_Mark_Base=0;
 
@@ -1993,6 +1998,7 @@ switch(Y_Road_Status)
         bb_time=10;
         sancha_stop();
         YRoadInCount=30;
+        sancha_wait_banma=1;
         break;
 }
 

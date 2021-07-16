@@ -25,7 +25,8 @@
 //uint8 img[IMG_H][IMG_W];		//收到的图像
 uint8 meau_page=0;
 uint8 meau_last_page=0;
-
+int16 sancha_wait_in;
+vuint8 sancha_wait_banma=0;
 
 void show_page(uint8 page)
 {
@@ -522,6 +523,7 @@ void gogogo_camera()
 
 void gogogo_adc()
 {
+    Search_Strategy=MOD1;
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
@@ -553,6 +555,14 @@ void gogogo_adc()
         {
             find_apriltag();
             apriltag_delay=50;
+        }
+//三岔入环计数
+        if(sancha_wait_in)
+        {
+            sancha_wait_in--;
+            if(sancha_wait_in<=0)
+                
+                bb_time=100;
         }
 //读取摄像头
         if(mt9v03x_csi_finish_flag)
@@ -680,6 +690,7 @@ void gogogo_adc()
 
 void gogogo_mix()
 {
+    Search_Strategy=MOD3;
     stop_cnt=0;
     break_flag=0;
     aim_speed=SPEED_SET;
@@ -711,6 +722,17 @@ void gogogo_mix()
         {
             find_apriltag();
             apriltag_delay=50;
+        }
+        //三岔入环计数
+        if(sancha_wait_in)
+        {
+            sancha_wait_in--;
+            if(sancha_wait_in<=0)
+            {
+                bb_time=100;
+                sancha_wait_in=0;
+            }
+                
         }
 //读取摄像头
         if(mt9v03x_csi_finish_flag)
