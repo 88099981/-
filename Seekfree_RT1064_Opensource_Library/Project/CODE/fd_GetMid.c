@@ -954,6 +954,8 @@ uint8 Judge_MOD1(void)
     //------车库检测 <head>---------//
     if(!GarageInCount && If_Garage())
     {
+        GarageInCount=50;
+        bb_time=100;
         if(flag_Garage_ARM<Garage_Rule-1)
         {
             flag_Garage_ARM++;
@@ -1077,7 +1079,7 @@ uint8 Judge_MOD1(void)
             }
         }
 
-    if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
+        if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
         {
             flag_AprilTag=1;
             AprilTagInCount=50;
@@ -1572,6 +1574,8 @@ uint8 Judge_MOD3(void)
     //------车库检测 <head>---------//
     if(!GarageInCount && If_Garage())
     {
+        GarageInCount=50;
+        bb_time=100;
         if(flag_Garage_ARM<Garage_Rule-1)
         {
             flag_Garage_ARM++;

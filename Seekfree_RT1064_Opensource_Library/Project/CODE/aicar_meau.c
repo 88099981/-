@@ -25,7 +25,7 @@
 //uint8 img[IMG_H][IMG_W];		//ÊÕµ½µÄÍ¼Ïñ
 uint8 meau_page=0;
 uint8 meau_last_page=0;
-int16 sancha_wait_in;
+int16 sancha_wait_in=500;
 vuint8 sancha_wait_banma=0;
 
 void show_page(uint8 page)
