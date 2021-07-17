@@ -170,8 +170,8 @@ void print_debug()
 {
     lcd_showstr(0,0,"camera");
     lcd_showstr(0,1,"adc");
-    lcd_showstr(0,2,"wireless");//无显示传图像
-    lcd_showstr(0,3,"servo");
+    lcd_showstr(0,2,"gar_out");//无显示传图像
+    lcd_showstr(0,3,"gar_in");
     lcd_showstr(0,4,"motor");
     lcd_showstr(0,5,"huandao");    
     lcd_showstr(0,6,"chasu");

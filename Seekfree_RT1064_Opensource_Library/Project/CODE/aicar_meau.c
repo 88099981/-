@@ -27,6 +27,8 @@ uint8 meau_page=0;
 uint8 meau_last_page=0;
 int16 sancha_wait_in=500;
 vuint8 sancha_wait_banma=0;
+vuint8 apriltag_wait_banma=0;
+vuint8 huandao_wait_banma=0;
 
 void show_page(uint8 page)
 {
@@ -149,38 +151,85 @@ void debug_adc()
 
 void debug_wireless()
 {
-    stop_cnt=0;
-    break_flag=0;
-    aim_speed=30;
-    adc_isr_enable=1;
+//    stop_cnt=0;
+//    break_flag=0;
+//    aim_speed=30;
+//    adc_isr_enable=1;
+//    while(key4_flag!=1)
+//    {
+//        aicar_key_get();//按键检测
+//        aicar_switch_get();//拨码开关
+//        if(mt9v03x_csi_finish_flag)
+//        {      
+//            mt9v03x_csi_finish_flag = 0;
+//            cut_image_to_img2();//copy						
+//            binary_img();			
+//            Search();
+//          
+//            //aicar_camera_wireless(USART_8, img[0], MT9V03X_CSI_W, MT9V03X_CSI_H);//山外上位机
+//            csi_seekfree_sendimg_03x(USART_8,img[0],MT9V03X_CSI_W,MT9V03X_CSI_H);//逐飞上位机
+//        }      
+//        aicar_n_chasu();
+//        if(key4_flag)
+//        {
+//            lcd_clear(BLACK);
+//            pointer_page=MEAU_DEBUG;
+//            pointer_arrow=2;
+//        }
+//    }
+//    break_flag=0;
+//    key4_flag=0;
+//    aim_speed=0;
+//    adc_isr_enable=0;
+//    servo_duty=3850;
     while(key4_flag!=1)
     {
         aicar_key_get();//按键检测
         aicar_switch_get();//拨码开关
-        if(mt9v03x_csi_finish_flag)
-        {      
-            mt9v03x_csi_finish_flag = 0;
-            cut_image_to_img2();//copy						
-            binary_img();			
-            Search();
-          
-            //aicar_camera_wireless(USART_8, img[0], MT9V03X_CSI_W, MT9V03X_CSI_H);//山外上位机
-            csi_seekfree_sendimg_03x(USART_8,img[0],MT9V03X_CSI_W,MT9V03X_CSI_H);//逐飞上位机
-        }      
-        aicar_n_chasu();
+        //aicar_adc_get();
+        //aicar_servopid_printf();
+        if(key1_flag&&sw2_status==1)
+        {
+            key1_flag=0;
+            garage_turn_out+=1000;
+        }
+        else if(key2_flag&&sw2_status==1)
+        {
+            key2_flag=0;
+            garage_turn_out-=1000;
+        }
+        else if(key1_flag&&sw2_status==0)
+        {
+            key1_flag=0;
+            servo_turn_out+=50;
+        }
+        else if(key2_flag&&sw2_status==0)
+        {
+            key2_flag=0;
+            servo_turn_out-=50;
+        }
+        if(key3_flag)
+        {
+            key3_flag=0;
+            break_flag=0;
+            aim_speed=SPEED_SET;
+            aicar_left_garage_out();
+            break_flag=1;
+            
+        }
         if(key4_flag)
         {
             lcd_clear(BLACK);
             pointer_page=MEAU_DEBUG;
             pointer_arrow=2;
-        }
+        }   
+        lcd_showstr(0,4,"turn_out:");
+        lcd_showint32(10*8,4,garage_turn_out,5);
+        lcd_showstr(0,5,"ser_out:");
+        lcd_showint16(10*8,5,servo_turn_out);
     }
-    break_flag=0;
     key4_flag=0;
-    aim_speed=0;
-    adc_isr_enable=0;
     servo_duty=3850;
-    
 }
 
 
@@ -190,41 +239,131 @@ void debug_servo()
     {
         aicar_key_get();//按键检测
         aicar_switch_get();//拨码开关
-        aicar_adc_get();
-        aicar_servopid_printf();
+        //aicar_adc_get();
+        //aicar_servopid_printf();
         if(key1_flag&&sw2_status==1)
         {
             key1_flag=0;
-            kp_ad+=0.3;
+            garage_turn_in+=1000;
         }
         else if(key2_flag&&sw2_status==1)
         {
             key2_flag=0;
-            kp_ad-=0.3;
+            garage_turn_in-=1000;
         }
         else if(key1_flag&&sw2_status==0)
         {
             key1_flag=0;
-            kd_ad+=0.3;
+            servo_turn_in+=50;
         }
         else if(key2_flag&&sw2_status==0)
         {
             key2_flag=0;
-            kd_ad-=0.3;
+            servo_turn_in-=50;
+        }
+        if(key3_flag)
+        {
+            key3_flag=0;
+            Search_Strategy=MOD3;
+            stop_cnt=0;
+            break_flag=0;
+            aim_speed=SPEED_SET;
+                        
+            while(key4_flag!=1)
+            {
+                sancha_wait_banma=1;
+                aicar_key_get();//按键检测
+                aicar_switch_get();//拨码开关
+                aicar_adc_get();//停车用
+                if(key1_flag)
+                {
+                    key1_flag=0;
+                    aim_speed+=10;
+                }
+                else if(key2_flag)
+                {
+                    key2_flag=0;
+                    aim_speed-=10;
+                }     
+        //读取摄像头
+                if(mt9v03x_csi_finish_flag)
+                {      
+                    mt9v03x_csi_finish_flag = 0;
+                    mv_image_to_img2();//copy	
+                    binary_img();
+                    Search();
+                }        
+                //aicar_huandao();//环岛由摄像头给出
+                if(flag_Cross==1)
+                    aicar_adc_error();
+                else
+                    aicar_mix_error();
+                
+                if(sw1_status==1)
+                    aicar_chasu();
+                else
+                    aicar_n_chasu();
+                
+                lcd_showstr(0,0,"sancha:");
+                lcd_showuint8(10*8,0,sancha_wait_banma);
+                lcd_showstr(0,1,"apriltag:");
+                lcd_showuint8(10*8,1,apriltag_wait_banma);
+                lcd_showstr(0,2,"huandao:");
+                lcd_showuint8(10*8,2,huandao_wait_banma);
+                lcd_showstr(0,3,"turn_sum:");
+                lcd_showint32(10*8,3,turn_sum,5);
+                lcd_showstr(0,4,"turn_in:");
+                lcd_showint32(10*8,4,garage_turn_in,5);
+                lcd_showstr(0,5,"ser_in:");
+                lcd_showint16(10*8,5,servo_turn_in);
+                lcd_showstr(0,6,"icm_gyro_z:");
+                lcd_showint16(10*8,6,icm_gyro_z);
+                lcd_showstr(0,7,"Garage L"); 
+
+        //        lcd_showstr(0,9,"tag_num:");
+        //        lcd_showuint8(10*6,8,temp1);
+        //        lcd_showuint8(10*10,8,temp2);
+
+        //        lcd_showstr(0,2,"bk_flag:");
+        //        lcd_showuint8(12*8,2,break_flag);
+        //        lcd_showstr(0,4,"kp_ad:");
+        //        lcd_showfloat(12*8,4,kp_ad,3,2);
+        //        lcd_showstr(0,5,"kd_ad:");
+        //        lcd_showfloat(12*8,5,kd_ad,3,2);
+        //        lcd_showstr(0,6,"left:");
+        //        lcd_showint16(12*8,6,left_motor);
+        //        lcd_showstr(0,7,"right:");
+        //        lcd_showint16(12*8,7,right_motor);
+                //aicar_chasu_printf();
+                if(key4_flag||flag_Garage_L)
+                {
+                    lcd_clear(BLACK);
+                    pointer_page=MEAU_GOGOGO;
+                    pointer_arrow=0;
+                }
+            }
+            break_flag=1;
+            key4_flag=0;
+            aim_speed=0;
+            servo_duty=3850;
+            
         }
         if(key4_flag)
         {
             lcd_clear(BLACK);
             pointer_page=MEAU_DEBUG;
             pointer_arrow=3;
-        }    
-        if(sw1_status==1)
-            aicar_adc_error();
-        else
-            servo_duty=3850;
+        }   
+        lcd_showstr(0,4,"turn_in:");
+        lcd_showint32(10*8,4,garage_turn_in,5);
+        lcd_showstr(0,5,"ser_in:");
+        lcd_showint16(10*8,5,servo_turn_in);
     }
     key4_flag=0;
     servo_duty=3850;
+    sancha_wait_banma=0;
+    apriltag_wait_banma=0;
+    huandao_wait_banma=0;
 }
 
 

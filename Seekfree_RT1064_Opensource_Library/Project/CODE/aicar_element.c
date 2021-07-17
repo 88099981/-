@@ -27,6 +27,10 @@ uint8 hd_turn=0;
 uint8 uart_send=0;//1为云台转向完成，2为舵机转向完成, 3为等待完成， 4为打靶完成
 int8 lasttime_holder=0;
 uint16 holder_duty;
+int16 servo_turn_out=4150;//舵机打角值
+int32 garage_turn_out=18000;//总共转满值
+int16 servo_turn_in=4250;//舵机打角值
+int32 garage_turn_in=35000;//总共转满值
 
 float kp_holder=7.0;
 float kd_holder=2.0;
@@ -144,13 +148,17 @@ void aicar_right_garage_out()
 void aicar_left_garage_out()
 {
     turn_sum=0;
-    while(turn_sum<18000)
+    while(turn_sum<garage_turn_out)
     {
-        servo_duty=4150;
-        get_icm20602_gyro_spi();
+        servo_duty=servo_turn_out;
+        //get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
         lcd_showint32(10*8,3,turn_sum,5);
+        lcd_showstr(0,4,"turn_out:");
+        lcd_showint32(10*8,4,garage_turn_out,5);
+        lcd_showstr(0,5,"ser_out:");
+        lcd_showint16(10*8,5,servo_turn_out);
         lcd_showstr(0,6,"icm_gyro_z:");
         lcd_showint16(10*8,6,icm_gyro_z);
         
@@ -191,13 +199,17 @@ void aicar_left_garage_in()
 {
     lcd_clear(BLACK);
     turn_sum=0;
-    while(turn_sum<35000)
+    while(turn_sum<garage_turn_in)
     {
-        servo_duty=4250;
-        get_icm20602_gyro_spi();
+        servo_duty=servo_turn_in;
+        //get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
         lcd_showint32(10*8,3,turn_sum,5);
+        lcd_showstr(0,4,"turn_in:");
+        lcd_showint32(10*8,4,garage_turn_in,5);
+        lcd_showstr(0,5,"ser_in:");
+        lcd_showint16(10*8,5,servo_turn_in);
         lcd_showstr(0,6,"icm_gyro_z:");
         lcd_showint16(10*8,6,icm_gyro_z);
         lcd_showstr(0,7,"Garage L");        

@@ -13,6 +13,10 @@ extern uint8 hd_in_delay;
 extern uint8 hd_out_delay;
 extern uint8 hd_turn;
 extern vuint8 ruhuan_turn;
+extern int32 garage_turn_out;
+extern int16 servo_turn_out;
+extern int32 garage_turn_in;
+extern int16 servo_turn_in;
 
 //º¯Êı
 void aicar_huandao();
