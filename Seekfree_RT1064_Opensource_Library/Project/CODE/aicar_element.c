@@ -151,7 +151,7 @@ void aicar_left_garage_out()
     while(turn_sum<garage_turn_out)
     {
         servo_duty=servo_turn_out;
-        //get_icm20602_gyro_spi();
+        get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
         lcd_showint32(10*8,3,turn_sum,5);
@@ -202,7 +202,7 @@ void aicar_left_garage_in()
     while(turn_sum<garage_turn_in)
     {
         servo_duty=servo_turn_in;
-        //get_icm20602_gyro_spi();
+        get_icm20602_gyro_spi();
         turn_sum+=icm_gyro_z;
         lcd_showstr(0,3,"turn_sum:");
         lcd_showint32(10*8,3,turn_sum,5);

@@ -890,13 +890,13 @@ uint8 If_Garage(void)
         }
         #endif
 
-        if(Feature_Verify_Color(10,0,20,10,White,90))
+        if(Feature_Verify_Color(10,0,20,10,White,80))
         {
             flag_Garage_L=1;
             flag_Garage_R=0;    //因为没有每帧初始化，所以为了避免误置造成矛盾，故对两个标志位均置高
             return 1;
         }
-        else if(Feature_Verify_Color(157,0,20,10,White,90))
+        else if(Feature_Verify_Color(157,0,20,10,White,80))
         {
             flag_Garage_L=0;
             flag_Garage_R=1;
@@ -1088,11 +1088,6 @@ uint8 Judge_MOD3(void)
 
     //-------十字检测 <head>--------//
     
-    if(CrossInCount && Round_Status<=4)
-    {
-        Round_Status=0;
-    }
-    
     if(!flag_T_Road && (Round_Status<=5) && EdgeNum>=IMG_Y*0.6)
     {   
         if(Feature_Verify_Color(0,23,187,3,White,90))
@@ -1239,6 +1234,7 @@ uint8 Judge_MOD3(void)
         case 11:
             if(RoundOutCount==1)
             {
+                huandao_wait_banma=1;
                 Round_Status=0;
             }
             break;
@@ -1246,6 +1242,7 @@ uint8 Judge_MOD3(void)
         case 12:
             if(RoundOutCount==1)
             {
+                huandao_wait_banma=1;
                 Round_Status=0;
             }
             break;
@@ -1257,6 +1254,11 @@ uint8 Judge_MOD3(void)
     }
 
     if(RoundOutCount && Round_Status<=8)
+    {
+        Round_Status=0;
+    }
+
+    if(huandao_wait_banma)
     {
         Round_Status=0;
     }
@@ -1279,7 +1281,7 @@ uint8 Judge_MOD3(void)
             }
         }
 
-    if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80)   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
+    if(!AprilTag_Mark_Base && sumincd.AprilTag>6 && sumincd.AprilTag<80 && !Feature_Verify_Color(10,10,20,10,White,80) && !Feature_Verify_Color(157,10,20,10,White,80))   //目前仅根据连通域内像素个数判断，因为扫线高度是固定的
         {
             flag_AprilTag=1;
             AprilTagInCount=50;
